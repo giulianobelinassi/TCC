@@ -56,18 +56,33 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	É de extrema importância para a Engenharia Civil, se não para a Sociedade como
 	um todo, o estudo de vibrações em estruturas para evitar possíveis catástrofes
 	provindas de terremotos, ou talvez incômodos de outras fontes, tais como
-	máquinas operatrizes e linhas ferroviárias. Como as vibrações chegam às
-	construções através do solo, então a principal parte da Engenharia que trata
-	este problema é a Dinâmica dos Solos.
+	máquinas operatrizes e linhas ferroviárias. Como na grande maioria dos casos 
+	as vibrações chegam às construções através do solo, a principal parte da Engenharia 
+	que trata problemas desta espécie é a Dinâmica dos Solos.
 	
 	Com as evolução dos computadores, é de se esperar que heurísticas e algoritmos fossem
 	projetados para simular o efeitos de tais vibrações em estruturas. Dentre estes,
-	deve-se ressaltar o Método dos Elementos de Contorno (MEC) e o Método dos
-	Elementos Finitos (MEF). Embora seja mais comum encontrar implementações do MEF,
-	isto não implica que este seja o método mais eficiente computacionalmente para
-	simulações de problemas deste tipo, dado que o MEF utiliza pontos internos à
-	estrutra analisada, já em contrapartida o MEC considera apenas pontos na
-	superfície do objeto de estudo.
+	deve-se ressaltar o Método dos Elementos de Contorno (MEC), que utiliza pontos na
+	superfície do volume a ser analisado, e o Método dos Elementos Finitos (MEF), que
+	insere pontos internos ao volume do objeto de estudo. Existem vantagens em escolher
+	o MEC ao MEF, entre elas \cite{shortcourse}:
+
+	\begin{enumerate}
+		\item Menor tempo para preparação dos dados.
+
+		\item Maior precisão dos pontos de estresse.
+
+		\item Menor uso de recursos computacionais.
+
+		\item Menos informações desnecessárias.
+	\end{enumerate}
+
+	e isto motiva o estudo de tal método para solução de problemas deste tipo.
+	Embora toda a análise teórica do BEM seja interessante no ponto de vista da Engenharia,
+	este trabalho tem enfoque na implementação do algoritmo
+	de forma a explorar recursos computacionais providenciados por processadores de
+	vários núcleos e Unidades de Processamento Gráfico do Propósito Geral, portanto
+	a parte computacional do problema.
 
 \section{Objetivos}
 	Este trabalho tem como objetivo implementar o MEC usando
@@ -79,21 +94,49 @@ Giuliano Augusto Faulin Belinassi - 8517272
 \section{Estado do Trabalho}
 	Este trabalho teve inicio em Setembro de 2016, com a primeira etapa tendo como
 	objetivo estudar a linguagem de programação usada na implementação entregue por
-	Carrion(2002) (Fortran). Algumas dificuldades foram encontradas aí, pois o
+	\cite{carrion} (no caso, Fortran). Algumas dificuldades foram encontradas aí, pois o
 	código foi escrito em uma versão mais antiga desta linguagem, além de não compilar
 	no compilador GFortran. Adaptações e manutenções foram necessárias.
 
 	Em seguida, algumas técnicas de paralelização de algoritmos foi estudada para
-	que fosse possível prosseguir com o trabalho. 
+	que fosse possível prosseguir com o trabalho, além de testes automatizados. 
 
-	Um $proffiling$ foi efetuado no código, logo em seguida, para que os gargalos
-	tornassem evidentes. O principal gargalo encontrado foi no procedimento
-	NONSINGD, responsável no problema original para calcular as partições
-	não singulares de $H$ e $G$, portanto encontrar maneiras de paralizar este
-	procedimento se tornou de extrema importância para o trabalho.
+	Um \textit{proffiling} foi efetuado no código, logo em seguida, para que os gargalos
+	tornassem evidentes, conforme a tabela $\ref{table:gprof}$. 
+	
+	\begin{table}[]
+	\centering
+	\caption{\textit{Proffiling} do código sequêncial}
+	\label{table:gprof}
+	\begin{tabular}{|l|l|}
+	\hline
+	Subrotina       & Tempo (\%) \\ \hline
+	solfund         & 34.11  \\ \hline
+	nonsingd        & 18.24  \\ \hline
+	nonsinge        & 14.71  \\ \hline
+	solfune         & 9.13   \\ \hline
+	gauleg          & 8.23   \\ \hline
+	\end{tabular}
+	\end{table}
 
 	
-	A partir do resultado obtido, a etapa de paralelização
+	Analisando mais rebuscadamente o código, descobriu-se que paralelizar o
+	procedimento \textit{Ghmatecd}, responsável por montar as matrizes
+	$H$ e $G$ conforme \cite{carrion}, implicaria em chamadas paralelas das
+	subrotinas \textit{Nonsingd} e \textit{Solfund}, sendo assim passou-se a
+	priorizar a paralelização dessa subrotina.
+
+	Como alterar um código pode comprometer funcionalidades que deste dependem,
+	a criação de testes automatizados foi fundamental para assegurar que o
+	resultado obtido condiz com o original. Embora existam frameworks para
+	a criação de testes em Fortran, por este projeto tratar com código legado,
+	preferiu-se criar as proprias funções independentes e programas externos que 
+	verificam se o resultado é, de fato, o esperado. Portanto, para verificar os
+	erros nas matrizes geradas, preferiu-se utilizar ora a norma infinita, 
+	ora a norma 1 da soma da diferença das 
+	matrizes, conforme o Teorema 2.1.29 \cite{matrix_comp}.
+	
+	Concluíndo os testes de aceitação, a etapa de paralelização
 	usando OpenMP teve início, em conjunto com algumas otimizações sequênciais.
 	Com uma entrada de ????2160????, o tempo gasto na implementação original era
 	superior a 4m17s. Após paralelizar todo o programa e realizar algumas

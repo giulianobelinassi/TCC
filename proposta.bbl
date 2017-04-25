@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{shortcourse}
+Heinz Antes.
+\newblock A short course on bondary elements methods.
+\newblock {\em Technische Universität Braunschweig}, 2010.
+
+\bibitem{carrion}
+Ronaldo Carrion.
+\newblock {\em Uma Implementação do Método dos Elementos de Contorno para
+  Problemas Viscoelastodinâmicos Estacionários Tridimensionais de Domínios
+  Abertos e Fechados}.
+\newblock PhD thesis, Universidade Estadual de Campinas, 2002.
+
+\bibitem{matrix_comp}
+David~S. Watkins.
+\newblock {\em Fundamentals of Matrix Computations}, volume~64.
+\newblock John Wiley \& Sons, 2 edition, 2004.
+
+\end{thebibliography}
