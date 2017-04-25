@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+
+%% Escrevendo em português:
+\usepackage[brazil]{babel}
+\usepackage[latin1]{inputenc} % isso é quase redundante
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage[T1]{fontenc}
+%----------------------------
+
+\setlength{\topmargin}{-.5in}
+\setlength{\textheight}{9in}
+\setlength{\textwidth}{6.3in}
+\setlength{\oddsidemargin}{-.125in}
+\setlength{\evensidemargin}{-.125in}
+
+\usepackage{xspace}
+\usepackage{pifont}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{color}
+\usepackage{fancybox}
+\usepackage{systeme}
+
+\pagestyle{empty}
+
+\pagestyle{empty}
+\newcommand{\N}{{\tt I\kern-.2em N \relax}}      % N        |N
+\def\pule{\vspace{0.2cm}}
+\def\pulao{\vspace{0.5cm}}
+\def\pulaozao{\vspace{1cm}}
+\def\ni{\noindent}
+
+\newcommand{\Si}{\ensuremath{\Sigma}\xspace}
+\newcommand{\Sis}{\ensuremath{\Sigma^*}\xspace}
+\newcommand{\serio}{\ding{98}\xspace}
+\newcommand{\LP}{L\&P\xspace}
+\newcommand{\conj}[2]{\ensuremath{\{#1\,|\;#2\}}}
+\newcommand{\twopartdef}[4]
+
+\begin{document}
+
+\begin{center}
+\large \bf
+MAC0499  --  Trabalho de Formatura Supervisionado.
+\vspace{0.5cm}\\
+Proposta de Trabalho {\small\texttt{1.0}} \\
+Giuliano Augusto Faulin Belinassi - 8517272
+
+\end{center}
+
+\begin{center}
+\end{center}
+
+\section{Introdução}
+	É de extrema importância para a Engenharia Civil, se não para a Sociedade como
+	um todo, o estudo de vibrações em estruturas para evitar possíveis catástrofes
+	provindas de terremotos, ou talvez incômodos de outras fontes, tais como
+	máquinas operatrizes e linhas ferroviárias. Como as vibrações chegam às
+	construções através do solo, então a principal parte da Engenharia que trata
+	este problema é a Dinâmica dos Solos.
+	
+	Com as evolução dos computadores, é de se esperar que heurísticas e algoritmos fossem
+	projetados para simular o efeitos de tais vibrações em estruturas. Dentre estes,
+	deve-se ressaltar o Método dos Elementos de Contorno (MEC) e o Método dos
+	Elementos Finitos (MEF). Embora seja mais comum encontrar implementações do MEF,
+	isto não implica que este seja o método mais eficiente computacionalmente para
+	simulações de problemas deste tipo, dado que o MEF utiliza pontos internos à
+	estrutra analisada, já em contrapartida o MEC considera apenas pontos na
+	superfície do objeto de estudo.
+
+\section{Objetivos}
+	Este trabalho tem como objetivo implementar o MEC usando
+	Unidades de Processamento Gráfico de Propósito Geral(GPGPU) partindo da
+	implementação fornecida por \cite{carrion}. A necessidade de paralelização
+	se dá devido a possibilidade de analisar estruturas com superfícies maiores e
+	com mais pontos, aumentando assim a precisão dos resultados obtidos.
+
+\section{Estado do Trabalho}
+	Este trabalho teve inicio em Setembro de 2016, com a primeira etapa tendo como
+	objetivo estudar a linguagem de programação usada na implementação entregue por
+	Carrion(2002) (Fortran). Algumas dificuldades foram encontradas aí, pois o
+	código foi escrito em uma versão mais antiga desta linguagem, além de não compilar
+	no compilador GFortran. Adaptações e manutenções foram necessárias.
+
+	Em seguida, algumas técnicas de paralelização de algoritmos foi estudada para
+	que fosse possível prosseguir com o trabalho. 
+
+	Um $proffiling$ foi efetuado no código, logo em seguida, para que os gargalos
+	tornassem evidentes. O principal gargalo encontrado foi no procedimento
+	NONSINGD, responsável no problema original para calcular as partições
+	não singulares de $H$ e $G$, portanto encontrar maneiras de paralizar este
+	procedimento se tornou de extrema importância para o trabalho.
+
+	
+	A partir do resultado obtido, a etapa de paralelização
+	usando OpenMP teve início, em conjunto com algumas otimizações sequênciais.
+	Com uma entrada de ????2160????, o tempo gasto na implementação original era
+	superior a 4m17s. Após paralelizar todo o programa e realizar algumas
+	otimizações sequências este tempo caiu em função da quantidade de processadores 
+	alocados, conforme a tabela $\ref{table:tempo_cpu_pegrande}$.
+
+	\begin{table}[]
+	\centering
+	\caption{Tempo gasto em um Core(TM) i7 CPU 920 @ 2.6GHz }
+	\label{table:tempo_cpu_pegrande}
+	\begin{tabular}{|l|l|}
+	\hline
+	Processadores & Tempo \\ \hline
+	1             & 1m20s \\ \hline
+	2             & 42s   \\ \hline
+	4             & 22s   \\ \hline
+	\end{tabular}
+	\end{table}
+
+
+	Em seguida, com todo o programa paralelizado na CPU, partiu-se para experimentos
+	com GPGPU na tentativa de obter um resultado
+	melhor. Como a plataforma escolhida foi CUDA e como o compilador de CUDA para
+	Fortran é pago, optou-se por construir uma interface CUDA C 
+	$\longleftrightarrow$ Fortran.
+
+	Prosseguindo com a paralelização em GPGPU, uma implementação de GHMATECD
+	foi codificada em CUDA C, porém os resultados não foram satisfatórios:
+
+	COLETAR OS RESULTADOS NA GPU E INSERIR AQUI.
+	
+
+
+\bibliography{proposta}{}
+\bibliographystyle{plain}
+
+\end{document}
+
+% Local Variables: 
+% mode: latex
+% eval: (Portug-mode)
+% TeX-master: t
+% End: 
