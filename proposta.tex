@@ -44,7 +44,7 @@
 \large \bf
 MAC0499  --  Trabalho de Formatura Supervisionado.
 \vspace{0.5cm}\\
-Proposta de Trabalho {\small\texttt{1.0}} \\
+Proposta de Trabalho \\
 Giuliano Augusto Faulin Belinassi - 8517272
 
 \end{center}
@@ -95,30 +95,14 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	Este trabalho teve inicio em Setembro de 2016, com a primeira etapa tendo como
 	objetivo estudar a linguagem de programação usada na implementação entregue por
 	\cite{carrion} (no caso, Fortran). Algumas dificuldades foram encontradas aí, pois o
-	código foi escrito em uma versão mais antiga desta linguagem, além de não compilar
-	no compilador GFortran. Adaptações e manutenções foram necessárias.
+	código foi escrito em uma versão obsoleta desta, além de não compilar
+	com o GFortran\cite{gfortran}. Adaptações e manutenções foram necessárias.
 
 	Em seguida, algumas técnicas de paralelização de algoritmos foi estudada para
 	que fosse possível prosseguir com o trabalho, além de testes automatizados. 
 
 	Um \textit{proffiling} foi efetuado no código, logo em seguida, para que os gargalos
 	tornassem evidentes, conforme a tabela $\ref{table:gprof}$. 
-	
-	\begin{table}[]
-	\centering
-	\caption{\textit{Proffiling} do código sequêncial}
-	\label{table:gprof}
-	\begin{tabular}{|l|l|}
-	\hline
-	Subrotina       & Tempo (\%) \\ \hline
-	solfund         & 34.11  \\ \hline
-	nonsingd        & 18.24  \\ \hline
-	nonsinge        & 14.71  \\ \hline
-	solfune         & 9.13   \\ \hline
-	gauleg          & 8.23   \\ \hline
-	\end{tabular}
-	\end{table}
-
 	
 	Analisando mais rebuscadamente o código, descobriu-se que paralelizar o
 	procedimento \textit{Ghmatecd}, responsável por montar as matrizes
@@ -134,18 +118,66 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	verificam se o resultado é, de fato, o esperado. Portanto, para verificar os
 	erros nas matrizes geradas, preferiu-se utilizar ora a norma infinita, 
 	ora a norma 1 da soma da diferença das 
-	matrizes, conforme o Teorema 2.1.29 \cite{matrix_comp}.
+	matrizes, conforme o Teorema 2.1.29 de \cite{matrix_comp}.
 	
 	Concluíndo os testes de aceitação, a etapa de paralelização
 	usando OpenMP teve início, em conjunto com algumas otimizações sequênciais.
-	Com uma entrada de ????2160????, o tempo gasto na implementação original era
+	Utilizando um problema de dimensões conforme a tabela $\ref{in_2160}$, o tempo
+	gasto na implementação original para esta entrada era
 	superior a 4m17s. Após paralelizar todo o programa e realizar algumas
 	otimizações sequências este tempo caiu em função da quantidade de processadores 
-	alocados, conforme a tabela $\ref{table:tempo_cpu_pegrande}$.
+	alocados, conforme a tabela $\ref{table:tempo_cpu_pegrande}$. É interessante
+	notar o \textit{speedup} linear.	
+
+	Em seguida, com todo o programa paralelizado na CPU, partiu-se para experimentos
+	com GPGPU na tentativa de obter resultados mais interessantes que os obtidos.
+	Como a plataforma escolhida foi CUDA e como o compilador de CUDA para
+	Fortran é pago, optou-se por construir uma interface CUDA C 
+	$\leftrightarrow$ Fortran.
+
+	Prosseguindo com a paralelização em GPGPU, uma implementação de \textit{Ghmatecd}
+	foi codificada em CUDA C, porém os resultados não foram satisfatórios:
+
+
 
 	\begin{table}[]
 	\centering
-	\caption{Tempo gasto em um Core(TM) i7 CPU 920 @ 2.6GHz }
+	\caption{\textit{Proffiling} do código sequêncial}
+	\label{table:gprof}
+	\begin{tabular}{|l|l|}
+	\hline
+	Subrotina       & Tempo (\%) \\ \hline
+	solfund         & 34.11  \\ \hline
+	nonsingd        & 18.24  \\ \hline
+	nonsinge        & 14.71  \\ \hline
+	solfune         & 9.13   \\ \hline
+	gauleg          & 8.23   \\ \hline
+	\end{tabular}
+	\end{table}
+
+	\begin{table}[]
+	\centering
+	\caption{Entrada ESOLO2160E\_-5+5}
+	\label{in_2160}
+	\begin{tabular}{|l|l|}
+	\hline
+	Número de Elementos da Malha            & 2160 \\ \hline
+	Número de Elementos de Contorno         & 900  \\ \hline
+	Número de Pontos Extremos dos Elementos & 2162 \\ \hline
+	Número de Pontos Internos               & 10   \\ \hline
+	Número de Pontos de Gauss               & 8    \\ \hline
+	Número de Frequências                   & 1    \\ \hline
+	Módulo de Cisalhamento                  & 1.00 \\ \hline
+	Coeficiente de Poisson                  & 0.30 \\ \hline
+	Coeficiente de Amortecimento            & 0.00 \\ \hline
+	Densidade de Massa                      & 1.00 \\ \hline
+	\end{tabular}
+	\end{table}
+
+
+	\begin{table}[]
+	\centering
+	\caption{Tempo gasto em \textbf{Pé Grande}, com flags -Ofast -march=native -flto -funroll-loops }
 	\label{table:tempo_cpu_pegrande}
 	\begin{tabular}{|l|l|}
 	\hline
@@ -156,18 +188,21 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{tabular}
 	\end{table}
 
-
-	Em seguida, com todo o programa paralelizado na CPU, partiu-se para experimentos
-	com GPGPU na tentativa de obter um resultado
-	melhor. Como a plataforma escolhida foi CUDA e como o compilador de CUDA para
-	Fortran é pago, optou-se por construir uma interface CUDA C 
-	$\longleftrightarrow$ Fortran.
-
-	Prosseguindo com a paralelização em GPGPU, uma implementação de GHMATECD
-	foi codificada em CUDA C, porém os resultados não foram satisfatórios:
-
-	COLETAR OS RESULTADOS NA GPU E INSERIR AQUI.
+\section{Apêndice}
+	Informações técnicas dos computadores de teste.
 	
+	\begin{table}[!htbp]
+	\centering
+	\caption{Pé Grande}
+	\label{pegrande}
+	\begin{tabular}{|l|l|}
+	\hline
+	Processador     & Intel(R) Core(R) i7 CPU 920 @ 2.6GHz\\ \hline
+	Memória         & 8Gb  \\ \hline
+	GPU             & NVIDIA(R) GeForce(R) GTX 470 \\ \hline
+	\end{tabular}
+	\end{table}
+
 
 
 \bibliography{proposta}{}

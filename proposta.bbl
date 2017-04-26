@@ -12,6 +12,12 @@ Ronaldo Carrion.
   Abertos e Fechados}.
 \newblock PhD thesis, Universidade Estadual de Campinas, 2002.
 
+\bibitem{gfortran}
+GNU Fundation.
+\newblock Gfortran - the gnu fortran compiler.
+\newblock https://gcc.gnu.org/wiki/GFortran.
+\newblock Acessado em \today.
+
 \bibitem{matrix_comp}
 David~S. Watkins.
 \newblock {\em Fundamentals of Matrix Computations}, volume~64.
