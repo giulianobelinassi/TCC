@@ -12,10 +12,22 @@ Ronaldo Carrion.
   Abertos e Fechados}.
 \newblock PhD thesis, Universidade Estadual de Campinas, 2002.
 
+\bibitem{cuda}
+NVIDIA Corporation.
+\newblock Cuda, plataforma de computação paralela.
+\newblock http://www.nvidia.com.br/object/cuda\_home\_new\_br.html.
+\newblock Acessado em \today.
+
 \bibitem{gfortran}
 GNU Fundation.
 \newblock Gfortran - the gnu fortran compiler.
 \newblock https://gcc.gnu.org/wiki/GFortran.
+\newblock Acessado em \today.
+
+\bibitem{pgi_pago}
+PGI Group.
+\newblock Pgi cuda fortran compiler.
+\newblock https://www.pgroup.com/resources/cudafortran.htm.
 \newblock Acessado em \today.
 
 \bibitem{matrix_comp}

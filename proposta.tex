@@ -58,11 +58,11 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	provindas de terremotos, ou talvez incômodos de outras fontes, tais como
 	máquinas operatrizes e linhas ferroviárias. Como na grande maioria dos casos 
 	as vibrações chegam às construções através do solo, a principal parte da Engenharia 
-	que trata problemas desta espécie é a Dinâmica dos Solos.
+	que trata de problemas desta espécie é a Dinâmica dos Solos.
 	
 	Com as evolução dos computadores, é de se esperar que heurísticas e algoritmos fossem
 	projetados para simular o efeitos de tais vibrações em estruturas. Dentre estes,
-	deve-se ressaltar o Método dos Elementos de Contorno (MEC), que utiliza pontos na
+	destacam-se o Método dos Elementos de Contorno (MEC), que utiliza pontos na
 	superfície do volume a ser analisado, e o Método dos Elementos Finitos (MEF), que
 	insere pontos internos ao volume do objeto de estudo. Existem vantagens em escolher
 	o MEC ao MEF, entre elas \cite{shortcourse}:
@@ -78,8 +78,8 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{enumerate}
 
 	e isto motiva o estudo de tal método para solução de problemas deste tipo.
-	Embora toda a análise teórica do BEM seja interessante no ponto de vista da Engenharia,
-	este trabalho tem enfoque na implementação do algoritmo
+	Embora toda a análise teórica do BEM seja interessante abordando pela Engenharia,
+	este trabalho tem concentra-se na implementação do algoritmo
 	de forma a explorar recursos computacionais providenciados por processadores de
 	vários núcleos e Unidades de Processamento Gráfico do Propósito Geral, portanto
 	a parte computacional do problema.
@@ -99,10 +99,26 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	com o GFortran\cite{gfortran}. Adaptações e manutenções foram necessárias.
 
 	Em seguida, algumas técnicas de paralelização de algoritmos foi estudada para
-	que fosse possível prosseguir com o trabalho, além de testes automatizados. 
+	que fosse possível prosseguir com o trabalho. 
 
 	Um \textit{proffiling} foi efetuado no código, logo em seguida, para que os gargalos
-	tornassem evidentes, conforme a tabela $\ref{table:gprof}$. 
+	tornassem evidentes, conforme a tabela $\ref{table:gprof}$.
+	
+		\begin{table}[!htbp]
+	\centering
+	\caption{\textit{Proffiling} do código sequencial}
+	\label{table:gprof}
+	\begin{tabular}{|l|l|}
+	\hline
+	Subrotina                & Tempo (\%) \\ \hline
+	\textit{solfund}         & 34.11  \\ \hline
+	\textit{nonsingd}        & 18.24  \\ \hline
+	\textit{nonsinge}        & 14.71  \\ \hline
+	\textit{solfune}         & 9.13   \\ \hline
+	\textit{gauleg}          & 8.23   \\ \hline
+	\end{tabular}
+	\end{table}
+ 
 	
 	Analisando mais rebuscadamente o código, descobriu-se que paralelizar o
 	procedimento \textit{Ghmatecd}, responsável por montar as matrizes
@@ -113,49 +129,25 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	Como alterar um código pode comprometer funcionalidades que deste dependem,
 	a criação de testes automatizados foi fundamental para assegurar que o
 	resultado obtido condiz com o original. Embora existam frameworks para
-	a criação de testes em Fortran, por este projeto tratar com código legado,
-	preferiu-se criar as proprias funções independentes e programas externos que 
+	a criação de testes de unidade em Fortran, por este projeto tratar com código legado
+	com entradas e saídas bem definidas,
+	preferiu-se criar as próprias funções independentes e programas externos que 
 	verificam se o resultado é, de fato, o esperado. Portanto, para verificar os
 	erros nas matrizes geradas, preferiu-se utilizar ora a norma infinita, 
 	ora a norma 1 da soma da diferença das 
 	matrizes, conforme o Teorema 2.1.29 de \cite{matrix_comp}.
 	
-	Concluíndo os testes de aceitação, a etapa de paralelização
-	usando OpenMP teve início, em conjunto com algumas otimizações sequênciais.
+	Concluindo os testes de aceitação, a etapa de paralelização
+	usando OpenMP teve início, em conjunto com algumas otimizações sequenciais.
 	Utilizando um problema de dimensões conforme a tabela $\ref{in_2160}$, o tempo
 	gasto na implementação original para esta entrada era
 	superior a 4m17s. Após paralelizar todo o programa e realizar algumas
 	otimizações sequências este tempo caiu em função da quantidade de processadores 
 	alocados, conforme a tabela $\ref{table:tempo_cpu_pegrande}$. É interessante
-	notar o \textit{speedup} linear.	
-
-	Em seguida, com todo o programa paralelizado na CPU, partiu-se para experimentos
-	com GPGPU na tentativa de obter resultados mais interessantes que os obtidos.
-	Como a plataforma escolhida foi CUDA e como o compilador de CUDA para
-	Fortran é pago, optou-se por construir uma interface CUDA C 
-	$\leftrightarrow$ Fortran.
-
-	Prosseguindo com a paralelização em GPGPU, uma implementação de \textit{Ghmatecd}
-	foi codificada em CUDA C, porém os resultados não foram satisfatórios:
+	notar o \textit{speedup} linear na tabela $\ref{table:tempo_cpu_pegrande}$.	
 
 
-
-	\begin{table}[]
-	\centering
-	\caption{\textit{Proffiling} do código sequêncial}
-	\label{table:gprof}
-	\begin{tabular}{|l|l|}
-	\hline
-	Subrotina       & Tempo (\%) \\ \hline
-	solfund         & 34.11  \\ \hline
-	nonsingd        & 18.24  \\ \hline
-	nonsinge        & 14.71  \\ \hline
-	solfune         & 9.13   \\ \hline
-	gauleg          & 8.23   \\ \hline
-	\end{tabular}
-	\end{table}
-
-	\begin{table}[]
+	\begin{table}[!htbp]
 	\centering
 	\caption{Entrada ESOLO2160E\_-5+5}
 	\label{in_2160}
@@ -164,7 +156,7 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	Número de Elementos da Malha            & 2160 \\ \hline
 	Número de Elementos de Contorno         & 900  \\ \hline
 	Número de Pontos Extremos dos Elementos & 2162 \\ \hline
-	Número de Pontos Internos               & 10   \\ \hline
+	Número de Pontos Internos Inserido               & 10   \\ \hline
 	Número de Pontos de Gauss               & 8    \\ \hline
 	Número de Frequências                   & 1    \\ \hline
 	Módulo de Cisalhamento                  & 1.00 \\ \hline
@@ -174,8 +166,7 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{tabular}
 	\end{table}
 
-
-	\begin{table}[]
+	\begin{table}[!htbp]
 	\centering
 	\caption{Tempo gasto em \textbf{Pé Grande}, com flags -Ofast -march=native -flto -funroll-loops }
 	\label{table:tempo_cpu_pegrande}
@@ -188,9 +179,59 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{tabular}
 	\end{table}
 
+
+	Em seguida, com todo o programa paralelizado na CPU, partiu-se para experimentos
+	com GPGPU na tentativa de obter resultados mais interessantes que os obtidos.
+	Como a plataforma escolhida foi CUDA e como o compilador de CUDA para
+	Fortran é pago \cite{pgi_pago}, optou-se por construir uma interface CUDA C 
+	$\leftrightarrow$ Fortran.
+
+	Prosseguindo com a paralelização em GPGPU, uma implementação de \textit{Ghmatecd}
+	foi codificada em CUDA C \cite{cuda}, porém os resultados não foram satisfatórios, conforme 
+	os testes executado em Venus, vide tabelas $\ref{table:tempo_cpu_venus}$ e 
+	$\ref{table:tempo_gpu_venus}	$.
+
+	\begin{table}[!htbp]
+	\centering
+	\caption{Tempo gasto em \textbf{Venus} na subrotina \textit{Ghmatecd} implementada em CPU}
+	\label{table:tempo_cpu_venus}
+	\begin{tabular}{|l|l|l|}
+	\hline
+	Processadores & Tempo GPU & Flags \\ \hline
+	1             &  35s   & -Ofast -march=native -flto -funroll-loops \\ \hline
+	2             &  26s   & -Ofast -march=native -flto -funroll-loops \\ \hline
+	4             &  20s   & -Ofast -march=native -flto -funroll-loops \\ \hline
+	\end{tabular}
+	\end{table}
+
+	\begin{table}[!htbp]
+	\centering
+	\caption{Tempo gasto em \textbf{Venus} na subrotina \textit{Ghmatecd} implementada em CUDA}
+	\label{table:tempo_gpu_venus}
+	\begin{tabular}{|l|l|l|}
+	\hline
+	Unidades Gráficas de Proposito Geral  & Tempo GPU & Flags \\ \hline
+	1                                     &  30s      & -use\_fast\_math -O3  \\ \hline
+	\end{tabular}
+	\end{table}
+
+
+	
+\section{Conclusões}
+	Paralelizar rotinas em um código legado cuja arquitetura não foi projetada para tal
+	pode ser difícil. A ferramenta OpenMP facilita tal trabalho pela baixa quantidade de
+	código que necessita ser modificado para que o objetivo seja concluído, no entanto o mesmo
+	não se aplica à CUDA devido a sua arquitetura peculiar.
+	
+	Embora Fortran tenha um recurso interessante de declarações implícitas de variável, esta
+	deve ser evitada. Em \textit{Solfund.for}, havia um erro de digitação em uma variável que
+	modificava o comportamento do código conforme matrizes eram declaradas em outros métodos.
+	Se o recurso em questão estivesse desabilitado, o erro seria descoberto na implementação
+	original. 
+
 \section{Apêndice}
 	Informações técnicas dos computadores de teste.
-	
+
 	\begin{table}[!htbp]
 	\centering
 	\caption{Pé Grande}
@@ -203,6 +244,17 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{tabular}
 	\end{table}
 
+	\begin{table}[!htbp]
+	\centering
+	\caption{Venus}
+	\label{venus}
+	\begin{tabular}{|l|l|}
+	\hline
+	Processador     & AMD A10-7700K Radeon R7, 10 Compute Cores 4C+6G @ 3.4GHz\\ \hline
+	Memória         & 8Gb  \\ \hline
+	GPU             & NVIDIA(R) GeForce(R) GTX 980 \\ \hline
+	\end{tabular}
+	\end{table}
 
 
 \bibliography{proposta}{}
