@@ -18,6 +18,12 @@ NVIDIA Corporation.
 \newblock http://www.nvidia.com.br/object/cuda\_home\_new\_br.html.
 \newblock Acessado em \today.
 
+\bibitem{openblas}
+OpenBLAS developers.
+\newblock Openblas, an optimizes blas library.
+\newblock http://www.openblas.net.
+\newblock Acessado em \today.
+
 \bibitem{gfortran}
 GNU Fundation.
 \newblock Gfortran - the gnu fortran compiler.

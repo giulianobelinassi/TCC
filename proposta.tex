@@ -78,13 +78,13 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{enumerate}
 
 	e isto motiva o estudo de tal método para solução de problemas deste tipo.
-	Embora toda a análise teórica do BEM seja interessante abordando pela Engenharia,
-	este trabalho tem concentra-se na implementação do algoritmo
-	de forma a explorar recursos computacionais providenciados por processadores de
-	vários núcleos e Unidades de Processamento Gráfico do Propósito Geral, portanto
-	a parte computacional do problema.
+	Embora toda a análise teórica do MEC seja interessante do ponto de vista da Engenharia,
+	este trabalho concentra-se na parte computacional do problema, 
+	mais especificamete na implementação deste algoritmo de forma a explorar 
+	recursos computacionais providenciados por processadores de	vários núcleos e 
+	Unidades de Processamento Gráfico de Propósito Geral.
 
-\section{Objetivos}
+\section{Objetivo}
 	Este trabalho tem como objetivo implementar o MEC usando
 	Unidades de Processamento Gráfico de Propósito Geral(GPGPU) partindo da
 	implementação fornecida por \cite{carrion}. A necessidade de paralelização
@@ -92,14 +92,64 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	com mais pontos, aumentando assim a precisão dos resultados obtidos.
 
 \section{Estado do Trabalho}
-	Este trabalho teve inicio em Setembro de 2016, com a primeira etapa tendo como
+	Este trabalho teve inicio em Setembro de 2016 como um projeto de Iniciação Científica da CAPES.
+	A primeira etapa havia como
 	objetivo estudar a linguagem de programação usada na implementação entregue por
 	\cite{carrion} (no caso, Fortran). Algumas dificuldades foram encontradas aí, pois o
-	código foi escrito em uma versão obsoleta desta, além de não compilar
-	com o GFortran\cite{gfortran}. Adaptações e manutenções foram necessárias.
+	código foi escrito em uma versão obsoleta desta (Versão 77), implicando em:
+	\begin{enumerate}
+		\item Não compilar com o GFortran\cite{gfortran}.
+		\item As subrotinas não haviam distinções claras entre entrada e saída
+		\item Excessivo uso de GOTOs para efetuar operações básicas, como laços.
+		\item Dependência de subrotinas específicas do compilador
+		      utilizado no projeto original.
+	\end{enumerate}
+	Adaptações e manutenções foram necessárias, embora o código estivesse
+	modularizado em subrotinas com comportamento descrito em seus cabeçalhos. Uma 
+	descrição breve da estrutura geral do código segue abaixo:
+	\begin{enumerate}
+		\item Main
+		\begin{enumerate}
+			\item Inputece
+			\item Ghmatece
+			\begin{enumerate}
+				\item Singge
+				\begin{enumerate}
+					\item Nonsinge
+				\end{enumerate}
+				\item Nonsinge
+			\end{enumerate}
+			\item Ghmatecd
+			\begin{enumerate}
+				\item Gauleg
+				\item Sing\_de
+				\begin{enumerate}
+					\item Solfundif
+				\end{enumerate}
+				\item Nonsingd
+				\begin{enumerate}
+					\item Solfund
+				\end{enumerate}		
+			\end{enumerate}
+			\item DGESV
+			\item Interec
+			\begin{enumerate}
+				\item Nonsingd
+				\begin{enumerate}
+					\item Solfund
+				\end{enumerate}	
+				\item Sigmaec
+			\end{enumerate}
+			\item Outputec
+		\end{enumerate}
+	\end{enumerate}
+	Exceto por DGESV, uma subrotina do OpenBLAS \cite{openblas}, que calcula a 
+	decomposição $LU$
+	para solução de sistemas lineares de variáveis complexas em paralelo, todos outras
+	subrotinas contém descrições do que fazem em seus arquivos correspondentes.
 
-	Em seguida, algumas técnicas de paralelização de algoritmos foi estudada para
-	que fosse possível prosseguir com o trabalho. 
+	Em seguida, algumas técnicas de paralelização de algoritmos foram estudadas 
+	para que fosse possível prosseguir com o trabalho. 
 
 	Um \textit{proffiling} foi efetuado no código, logo em seguida, para que os gargalos
 	tornassem evidentes, conforme a tabela $\ref{table:gprof}$.
@@ -120,11 +170,9 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	\end{table}
  
 	
-	Analisando mais rebuscadamente o código, descobriu-se que paralelizar o
-	procedimento \textit{Ghmatecd}, responsável por montar as matrizes
-	$H$ e $G$ conforme \cite{carrion}, implicaria em chamadas paralelas das
-	subrotinas \textit{Nonsingd} e \textit{Solfund}, sendo assim passou-se a
-	priorizar a paralelização dessa subrotina.
+	Observando estes dados, decidiu-se priorizar a paralelização de 
+	\textit{Ghmatecd} e \textit{Interec}, pois isto implica em chamadas 
+	paralelas das subrotinas \textit{Nonsingd} e \textit{Solfund}.
 
 	Como alterar um código pode comprometer funcionalidades que deste dependem,
 	a criação de testes automatizados foi fundamental para assegurar que o
@@ -223,7 +271,8 @@ Giuliano Augusto Faulin Belinassi - 8517272
 	código que necessita ser modificado para que o objetivo seja concluído, no entanto o mesmo
 	não se aplica à CUDA devido a sua arquitetura peculiar.
 	
-	Embora Fortran tenha um recurso interessante de declarações implícitas de variável, esta
+	Embora Fortran tenha um recurso interessante de declarações implícitas de
+	variável, este
 	deve ser evitada. Em \textit{Solfund.for}, havia um erro de digitação em uma variável que
 	modificava o comportamento do código conforme matrizes eram declaradas em outros métodos.
 	Se o recurso em questão estivesse desabilitado, o erro seria descoberto na implementação
