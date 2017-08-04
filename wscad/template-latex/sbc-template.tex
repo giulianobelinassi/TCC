@@ -88,13 +88,12 @@ the goal enable the use of GPUs in general purpose situation.
 
 CUDA consists of kernels, which are functions that run in a GPU in a parallel fashion. 
 A kernel is organized into a set of blocks. A block is a set of threads that cooperate 
-between themselves.  
+between themselves \cite{patterson:2007}.  
 
 A kernel accesses data from GPU's memory. Its memory is divided between global memory, 
 a memory that all threads can access; a local memory, a memory that is private to a thread; 
-and shared memory, a  low-latency memory that is shared between all threads in the same block. 
-Because of that, all data must be copied to GPU's main memory before a GPU thread can access 
-it. 
+and shared memory, a  low-latency memory that is shared between all threads in the same block
+\cite{patterson:2007}. 
 
 
 

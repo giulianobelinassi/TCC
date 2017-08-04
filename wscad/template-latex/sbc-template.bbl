@@ -23,6 +23,11 @@ Pacheco, P. (2011).
 \newblock {\em An introduction to parallel programming}.
 \newblock Elsevier.
 
+\bibitem[Patterson and Hennessy 2007]{patterson:2007}
+Patterson, D.~A. and Hennessy, J.~L. (2007).
+\newblock Computer organization and design.
+\newblock {\em Morgan Kaufmann}.
+
 \bibitem[Smith and Jones 1999]{smith:99}
 Smith, A. and Jones, B. (1999).
 \newblock On the complexity of computing.
