@@ -10,7 +10,11 @@
 \usepackage{amsmath}
 \usepackage{amssymb} 
 \usepackage{mathtools}
-    
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+ 
 \newcommand{\Cfield}{\mathbb{C}}
 \newcommand{\Rfield}{\mathbb{R}}
 
@@ -49,17 +53,6 @@
   10 lines and must be in the first page of the paper.
 \end{abstract}
      
-\begin{resumo} 
-  Este meta-artigo descreve o estilo a ser usado na confecção de artigos e
-  resumos de artigos para publicação nos anais das conferências organizadas
-  pela SBC. É solicitada a escrita de resumo e abstract apenas para os artigos
-  escritos em português. Artigos em inglês deverão apresentar apenas abstract.
-  Nos dois casos, o autor deve tomar cuidado para que o resumo (e o abstract)
-  não ultrapassem 10 linhas cada, sendo que ambos devem estar na primeira
-  página do artigo.
-\end{resumo}
-
-
 \section{Introduction}
 
 Parallel computing is hard to define, but intuitively, it is a computation method 
@@ -140,6 +133,98 @@ $\norm{y_f - y_g}$.
 %is the maximum difference between a single entry of the vector. If the matrix
 %$\infty$-norm is used, then the result is the biggest sum of errors of a matrix
 %row. The matrix 1-norm yields the biggest sum of erros of a matrix column.
+
+\section{Parallelization Technique}
+
+A parallel implementation of BEM began by analyzing and modifying a sequential code 
+provided by Carrion. Gprof \cite{binutils}, a profiling tool by GNU, showed that the most time-consuming 
+routine was Nonsingd, a subroutine designed to solve small parts of the nonsingular dynamic 
+problem. Since most calls to Nonsingd were from Ghmatecd, most of the parallelization effort 
+was focused on that last routine.
+
+\subsection{Parallelization of Ghmatecd}
+Ghmatecd works in the following way: It assembles two complex matrices H and G by computing 
+smaller $3 \times 3$ matrices returned by Nonsingd and Sigmaec. Sigmaec is very similar to Nonsingd, but it 
+is designed to solve the singular part of the dynamic problem. Let $n$ be the number of 
+\textbf{ELEMENTOS DE MALHA} and $m$ \textbf{ELEMENTOS DE CONTORNO} The following pseudocode 
+illustrates how Ghmatecd works:
+
+\begin{algorithm}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
+\begin{algorithmic}[1]
+	\Procedure{Ghmatecd}{}
+		\For{$j := 1, n$} 
+			\For{$i := 1, m$}
+				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+				\If{$ii == jj$}
+					\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i, j)$}\Comment{two $3\times3$ complex matrices}					
+				\Else
+					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
+				\EndIf
+				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+			\EndFor
+	 \EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+In the algorithm above, Nonsingd and Sigmaec parameters are not displayed for readability. Notice that there 
+is no interdependency between iteractions, so the two nested loop in the algorithm can be computed in parallel, hence, 
+both matrices $H$ and $G$ can be built in a parallel fashion. If the number of processors is small, 
+then computing that nested loop in parallel is enough because even for small instances of the problem, 
+$n \times m$ will be bigger than the number of processors.
+By the other hand, GPUs have a huge parallel capability, and the above strategy alone would generate a waste of 
+computational resources. A careful analysis of both Nonsingd and Sigmaec codes concluded that a certain degree of 
+parallelism can be explored in those procedures in order to take advantage of GPUs. Both procedures have a two nested 
+loop that generates various 3x3 matrices. Before returning, those procedures do a reduction of these matrices. 
+It should be highlighted that Sigmaec and Nonsingd are almost identical, so both can be merged into a single routine 
+with a special logic to check if it needs to solve the singular or the nonsingular problem. Let $g$ be the number
+of Gauss quadrature points. If this new procedure is unrolled in Ghmatecd, then there would be:
+
+\begin{algorithm}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
+\begin{algorithmic}[1]
+	\Procedure{Ghmatecd}{}
+		\For{$j := 1, n$} 
+			\For{$i := 1, m$}
+				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+				\State{Allocate \textit{Hbuffer} and \textit{Gbuffer}, buffer of matrices $3 \times 3$ of size $g \times g$}
+				\For{$y := 1, g$}
+					\For{$x := 1, g$}
+						\State{\textit{params} $\leftarrow$ ComputeParameters$(i, j, x, y)$}
+						\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(x, y, params)$}
+						\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(x, y, params)$}
+						\If{$ii == jj$}
+							\State{$\text{SpecialLogicForSingularCase}(\textit{Hbuffer}(x, y), \textit{Gbuffer}(x, y))$}
+						\EndIf
+					\EndFor
+				\EndFor
+				\State{$Gelement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Gbuffer})$} 
+				\State{$Helement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Hbuffer})$}
+				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+			\EndFor
+	 \EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+The algorithm2 can be implemented in CUDA kernel in the following way: Inside a block, create $g \times g$ threads to 
+compute in parallel the two nested loop in lines 6 to 7, allocating \textit{Hbuffer} and \textit{Gbuffer} in shared 
+memory. Since these buffers contain matrices of size $3 \times 3$, $9$ of these $g \times g$ threads can be used to 
+sum all matrices. Notice that $g \geq 3$ is necessary for that condition, and that $g$ is also upper-bounded by the 
+amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
+2 to 3 will generate the entire $H$ and $G$.
+
+\subsection{Parallelization of Ghmatece}
+
+Ghmatece is a routine designed to create two real matrices H and G associated with the static problem, and it 
+is very similar to Ghmatecd. That routine can be implemented in CUDA in almost the same way as Ghmatecd, but 
+caution is needed because the singular case has a lot of ifs that can cause branch divergence, thus affecting 
+performance in a negative way. 
+Since the singular case is dimensionally smaller than the non-singular case, it can be computed in the CPU 
+and the result merged with the non-singular case calculated in the GPU. 
 
 \section{General Information}
 
