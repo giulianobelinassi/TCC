@@ -12,7 +12,7 @@
 \usepackage{mathtools}
 
 \usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 
  
 \newcommand{\Cfield}{\mathbb{C}}
@@ -89,37 +89,38 @@ and shared memory, a  low-latency memory that is shared between all threads in t
 \cite{patterson:2007}. 
 
 
-
-The Bondary Elements Method (BEM) is a computational method of solving linear
-partial differentials equations that have been formulated as integral equations.
-This is used in many areas of engineering, but this article presents a Graphical
-Unit Processor (GPU) accelerated implementation of BEM with the purpose of
-analysing waves propagation on the ground and it's effects on nearby structures.
-
-Given a sequential implementation of such method by \cite{carrion:02}, the main objectives
-of this project includes the creation of automated tests to check if the modified 
-program results are numerically compatible with the original version; somewhat 
-modernize the legacy code, which was written in Fortran 77; optimize the code, 
-removing repeated unnecessary calculations and managing a better usage of the 
-Central Processing Unit (CPU) resources; 
-identify the most time-consuming subroutines and paralellize them.
-
-This project was supported by CAPES and \textbf{BLABLABLABLABLABLA} (não sei muito bem
-o que colocar aqui)
+%The Bondary Elements Method (BEM) is a computational method of solving linear
+%partial differentials equations that have been formulated as integral equations.
+%This is used in many areas of engineering, but this article presents a Graphical
+%Unit Processor (GPU) accelerated implementation of BEM with the purpose of
+%analysing waves propagation on the ground and it's effects on nearby structures.
+%
+%Given a sequential implementation of such method by \cite{carrion:02}, the main objectives
+%of this project includes the creation of automated tests to check if the modified 
+%program results are numerically compatible with the original version; somewhat 
+%modernize the legacy code, which was written in Fortran 77; optimize the code, 
+%removing repeated unnecessary calculations and managing a better usage of the 
+%Central Processing Unit (CPU) resources; 
+%identify the most time-consuming subroutines and paralellize them.
+%
+%This project was supported by CAPES and \textbf{BLABLABLABLABLABLA} (não sei muito bem
+%o que colocar aqui)
 
 \section{Norms}
 
 In order to check if the final result obtained by the parallel program is numerically 
 compatible with the original, the concept of vector and matrix norms are necessary. 
-Let $x \in \Cfield^n$ and $A \in \Cfield^{m \times n}$. \cite{watkins:2004} defines a 
-vector $\infty$-norm, matrix $\infty$-norm and matrix 1-norm as:
+Let %$x \in \Cfield^n$ and 
+$A \in \Cfield^{m \times n}$. \cite{watkins:2004} defines a 
+%vector $\infty$-norm, 
+matrix $\infty$-norm and matrix 1-norm as:
 \begin{equation}
-	\norm{x}_{\infty} = \max\limits_{1 \leq k \leq n} |x_k| \qquad 
+%	\norm{x}_{\infty} = \max\limits_{1 \leq k \leq n} |x_k| \qquad 
 	\norm{A}_{\infty} = \max\limits_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}| \quad
 	\norm{A}_{   1  } = \max\limits_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}| \quad
 \end{equation}
 
-All vector norms have the propierty that $\norm{x} = 0$ if and only if $x = 0$, and
+All norms have the propierty that $\norm{A} = 0$ if and only if $A = 0$, and
 the same result asserts for matrix norms. Let $f$ and $g$ be two numerical 
 algorithms that solves the same problem, but in a different fashion. 
 Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
@@ -145,8 +146,8 @@ was focused on that last routine.
 \subsection{Ghmatecd Parallelization}
 Ghmatecd works in the following way: It assembles two complex matrices H and G by computing 
 smaller $3 \times 3$ matrices returned by Nonsingd and Sigmaec. Let $n$ be the number of 
-\textbf{ELEMENTOS DE MALHA} and $m$ \textbf{ELEMENTOS DE CONTORNO} The following pseudocode 
-illustrates how Ghmatecd works:
+mesh elements and $m$ be the number of bondary elements. Algorithm 1 illustrates how Ghmatecd 
+works.
 
 \begin{algorithm}
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
@@ -156,7 +157,7 @@ illustrates how Ghmatecd works:
 			\For{$i := 1, m$}
 				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
 				\If{$i == j$}
-					\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i, j)$}\Comment{two $3\times3$ complex matrices}					
+					\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i)$}\Comment{two $3\times3$ complex matrices}					
 				\Else
 					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
 				\EndIf
@@ -173,31 +174,29 @@ hence, both matrices $H$ and $G$ can be built in a parallel fashion. If the numb
 then parallelizing the two nested loops in line computing that nested loop in parallel is enough because even for small instances of the problem, 
 $n \times m$ will be bigger than the number of processors.
 By other hand, GPUs have greater parallel capability than CPUs, and the above strategy alone would generate a waste of 
-computational resources. A careful analysis of both Nonsingd and Sigmaec codes concluded that a certain degree of 
-parallelism can be explored in those procedures in order to take advantage of GPUs. Both procedures have a two nested 
-loop that generates various 3x3 matrices. Before returning, those procedures do a reduction of these matrices. 
-It should be highlighted that Sigmaec and Nonsingd are almost identical, so both can be merged into a single routine 
-with a special logic to check if it needs to solve the singular or the nonsingular problem. Let $g$ be the number
-of Gauss quadrature points. If this new procedure is unrolled in Ghmatecd, then there would be:
+computational resources. Since Nonsingd is the cause of the high time cost of Ghmatecd, the main effort was to implement
+an optimized version of Ghmatecd, called Ghmatecd\_Nonsingd, that only computes the Nonsingd case in the GPU, and leave Sigmaec to be computed in the CPU
+after the computation of Ghmatecd\_Nonsingd is completed. 
+
+Let $g$ be the number of Gauss quadrature points. The Algorithm 2 pictures this new strategy.
 
 \begin{algorithm}
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
 \begin{algorithmic}[1]
-	\Procedure{Ghmatecd}{}
+	\Procedure{Ghmatecd\_nonsingd}{}
 		\For{$j := 1, n$} 
 			\For{$i := 1, m$}
 				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
-				\State{Allocate \textit{Hbuffer} and \textit{Gbuffer}, buffer of matrices $3 \times 3$ of size $g \times g$}
-				\For{$y := 1, g$}
-					\For{$x := 1, g$}
-						\State{\textit{params} $\leftarrow$ ComputeParameters$(i, j, x, y)$}
-						\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(x, y, params)$}
-						\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(x, y, params)$}
-						\If{$i == j$}
-							\State{$\text{SpecialLogicForSingularCase}(\textit{Hbuffer}(x, y), \textit{Gbuffer}(x, y))$}
-						\EndIf
+				\State{Allocate \textit{Hbuffer} and \textit{Gbuffer}, buffer of matrices $3 \times 3$ of size $g^2$}
+				\If{$i \neq j$}
+					\For{$y := 1, g$}
+						\For{$x := 1, g$}
+							\State{\textit{params} $\leftarrow$ ComputeParameters$(i, j, x, y)$}
+							\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(x, y, params)$}
+							\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(x, y, params)$}
+						\EndFor
 					\EndFor
-				\EndFor
+				\EndIf
 				\State{$Gelement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Gbuffer})$} 
 				\State{$Helement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Hbuffer})$}
 				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
@@ -205,24 +204,61 @@ of Gauss quadrature points. If this new procedure is unrolled in Ghmatecd, then 
 			\EndFor
 	 \EndFor
 	\EndProcedure
+
+	\Procedure{Ghmatecd\_Sigmaec}{}
+		\For{$i := 1, m$}
+			\State{$ii := 3(i-1) + 1$}
+			\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i)$}	
+			\State{$G[ii:ii+2][ii:ii+2] \leftarrow Gelement$}
+			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
+	 \EndFor
+	\EndProcedure
+	\Procedure{Ghmatecd}{}
+		\State{$\text{Ghmatecd\_Nonsingd}()$}
+		\State{$\text{Ghmatecd\_Sigmaec}()$}
+	\EndProcedure
+		
 \end{algorithmic}
 \end{algorithm}
 
-The algorithm2 can be implemented in CUDA kernel in the following way: Inside a block, create $g \times g$ threads to 
+The Ghmatecd\_Nonsingd can be implemented in CUDA kernel in the following way: Inside a block, create $g \times g$ threads to 
 compute in parallel the two nested loop in lines 6 to 7, allocating \textit{Hbuffer} and \textit{Gbuffer} in shared 
 memory. Since these buffers contain matrices of size $3 \times 3$, $9$ of these $g \times g$ threads can be used to 
 sum all matrices. Notice that $g \geq 3$ is necessary for that condition, and that $g$ is also upper-bounded by the 
 amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
 2 to 3 will generate the entire $H$ and $G$.
 
+The Ghmatecd\_Sigmaec can be parallelized with a simple OpenMP Parallel for clause.
+
 \subsection{Ghmatece Parallelization}
 
 Ghmatece is a routine designed to create two real matrices H and G associated with the static problem, and it 
-is very similar to Ghmatecd. That routine can be implemented in CUDA in almost the same way as Ghmatecd, but 
-caution is needed because the singular case has a lot of ifs that can cause branch divergence, thus affecting 
-performance in a negative way. 
-Since the singular case is dimensionally smaller than the non-singular case, it can be computed in the CPU 
-and the result merged with the non-singular case calculated in the GPU. 
+is very similar to Ghmatecd. That routine can be implemented in CUDA in the same way as described in Ghmatecd. 
+
+\section{Methodology}
+The error between CPU and GPU versions of $H$ and $G$ matrices were computated by calulating $\norm{H_{cpu} - H_{gpu}}_1$
+and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
+
+The elapsed time was computed in seconds with the OpenMP library function OMP\_GET\_WTIME. This function calculates the 
+elapsed wall clock time in seconds with double precision.
+
+The GPU time results are a sum of the time elapsed to move the data to GPU, launch and execute the kernel, wait for the 
+result, and move the data back to computer's main memory.
+
+For each experiment, there were 4 samples of data, with 240 mesh elements and 100 boundary elements; 960 mesh elements 
+and 400 boundary elements; 2160 mesh elements and 900 boundary elements; 4000 mesh elements and 1600 boundary elements. 
+All experiments set the Gauss Quadrature Points to 8.
+
+For each experiment execution, it was collected the total time elapsed by the serial code, with OpenMP and CUDA. 
+In order to assure the results, all experiments are run 30 times for each sample.
+It is important to highlight that before running each experiment, a warmup procedure is executed, that consists of 
+running the application with the sample 3 times without collecting any result.
+
+Two computers were used in the experiments. Both machines have a AMD A10-7700K with 4 cores, but one have a 
+NVIDIA GeForce GTX980 and another have a GeForce GTX750.
+
+\section{Results}
+
 
 \section{General Information}
 
