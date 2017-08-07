@@ -22,23 +22,18 @@
 
 \sloppy
 
-\title{Instructions for Authors of SBC Conferences\\ Papers and Abstracts}
+\title{Optimizing a Boundary Elements Method implementations with GPU}
 
-\author{Luciana P. Nedel\inst{1}, Rafael H. Bordini\inst{2}, Flávio Rech
-  Wagner\inst{1}, Jomi F. Hübner\inst{3} }
+\author{Giuliano A. F. Belinassi\inst{1}, Rodrigo Siqueira\inst{1}, Ronaldo Carrion\inst{2}
+  Alfredo Goldman\inst{1} }
 
 
-\address{Instituto de Informática -- Universidade Federal do Rio Grande do Sul
-  (UFRGS)\\
-  Caixa Postal 15.064 -- 91.501-970 -- Porto Alegre -- RS -- Brazil
+\address{Instituto de Matemática e Estatística (IME) -- Universidade de São Paulo
+  (USP)\\
+  Rua do Matão, 1010 -- São Paulo -- SP -- Brazil
 \nextinstitute
-  Department of Computer Science -- University of Durham\\
-  Durham, U.K.
-\nextinstitute
-  Departamento de Sistemas e Computação\\
-  Universidade Regional de Blumenal (FURB) -- Blumenau, SC -- Brazil
-  \email{\{nedel,flavio\}@inf.ufrgs.br, R.Bordini@durham.ac.uk,
-  jomi@inf.furb.br}
+  Escola Politécnica (EP)  -- Universidade de São Paulo\\
+  Avenue Professor Mello Moraes, 2603 -- São Paulo -- SP -- Brazil
 }
 
 \begin{document} 
@@ -55,6 +50,16 @@
      
 \section{Introduction}
 
+Since the computer was proven a useful machine, there always has been an interest of 
+building faster versions of it to solve bigger and more complex problems in a matter 
+of time that no human could. One way archiving this is by building more complex sequential 
+CPUs, with more transistors. Recently, the size of CPU components got so small that it is 
+becoming difficult to create such faster sequential CPUs. As a consequence of this fact, 
+CPU manufacturers are investing in multicore CPUs, capable of running one than one task 
+asynchronously.
+
+
+
 Parallel computing is hard to define, but intuitively, it is a computation method 
 that allows data to be distributed and processed simultaneously. In Flynn's taxonomy
 \cite{pacheco:2011},
@@ -62,49 +67,58 @@ there are two types of parallel computer archictectures:
 
 \begin{enumerate}
 \item Single Instruction, Multiple Data (SIMD); a processor that allows a chunk of
-data to be loaded and a single instruction to be used to process it. Intel's SSE 
-and Graphics Processing Units (GPU) are examples it. 
+data to be loaded and a single instruction to be used to process it. As example of SIMD,
+there is Intel's SSE \cite{sse} and Graphics Processing Units (GPU) are examples it. 
 
 \item Multiple Instruction, Multiple Data (MIMD); a system consisting of
-multiple independent processing units, executing asynchronously. Here are located 
-all multicore Shared-memory systems and Distributed-memory systems.
+multiple independent processing units, executing asynchronously. Multicore CPUs are a 
+example of MIMD.
 \end{enumerate}
 
-GPU was originally designed to renderize graphics in real time, however, researchers 
-realized that GPU could be used for general purpose applications. OpenGL and DirectX 
-were designed to access GPUs resources, both are specialized to produce graphics. 
-These libraries were used by engineers and scientists in their specific problems, 
-as a result, they had to convert their problem into a graphical domain.
+Since the computer was proven a useful machine, there always has been an interest of 
+building faster versions of it to solve bigger and more complex problems in a matter 
+of time that no human could. One way archiving this is by building more complex sequential 
+CPUs, with more transistors. Recently, the size of CPU components got so small that it is 
+becoming difficult to create such faster sequential CPUs. As a consequence of this fact, 
+CPU manufacturers are investing in multicore CPUs, capable of running one than one task 
+asynchronously.
 
-NVIDIA noticed a new demand for their products and created an API called CUDA with 
-the goal enable the use of GPUs in general purpose situation.
+Some graphical problems, such as dot product, can take advantage of SIMD instructions to 
+reduce the required time to compute them. Here is invented the GPU.
 
-CUDA consists of kernels, which are functions that run in a GPU in a parallel fashion. 
-A kernel is organized into a set of blocks. A block is a set of threads that cooperate 
-between themselves \cite{patterson:2007}.  
+Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
+were the first libraries designed to access GPUs resources and provide graphics. 
+However, researchers realized that GPUs could be used for other applications different 
+from graphics. Consequently, graphical libraries were used by engineers and scientists 
+in their specific problems, however, they had to convert their problem into a graphical 
+domain.
 
-A kernel accesses data from GPU's memory. Its memory is divided between global memory, 
-a memory that all threads can access; a local memory, a memory that is private to a thread; 
-and shared memory, a  low-latency memory that is shared between all threads in the same block
+NVIDIA noticed a new demand for their products and created an API called CUDA to enable 
+the use of GPUs in general purpose situation. CUDA has the concept of kernels, which are
+ functions called from host to be executed in 
+the GPU threads. Kernels are organized into a set of blocks wherein each block is a set 
+of threads that cooperate with each other \cite{patterson:2007}.
+
+GPU's memory is divided into global memory, local memory, and shared memory. First, it is 
+a memory that all threads can access. Second, it is a memory that is private to a thread. 
+Third, it is a  low-latency memory that is shared between all threads in the same block.
 \cite{patterson:2007}. 
 
 
-%The Bondary Elements Method (BEM) is a computational method of solving linear
-%partial differentials equations that have been formulated as integral equations.
-%This is used in many areas of engineering, but this article presents a Graphical
-%Unit Processor (GPU) accelerated implementation of BEM with the purpose of
-%analysing waves propagation on the ground and it's effects on nearby structures.
-%
-%Given a sequential implementation of such method by \cite{carrion:02}, the main objectives
-%of this project includes the creation of automated tests to check if the modified 
-%program results are numerically compatible with the original version; somewhat 
-%modernize the legacy code, which was written in Fortran 77; optimize the code, 
-%removing repeated unnecessary calculations and managing a better usage of the 
-%Central Processing Unit (CPU) resources; 
-%identify the most time-consuming subroutines and paralellize them.
-%
-%This project was supported by CAPES and \textbf{BLABLABLABLABLABLA} (não sei muito bem
-%o que colocar aqui)
+%TODO:
+The Boundary Elements Method (BEM) is a computational method of solving linear partial 
+differentials equations that have been formulated as integral equations.
+This is used in many engineering areas, one of them is to analyze waves propagation on the 
+ground and its effects on nearby structures. It requires high computational power and this 
+article discusses how GPUs can be used to accelerate its calculations.
+
+Given a sequential implementation of BEM by \cite{carrion:02}, the main objectives
+of this project includes the creation of automated tests to check if the modified 
+program results are numerically compatible with the original version; somewhat 
+modernize the legacy code, which was written in Fortran 77; optimize the code, 
+removing repeated unnecessary calculations and managing a better usage of the 
+Central Processing Unit (CPU) resources; 
+identify the most time-consuming subroutines and paralellize them.
 
 \section{Norms}
 

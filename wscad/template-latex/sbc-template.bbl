@@ -5,18 +5,17 @@ Gnu binutils.
 \newblock \url{https://www.gnu.org/software/binutils/}.
 \newblock Accessed: 2017-05-08.
 
+\bibitem[sse ]{sse}
+Intel sse.
+\newblock
+  \url{https://www.intel.com/content/www/us/en/support/processors/000005779.html?_ga=2.114110593.729918000.1502128033-2045315159.1502128033}.
+\newblock Accessed: 2017-07-08.
+
 \bibitem[Boulic and Renault 1991]{boulic:91}
 Boulic, R. and Renault, O. (1991).
 \newblock 3d hierarchies for animation.
 \newblock In Magnenat-Thalmann, N. and Thalmann, D., editors, {\em New Trends
   in Animation and Visualization}. John Wiley {\&} Sons ltd.
-
-\bibitem[Carrion 2002]{carrion:02}
-Carrion, R. (2002).
-\newblock {\em Uma Implementação do Método dos Elementos de Contorno para
-  problemas Viscoelastodinâmicos Estacionários Tridimensionais em Domínios
-  Abertos e Fechados}.
-\newblock PhD thesis, Universidade Estadual de Campinas.
 
 \bibitem[Knuth 1984]{knuth:84}
 Knuth, D.~E. (1984).
