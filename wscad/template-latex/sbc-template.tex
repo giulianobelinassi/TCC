@@ -50,15 +50,13 @@
      
 \section{Introduction}
 
-Since the computer was proven a useful machine, there always has been an interest of 
+Since the computer was proven to be a useful machine, there always has been an interest of 
 building faster versions of it to solve bigger and more complex problems in a matter 
-of time that no human could. One way archiving this is by building more complex sequential 
+of time that no human can. One way archiving this is by building more complex sequential 
 CPUs, with more transistors. Recently, the size of CPU components got so small that it is 
-becoming difficult to create such faster sequential CPUs. As a consequence of this fact, 
+becoming difficult to create such faster sequential CPUs \cite{brock:2006}. As a consequence of this fact, 
 CPU manufacturers are investing in multicore CPUs, capable of running one than one task 
 asynchronously.
-
-
 
 Parallel computing is hard to define, but intuitively, it is a computation method 
 that allows data to be distributed and processed simultaneously. In Flynn's taxonomy
@@ -74,17 +72,6 @@ there is Intel's SSE \cite{sse} and Graphics Processing Units (GPU) are examples
 multiple independent processing units, executing asynchronously. Multicore CPUs are a 
 example of MIMD.
 \end{enumerate}
-
-Since the computer was proven a useful machine, there always has been an interest of 
-building faster versions of it to solve bigger and more complex problems in a matter 
-of time that no human could. One way archiving this is by building more complex sequential 
-CPUs, with more transistors. Recently, the size of CPU components got so small that it is 
-becoming difficult to create such faster sequential CPUs. As a consequence of this fact, 
-CPU manufacturers are investing in multicore CPUs, capable of running one than one task 
-asynchronously.
-
-Some graphical problems, such as dot product, can take advantage of SIMD instructions to 
-reduce the required time to compute them. Here is invented the GPU.
 
 Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
 were the first libraries designed to access GPUs resources and provide graphics. 
@@ -120,26 +107,6 @@ removing repeated unnecessary calculations and managing a better usage of the
 Central Processing Unit (CPU) resources; 
 identify the most time-consuming subroutines and paralellize them.
 
-\section{Norms}
-
-In order to check if the final result obtained by the parallel program is numerically 
-compatible with the original, the concept of vector and matrix norms are necessary. 
-Let %$x \in \Cfield^n$ and 
-$A \in \Cfield^{m \times n}$. \cite{watkins:2004} defines a 
-%vector $\infty$-norm, 
-matrix $\infty$-norm and matrix 1-norm as:
-\begin{equation}
-%	\norm{x}_{\infty} = \max\limits_{1 \leq k \leq n} |x_k| \qquad 
-	\norm{A}_{\infty} = \max\limits_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}| \quad
-	\norm{A}_{   1  } = \max\limits_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}| \quad
-\end{equation}
-
-All norms have the propierty that $\norm{A} = 0$ if and only if $A = 0$, and
-the same result asserts for matrix norms. Let $f$ and $g$ be two numerical 
-algorithms that solves the same problem, but in a different fashion. 
-Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
-$g$. The \textit{error} between those two values can be measured computing
-$\norm{y_f - y_g}$.
 
 %Let now $\hat{x} \in \Cfield^n$
 %be a value that should have been $x$, but contains errors due to whatever
@@ -240,9 +207,8 @@ compute in parallel the two nested loop in lines 6 to 7, allocating \textit{Hbuf
 memory. Since these buffers contain matrices of size $3 \times 3$, $9$ of these $g \times g$ threads can be used to 
 sum all matrices. Notice that $g \geq 3$ is necessary for that condition, and that $g$ is also upper-bounded by the 
 amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
-2 to 3 will generate the entire $H$ and $G$.
-
-The Ghmatecd\_Sigmaec can be parallelized with a simple OpenMP Parallel for clause.
+2 to 3 will generate the entire $H$ and $G$ wihout the singular part. The Ghmatecd\_Sigmaec can be parallelized with 
+a simple OpenMP Parallel for clause, and it will calculate the remaining $H$ and $G$. 
 
 \subsection{Ghmatece Parallelization}
 
@@ -250,6 +216,25 @@ Ghmatece is a routine designed to create two real matrices H and G associated wi
 is very similar to Ghmatecd. That routine can be implemented in CUDA in the same way as described in Ghmatecd. 
 
 \section{Methodology}
+
+In order to check if the final result obtained by the parallel program is numerically 
+compatible with the original, the concept of vector and matrix norms are necessary. 
+Let %$x \in \Cfield^n$ and 
+$A \in \Cfield^{m \times n}$. \cite{watkins:2004} defines  
+matrix 1-norm as:
+\begin{equation}
+%	\norm{x}_{\infty} = \max\limits_{1 \leq k \leq n} |x_k| \qquad 
+%	\norm{A}_{\infty} = \max\limits_{1 \leq i \leq m} \sum_{j=1}^{n} |a_{ij}| \quad
+	\norm{A}_{   1  } = \max\limits_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}| \quad
+\end{equation}
+
+All norms have the propierty that $\norm{A} = 0$ if and only if $A = 0$.
+Let $f$ and $g$ be two numerical 
+algorithms that solves the same problem, but in a different fashion. 
+Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
+$g$. The \textit{error} between those two values can be measured computing
+$\norm{y_f - y_g}$.
+
 The error between CPU and GPU versions of $H$ and $G$ matrices were computated by calulating $\norm{H_{cpu} - H_{gpu}}_1$
 and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
 
@@ -271,114 +256,38 @@ running the application with the sample 3 times without collecting any result.
 Two computers were used in the experiments. Both machines have a AMD A10-7700K with 4 cores, but one have a 
 NVIDIA GeForce GTX980 and another have a GeForce GTX750.
 
+Gfortran 5.4.0 and CUDA 8.0 were used to compile the applications. The main flags used in Gfortran are
+-Ofast -funroll-loops -flto . The flags used in
+CUDA nvcc compiler are: -use\_fast\_math  -O3  -Xptxas --opt-level=3  -maxrregcount=32 -Xptxas 
+--allow-expensive-optimizations=true . 
+
 \section{Results}
+The graphic at figure 1 illustrates the results. Since the standard deviation of the results is lower than X, 
+plotting the graphic with it is meaningless. 
 
 
-\section{General Information}
+\section{Future Works}
+The current implemented code have limitations. First, there is no logic to assemble H and G by blocks by lauching 
+multiple kernels. This strategy would allow bigger problems to be solved, since if the number of mesh elements is 
+bigger enough the application would crash due to insufficient video memory.  Second, the singular and nonsingular 
+part can be computed independently, so the CPU can be used to compute the singular part while the GPU is computing 
+the nonsingular part. The usage of GPUs in the singular case can also be analyzed.
 
-All full papers and posters (short papers) submitted to some SBC conference,
-including any supporting documents, should be written in English or in
-Portuguese. The format paper should be A4 with single column, 3.5 cm for upper
-margin, 2.5 cm for bottom margin and 3.0 cm for lateral margins, without
-headers or footers. The main font must be Times, 12 point nominal size, with 6
-points of space before each paragraph. Page numbers must be suppressed.
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=.5\textwidth]{fig1.jpg}
+%\caption{A typical figure}
+%\label{fig:exampleFig1}
+%\end{figure}
+%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=.3\textwidth]{fig2.jpg}
+%\caption{This figure is an example of a figure caption taking more than one
+%  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
+%\label{fig:exampleFig2}
+%\end{figure}
 
-Full papers must respect the page limits defined by the conference.
-Conferences that publish just abstracts ask for \textbf{one}-page texts.
-
-\section{First Page} \label{sec:firstpage}
-
-The first page must display the paper title, the name and address of the
-authors, the abstract in English and ``resumo'' in Portuguese (``resumos'' are
-required only for papers written in Portuguese). The title must be centered
-over the whole page, in 16 point boldface font and with 12 points of space
-before itself. Author names must be centered in 12 point font, bold, all of
-them disposed in the same line, separated by commas and with 12 points of
-space after the title. Addresses must be centered in 12 point font, also with
-12 points of space after the authors' names. E-mail addresses should be
-written using font Courier New, 10 point nominal size, with 6 points of space
-before and 6 points of space after.
-
-The abstract and ``resumo'' (if is the case) must be in 12 point Times font,
-indented 0.8cm on both sides. The word \textbf{Abstract} and \textbf{Resumo},
-should be written in boldface and must precede the text.
-
-\section{CD-ROMs and Printed Proceedings}
-
-In some conferences, the papers are published on CD-ROM while only the
-abstract is published in the printed Proceedings. In this case, authors are
-invited to prepare two final versions of the paper. One, complete, to be
-published on the CD and the other, containing only the first page, with
-abstract and ``resumo'' (for papers in Portuguese).
-
-\section{Sections and Paragraphs}
-
-Section titles must be in boldface, 13pt, flush left. There should be an extra
-12 pt of space before each title. Section numbering is optional. The first
-paragraph of each section should not be indented, while the first lines of
-subsequent paragraphs should be indented by 1.27 cm.
-
-\subsection{Subsections}
-
-The subsection titles must be in boldface, 12pt, flush left.
-
-\section{Figures and Captions}\label{sec:figs}
-
-
-Figure and table captions should be centered if less than one line
-(Figure~\ref{fig:exampleFig1}), otherwise justified and indented by 0.8cm on
-both margins, as shown in Figure~\ref{fig:exampleFig2}. The caption font must
-be Helvetica, 10 point, boldface, with 6 points of space before and after each
-caption.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.5\textwidth]{fig1.jpg}
-\caption{A typical figure}
-\label{fig:exampleFig1}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.3\textwidth]{fig2.jpg}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
-\label{fig:exampleFig2}
-\end{figure}
-
-In tables, try to avoid the use of colored or shaded backgrounds, and avoid
-thick, doubled, or unnecessary framing lines. When reporting empirical data,
-do not use more decimal digits than warranted by their precision and
-reproducibility. Table caption must be placed before the table (see Table 1)
-and the font used must also be Helvetica, 10 point, boldface, with 6 points of
-space before and after each caption.
-
-\begin{table}[ht]
-\centering
-\caption{Variables to be considered on the evaluation of interaction
-  techniques}
-\label{tab:exTable1}
-\includegraphics[width=.7\textwidth]{table.jpg}
-\end{table}
-
-\section{Images}
-
-All images and illustrations should be in black-and-white, or gray tones,
-excepting for the papers that will be electronically available (on CD-ROMs,
-internet, etc.). The image resolution on paper should be about 600 dpi for
-black-and-white images, and 150-300 dpi for grayscale images.  Do not include
-images with excessive resolution, as they may take hours to print, without any
-visible difference in the result. 
-
-\section{References}
-
-Bibliographic references must be unambiguous and uniform.  We recommend giving
-the author names references in brackets, e.g. \cite{knuth:84},
-\cite{boulic:91}, and \cite{smith:99}.
-
-The references must be listed using 12 point font size, with 6 points of space
-before each reference. The first line of each reference should not be
-indented, while the subsequent should be indented by 0.5 cm.
 
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
