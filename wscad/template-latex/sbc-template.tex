@@ -53,9 +53,9 @@
 Since the computer was proven to be a useful machine, there always has been an interest of 
 building faster versions of it to solve bigger and more complex problems in a matter 
 of time that no human can. One way archiving this is by building more complex sequential 
-CPUs, with more transistors. Recently, the size of CPU components got so small that it is 
-becoming difficult to create such faster sequential CPUs \cite{brock:2006}. As a consequence of this fact, 
-CPU manufacturers are investing in multicore CPUs, capable of running one than one task 
+CPUs, with more transistors. Recently, the size of CPU components got so small that it became
+difficult to create such faster sequential CPUs \cite{brock:2006}. As a consequence of this fact, 
+CPU manufacturers are investing in multicore CPUs, capable of running more than one task 
 asynchronously.
 
 Parallel computing is hard to define, but intuitively, it is a computation method 
@@ -76,7 +76,7 @@ example of MIMD.
 Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
 were the first libraries designed to access GPUs resources and provide graphics. 
 However, researchers realized that GPUs could be used for other applications different 
-from graphics. Consequently, graphical libraries were used by engineers and scientists 
+from graphics. Consequently, these libraries were used by engineers and scientists 
 in their specific problems, however, they had to convert their problem into a graphical 
 domain.
 
@@ -89,23 +89,60 @@ of threads that cooperate with each other \cite{patterson:2007}.
 GPU's memory is divided into global memory, local memory, and shared memory. First, it is 
 a memory that all threads can access. Second, it is a memory that is private to a thread. 
 Third, it is a  low-latency memory that is shared between all threads in the same block.
-\cite{patterson:2007}. 
+\cite{patterson:2007}.
 
 
-%TODO:
-The Boundary Elements Method (BEM) is a computational method of solving linear partial 
-differentials equations that have been formulated as integral equations.
-This is used in many engineering areas, one of them is to analyze waves propagation on the 
-ground and its effects on nearby structures. It requires high computational power and this 
-article discusses how GPUs can be used to accelerate its calculations.
+\section{Context}
 
-Given a sequential implementation of BEM by \cite{carrion:02}, the main objectives
-of this project includes the creation of automated tests to check if the modified 
-program results are numerically compatible with the original version; somewhat 
-modernize the legacy code, which was written in Fortran 77; optimize the code, 
-removing repeated unnecessary calculations and managing a better usage of the 
-Central Processing Unit (CPU) resources; 
-identify the most time-consuming subroutines and paralellize them.
+Differential equations governing problems of Mathematical Physics only have analytical 
+solutions in cases in which both the domain geometry and the boundary and initial conditions 
+are reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
+can only be solved in an approximate way, for example, by numerical techniques. These techniques 
+have experienced strong development due to the presence of increasingly powerful digital electronic 
+computers, allowing the solution of complex mathematical problems. The Boundary Element Method (BEM) 
+is a very efficient alternative for modeling unlimited domains, since it naturally satisfies the 
+Sommerfeld radiation condition, also known as geometric damping.
+Such method can be used to numerically model the 3D stationary behavior of wave propagation in the soil 
+based on BEM with the objective of creating a computational tool which can assist in analysis such as 
+evaluation of vibrations in the soil rising from machine tools operation or railway lines as well as 
+to understand the role of soil during earthquakes or even in the design of offshore oil platforms.
+
+Wihout addressing details on the BEM formulation, the Bondary Integral Equation for Stationary
+Elastodynamic Problems can be written as:
+
+\begin{equation}
+	c_{ij}u_{j}(\xi,\omega) + \int_S t_{ij}^*(\xi, x, \omega)u_j (x, \omega)\text{d}S(x) = \int_S u_{ij}^*(\xi, x, \omega) t_j(x, \omega)\text{d}S(x)
+\end{equation}
+
+After performing the geometry discretization, Equation (1) can still be represented in matrix form as:
+
+\begin{equation}
+	[H]\{u\} = [G]\{t\}
+\end{equation}
+
+Algorithmically, equation (1) is implemented into a routine named $\texttt{Nonsingd}$, computing the
+integral using the Gaussian Quadrature without addressing problems related to singularity. 
+To overcome singularity problems, there is a special routine called $\texttt{Sigmaec}$ that uses an 
+artifice known as Regularization of the Singular Integral. By last, $\texttt{Ghmatecd}$ is a routine 
+developed to create both $H$ and $G$ matrices described in equation (2).
+
+%Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
+%present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
+%called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
+%points.
+%To overcome this problem in the strong singularity, one use the artifice known as Regularization of 
+%the Singular Integral that can be expressed as follows:
+%
+%\begin{equation}
+%\begin{split}
+%	c_{ij}(\xi)u_{j}(\xi, \omega) + \int_{S}\left[t_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} - t_{ij}^{*}(\xi, x)_{\text{STA}} \right]u_{j}(x, \omega) \text{d}S(x) + \\
+%	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x)	
+%\end{split}
+%\end{equation}
+%DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
+%first one in Equation (3), does not present singularity when executed concomitantly as expressed because 
+%they have the same order in the both problems.
+
 
 
 %Let now $\hat{x} \in \Cfield^n$
@@ -116,19 +153,18 @@ identify the most time-consuming subroutines and paralellize them.
 %$\infty$-norm is used, then the result is the biggest sum of errors of a matrix
 %row. The matrix 1-norm yields the biggest sum of erros of a matrix column.
 
-\section{Parallelization Technique}
+\section{Parallelization Strategies}
 
 A parallel implementation of BEM began by analyzing and modifying a sequential code 
-provided by Carrion. Gprof \cite{binutils}, a profiling tool by GNU, showed that the most time-consuming 
-routine was Nonsingd, a subroutine designed to solve small parts of the nonsingular dynamic 
-problem. Since most calls to Nonsingd were from Ghmatecd, most of the parallelization effort 
+provided by \cite{carrion:02}. Gprof \cite{binutils}, a profiling tool by GNU, showed that the most time-consuming 
+routine was Nonsingd. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
 was focused on that last routine.
 
 \subsection{Ghmatecd Parallelization}
-Ghmatecd works in the following way: It assembles two complex matrices H and G by computing 
-smaller $3 \times 3$ matrices returned by Nonsingd and Sigmaec. Let $n$ be the number of 
-mesh elements and $m$ be the number of bondary elements. Algorithm 1 illustrates how Ghmatecd 
-works.
+
+Algorithm 1 shows the pseudocode of $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh elements and $m$ the number of 
+boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing smaller $3\times3$ matrices returned 
+by $\texttt{Nonsingd}$ and $\texttt{Sigmaec}$.
 
 \begin{algorithm}
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
@@ -150,16 +186,16 @@ works.
 \end{algorithmic}
 \end{algorithm}
 
-There is no interdependency between iteractions, so the two nested loop in the algorithm can be computed in parallel, 
-hence, both matrices $H$ and $G$ can be built in a parallel fashion. If the number of processors is small, 
-then parallelizing the two nested loops in line computing that nested loop in parallel is enough because even for small instances of the problem, 
-$n \times m$ will be bigger than the number of processors.
-By other hand, GPUs have greater parallel capability than CPUs, and the above strategy alone would generate a waste of 
-computational resources. Since Nonsingd is the cause of the high time cost of Ghmatecd, the main effort was to implement
-an optimized version of Ghmatecd, called Ghmatecd\_Nonsingd, that only computes the Nonsingd case in the GPU, and leave Sigmaec to be computed in the CPU
-after the computation of Ghmatecd\_Nonsingd is completed. 
-
-Let $g$ be the number of Gauss quadrature points. The Algorithm 2 pictures this new strategy.
+There is no interdependency between all iterations in lines 2-3 loops, thus, all iterations can be computed 
+in parallel. Since typically high-end CPUs have 8 cores, even a small number of mesh elements generate enough 
+workload to use all CPUs resources if this strategy alone is used. By another hand, a GPU contain thousands 
+of processors, thus even a considerable large amount of elements may not generate a workload in a way that 
+it consumes all its resources. Since $\texttt{Nonsingd}$ is the cause of the high time cost of $\texttt{Ghmatecd}$, 
+the main effort was to implement
+an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
+case in the GPU, and leave $\texttt{Sigmaec}$ to be computed in the CPU after the computation of \texttt{Ghmatecd\_Nonsingd} 
+is completed. With this, a new strategy arises when also computing Nonsingd in parallel. Let $g$ be the number of Gauss quadrature 
+points. The pseudocode in Algorithm 2 pictures this new strategy.
 
 \begin{algorithm}
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
@@ -172,9 +208,8 @@ Let $g$ be the number of Gauss quadrature points. The Algorithm 2 pictures this 
 				\If{$i \neq j$}
 					\For{$y := 1, g$}
 						\For{$x := 1, g$}
-							\State{\textit{params} $\leftarrow$ ComputeParameters$(i, j, x, y)$}
-							\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(x, y, params)$}
-							\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(x, y, params)$}
+							\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(i, j, x, y)$}
+							\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(i, j, x, y)$}
 						\EndFor
 					\EndFor
 				\EndIf
@@ -202,23 +237,19 @@ Let $g$ be the number of Gauss quadrature points. The Algorithm 2 pictures this 
 \end{algorithmic}
 \end{algorithm}
 
-The Ghmatecd\_Nonsingd can be implemented in CUDA kernel in the following way: Inside a block, create $g \times g$ threads to 
-compute in parallel the two nested loop in lines 6 to 7, allocating \textit{Hbuffer} and \textit{Gbuffer} in shared 
-memory. Since these buffers contain matrices of size $3 \times 3$, $9$ of these $g \times g$ threads can be used to 
-sum all matrices. Notice that $g \geq 3$ is necessary for that condition, and that $g$ is also upper-bounded by the 
+The $\texttt{Ghmatecd\_Nonsingd}$ can be implemented as a CUDA kernel. Inside of a CUDA block, create $g \times g$ 
+threads to compute in parallel the two nested loops in lines 2-3 and allocate spaces in the shared 
+memory to keep the buffer of matrices ($\texttt{Hbuffer}$ and $\texttt{Gbuffer}$). Since these buffers contain matrices of size 
+$3 \times 3$, nine of these $g \times g$ threads can be used to 
+sum all matrices because one thread can be assigned to each matrix entry, unless $g < 3$. Notice that $g$ is also upper-bounded by the 
 amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
-2 to 3 will generate the entire $H$ and $G$ wihout the singular part. The Ghmatecd\_Sigmaec can be parallelized with 
+2 to 3 will generate the entire $H$ and $G$ without the singular part. The $\texttt{Ghmatecd\_Sigmaec}$ can be parallelized with 
 a simple OpenMP Parallel for clause, and it will calculate the remaining $H$ and $G$. 
-
-\subsection{Ghmatece Parallelization}
-
-Ghmatece is a routine designed to create two real matrices H and G associated with the static problem, and it 
-is very similar to Ghmatecd. That routine can be implemented in CUDA in the same way as described in Ghmatecd. 
 
 \section{Methodology}
 
 In order to check if the final result obtained by the parallel program is numerically 
-compatible with the original, the concept of vector and matrix norms are necessary. 
+compatible with the original, the concept of matrix norms are necessary. 
 Let %$x \in \Cfield^n$ and 
 $A \in \Cfield^{m \times n}$. \cite{watkins:2004} defines  
 matrix 1-norm as:
@@ -238,36 +269,57 @@ $\norm{y_f - y_g}$.
 The error between CPU and GPU versions of $H$ and $G$ matrices were computated by calulating $\norm{H_{cpu} - H_{gpu}}_1$
 and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
 
-The elapsed time was computed in seconds with the OpenMP library function OMP\_GET\_WTIME. This function calculates the 
-elapsed wall clock time in seconds with double precision.
+For experimenting, there were four data samples as illustrated in Table 1. The 
+application is executed in a computer with an AMD A10-7700K processor aided with 
+a GeForce 980GTX for each one of the samples using the original code (serial implementation), 
+the OpenMP version, and the CUDA and OpenMP together. 
+Before any data collection, a warm up procedure is executed, which 
+consists of running the application with the sample three times without getting any result. 
+Afterward, all experiments were executed 30 times per sample. Each execution produces a 
+file with total time elapsed. GPU total time was computed by the sum of 6 elements: 
+(1) total time to move data to GPU, (2) launch and execute the kernel, (3) elapsed time 
+to compute the result, (4) time to move data back to main memory, (5) time to compute 
+the singular part in the CPU. The elapsed time was computed in seconds with the OpenMP library function 
+$\texttt{OMP\_GET\_WTIME}$. This function calculates the elapsed wall clock time in seconds 
+with double precision. All experiments set the Gauss Quadrature Points to 8.
 
-The GPU time results are a sum of the time elapsed to move the data to GPU, launch and execute the kernel, wait for the 
-result, and move the data back to computer's main memory.
+\begin{table}[]
+\centering
+\caption{Table 1: Data experiment set}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Number of Mesh elements    & 240 & 960 & 2160 & 4000 \\ \hline
+Number of Bondary elements & 100 & 400 & 900  & 1600 \\ \hline
+\end{tabular}
+\end{table}
 
-For each experiment, there were 4 samples of data, with 240 mesh elements and 100 boundary elements; 960 mesh elements 
-and 400 boundary elements; 2160 mesh elements and 900 boundary elements; 4000 mesh elements and 1600 boundary elements. 
-All experiments set the Gauss Quadrature Points to 8.
+\section{Results}
 
-For each experiment execution, it was collected the total time elapsed by the serial code, with OpenMP and CUDA. 
-In order to assure the results, all experiments are run 30 times for each sample.
-It is important to highlight that before running each experiment, a warmup procedure is executed, that consists of 
-running the application with the sample 3 times without collecting any result.
-
-Two computers were used in the experiments. Both machines have a AMD A10-7700K with 4 cores, but one have a 
-NVIDIA GeForce GTX980 and another have a GeForce GTX750.
-
-Gfortran 5.4.0 and CUDA 8.0 were used to compile the applications. The main flags used in Gfortran are
+Gfortran 5.4.0 and CUDA 8.0 were used to compile the application. The main flags used in Gfortran are
 -Ofast -funroll-loops -flto . The flags used in
 CUDA nvcc compiler are: -use\_fast\_math  -O3  -Xptxas --opt-level=3  -maxrregcount=32 -Xptxas 
 --allow-expensive-optimizations=true . 
 
-\section{Results}
-The graphic at figure 1 illustrates the results. Since the standard deviation of the results is lower than X, 
-plotting the graphic with it is meaningless. 
+The logarithmic scale graphic at figure 1 illustrates the results. All points are the mean of the 
+time in seconds of 30 executions as described in Methodology.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1.0]{results1.pdf}
+\caption{Time elapsed by each implementation in logarithm scale}
+\label{fig:graphic1}
+\end{figure}
+
+Since the speedup acquired in the 4000 mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
+algorithm are $2.26$ and $37.95$ respectively, the conclusion is that the presented strategy aided with GPUs can be 
+used to accelerate the overall performance of the simulation for a large number of mesh elements. Notice that 
+the performance gain in the 260 sample between OpenMP and CUDA+OpenMP is not noticeable, thus the usage of GPUs 
+for smaller data may not be attractive. 
 
 
 \section{Future Works}
-The current implemented code have limitations. First, there is no logic to assemble H and G by blocks by lauching 
+The current implemented code have limitations. First, there is no logic to assemble $H$ and $G$ by blocks by lauching 
 multiple kernels. This strategy would allow bigger problems to be solved, since if the number of mesh elements is 
 bigger enough the application would crash due to insufficient video memory.  Second, the singular and nonsingular 
 part can be computed independently, so the CPU can be used to compute the singular part while the GPU is computing 
