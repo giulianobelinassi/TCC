@@ -22,7 +22,8 @@
 
 \sloppy
 
-\title{Optimizing a Boundary Elements Method implementations with GPU}
+\title{Optimizing a Boundary Elements Method implementation for Stationary
+Elastodynamic Problems with Graphical Processing Units (GPU)}
 
 \author{Giuliano A. F. Belinassi\inst{1}, Rodrigo Siqueira\inst{1}, Ronaldo Carrion\inst{2}
   Alfredo Goldman\inst{1} }
@@ -32,7 +33,7 @@
   (USP)\\
   Rua do Matão, 1010 -- São Paulo -- SP -- Brazil
 \nextinstitute
-  Escola Politécnica (EP)  -- Universidade de São Paulo\\
+  Escola Politécnica (EP)  -- Universidade de São Paulo (USP)\\
   Avenue Professor Mello Moraes, 2603 -- São Paulo -- SP -- Brazil
 }
 
@@ -41,11 +42,10 @@
 \maketitle
 
 \begin{abstract}
-  This meta-paper describes the style to be used in articles and short papers
-  for SBC conferences. For papers in English, you should add just an abstract
-  while for the papers in Portuguese, we also ask for an abstract in
-  Portuguese (``resumo''). In both cases, abstracts should not have more than
-  10 lines and must be in the first page of the paper.
+The Boundary Element Method requires a geometry discretization to execute simulations, 
+and it can be used to analyze the 3D stationary behavior of wave propagation in the soil. 
+Such discretization involves in generating two high computational power demanding matrices, 
+and this article demonstrates how Graphical Processing Units (GPU) can be used to accelerate this process. 
 \end{abstract}
      
 \section{Introduction}
@@ -53,8 +53,8 @@
 Since the computer was proven to be a useful machine, there always has been an interest of 
 building faster versions of it to solve bigger and more complex problems in a matter 
 of time that no human can. One way archiving this is by building more complex sequential 
-CPUs, with more transistors. Recently, the size of CPU components got so small that it became
-difficult to create such faster sequential CPUs \cite{brock:2006}. As a consequence of this fact, 
+CPUs, with more transistors. Recently, as the size of CPU components got smaller, it became
+difficult to create such faster sequential CPUs \cite{brock:2006}. As consequence, 
 CPU manufacturers are investing in multicore CPUs, capable of running more than one task 
 asynchronously.
 
@@ -66,7 +66,7 @@ there are two types of parallel computer archictectures:
 \begin{enumerate}
 \item Single Instruction, Multiple Data (SIMD); a processor that allows a chunk of
 data to be loaded and a single instruction to be used to process it. As example of SIMD,
-there is Intel's SSE \cite{sse} and Graphics Processing Units (GPU) are examples it. 
+there is AMD's 3DNow! \cite{3dnow} and Graphics Processing Units (GPU). 
 
 \item Multiple Instruction, Multiple Data (MIMD); a system consisting of
 multiple independent processing units, executing asynchronously. Multicore CPUs are a 
@@ -167,7 +167,7 @@ boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing 
 by $\texttt{Nonsingd}$ and $\texttt{Sigmaec}$.
 
 \begin{algorithm}
-\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
 \begin{algorithmic}[1]
 	\Procedure{Ghmatecd}{}
 		\For{$j := 1, n$} 
@@ -195,10 +195,10 @@ the main effort was to implement
 an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
 case in the GPU, and leave $\texttt{Sigmaec}$ to be computed in the CPU after the computation of \texttt{Ghmatecd\_Nonsingd} 
 is completed. With this, a new strategy arises when also computing Nonsingd in parallel. Let $g$ be the number of Gauss quadrature 
-points. The pseudocode in Algorithm 2 pictures this new strategy.
+points. The pseudocode in Algorithms 2 and 3 pictures this new strategy.
 
 \begin{algorithm}
-\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}\label{euclid}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
 \begin{algorithmic}[1]
 	\Procedure{Ghmatecd\_nonsingd}{}
 		\For{$j := 1, n$} 
@@ -220,7 +220,13 @@ points. The pseudocode in Algorithm 2 pictures this new strategy.
 			\EndFor
 	 \EndFor
 	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
 
+
+\begin{algorithm}
+\caption{Compute Sigmaec part of $H, G \in \Cfield^{(3m)\times(3n)}$}
+\begin{algorithmic}[1]
 	\Procedure{Ghmatecd\_Sigmaec}{}
 		\For{$i := 1, m$}
 			\State{$ii := 3(i-1) + 1$}
@@ -229,7 +235,7 @@ points. The pseudocode in Algorithm 2 pictures this new strategy.
 			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
 	 \EndFor
 	\EndProcedure
-	\Procedure{Ghmatecd}{}
+	\Procedure{Ghmatecd}{} 
 		\State{$\text{Ghmatecd\_Nonsingd}()$}
 		\State{$\text{Ghmatecd\_Sigmaec}()$}
 	\EndProcedure
@@ -243,7 +249,7 @@ memory to keep the buffer of matrices ($\texttt{Hbuffer}$ and $\texttt{Gbuffer}$
 $3 \times 3$, nine of these $g \times g$ threads can be used to 
 sum all matrices because one thread can be assigned to each matrix entry, unless $g < 3$. Notice that $g$ is also upper-bounded by the 
 amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
-2 to 3 will generate the entire $H$ and $G$ without the singular part. The $\texttt{Ghmatecd\_Sigmaec}$ can be parallelized with 
+2 to 3 will generate the entire $H$ and $G$ without the $\texttt{Sigmaec}$ part. The $\texttt{Ghmatecd\_Sigmaec}$ can be parallelized with 
 a simple OpenMP Parallel for clause, and it will calculate the remaining $H$ and $G$. 
 
 \section{Methodology}
@@ -271,7 +277,7 @@ and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bello
 
 For experimenting, there were four data samples as illustrated in Table 1. The 
 application is executed in a computer with an AMD A10-7700K processor aided with 
-a GeForce 980GTX for each one of the samples using the original code (serial implementation), 
+a GeForce GTX980 for each one of the samples using the original code (serial implementation), 
 the OpenMP version, and the CUDA and OpenMP together. 
 Before any data collection, a warm up procedure is executed, which 
 consists of running the application with the sample three times without getting any result. 
@@ -279,7 +285,7 @@ Afterward, all experiments were executed 30 times per sample. Each execution pro
 file with total time elapsed. GPU total time was computed by the sum of 6 elements: 
 (1) total time to move data to GPU, (2) launch and execute the kernel, (3) elapsed time 
 to compute the result, (4) time to move data back to main memory, (5) time to compute 
-the singular part in the CPU. The elapsed time was computed in seconds with the OpenMP library function 
+the remaining $H$ and $G$ parts in the CPU. The elapsed time was computed in seconds with the OpenMP library function 
 $\texttt{OMP\_GET\_WTIME}$. This function calculates the elapsed wall clock time in seconds 
 with double precision. All experiments set the Gauss Quadrature Points to 8.
 
@@ -296,10 +302,11 @@ Number of Bondary elements & 100 & 400 & 900  & 1600 \\ \hline
 
 \section{Results}
 
-Gfortran 5.4.0 and CUDA 8.0 were used to compile the application. The main flags used in Gfortran are
--Ofast -funroll-loops -flto . The flags used in
-CUDA nvcc compiler are: -use\_fast\_math  -O3  -Xptxas --opt-level=3  -maxrregcount=32 -Xptxas 
---allow-expensive-optimizations=true . 
+Gfortran 5.4.0 \cite{gfortran} and CUDA 8.0 \cite{cudatoolkit} were used to compile the application. The main flags used in Gfortran are
+$\texttt{-Ofast}$ $\texttt{-march=native}$ $\texttt{-funroll-loops}$ $\texttt{-flto}$. The flags used in
+CUDA nvcc compiler are: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xptxas}$ $\texttt{--opt-level=3}$
+$\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 
+$\texttt{--allow-expensive-optimizations=true}$ . 
 
 The logarithmic scale graphic at figure 1 illustrates the results. All points are the mean of the 
 time in seconds of 30 executions as described in Methodology.
@@ -311,17 +318,18 @@ time in seconds of 30 executions as described in Methodology.
 \label{fig:graphic1}
 \end{figure}
 
-Since the speedup acquired in the 4000 mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
-algorithm are $2.26$ and $37.95$ respectively, the conclusion is that the presented strategy aided with GPUs can be 
-used to accelerate the overall performance of the simulation for a large number of mesh elements. Notice that 
-the performance gain in the 260 sample between OpenMP and CUDA+OpenMP is not noticeable, thus the usage of GPUs 
-for smaller data may not be attractive. 
+Since the speedup acquired in the $4000$ mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
+algorithm are $2.68$ and $106.95$ respectively, the conclusion is that the presented strategy aided with GPUs can be 
+used to accelerate the overall performance of the simulation for a large number of mesh elements. This is a consequence 
+of parallelizing the construction of both matrices $H$ and $G$, and the calculations in the $\texttt{Nonsingd}$ routine. 
+Notice that there is a performance loss in the 260 sample between OpenMP and CUDA+OpenMP, this is caused by the high 
+latency between CPU-GPU communication, thus the usage of GPUs for smaller data may not be attractive.
 
 
 \section{Future Works}
 The current implemented code have limitations. First, there is no logic to assemble $H$ and $G$ by blocks by lauching 
-multiple kernels. This strategy would allow bigger problems to be solved, since if the number of mesh elements is 
-bigger enough the application would crash due to insufficient video memory.  Second, the singular and nonsingular 
+multiple kernels. This strategy would allow larger problems to be solved, since if the number of mesh elements is 
+large enough the application would crash due to insufficient GPU memory.  Second, the singular and nonsingular 
 part can be computed independently, so the CPU can be used to compute the singular part while the GPU is computing 
 the nonsingular part. The usage of GPUs in the singular case can also be analyzed.
 
