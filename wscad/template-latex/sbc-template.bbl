@@ -1,16 +1,5 @@
 \begin{thebibliography}{}
 
-\bibitem[AMD 2000]{3dnow}
-AMD (2000).
-\newblock Amd 3dnow!
-\newblock \url{http://support.amd.com/TechDocs/21928.pdf}.
-\newblock Accessed: 2017-07-08.
-
-\bibitem[Brock and Moore 2006]{brock:2006}
-Brock, D.~C. and Moore, G.~E. (2006).
-\newblock {\em Understanding Moore's law: four decades of innovation}.
-\newblock Chemical Heritage Foundation.
-
 \bibitem[Carrion 2002]{carrion:02}
 Carrion, R. (2002).
 \newblock {\em Uma Implementação do Método dos Elementos de Contorno para
@@ -36,11 +25,6 @@ NVIDIA (2017).
 \newblock
   \url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#axzz4pGcmz4XI}.
 \newblock Accessed: 2017-07-09.
-
-\bibitem[Pacheco 2011]{pacheco:2011}
-Pacheco, P. (2011).
-\newblock {\em An introduction to parallel programming}.
-\newblock Elsevier.
 
 \bibitem[Patterson and Hennessy 2007]{patterson:2007}
 Patterson, D.~A. and Hennessy, J.~L. (2007).

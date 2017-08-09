@@ -23,7 +23,7 @@
 \sloppy
 
 \title{Optimizing a Boundary Elements Method implementation for Stationary
-Elastodynamic Problems with Graphical Processing Units (GPU)}
+Elastodynamic Problems with GPUs}
 
 \author{Giuliano A. F. Belinassi\inst{1}, Rodrigo Siqueira\inst{1}, Ronaldo Carrion\inst{2}
   Alfredo Goldman\inst{1} }
@@ -42,43 +42,45 @@ Elastodynamic Problems with Graphical Processing Units (GPU)}
 \maketitle
 
 \begin{abstract}
+
 The Boundary Element Method requires a geometry discretization to execute simulations, 
 and it can be used to analyze the 3D stationary behavior of wave propagation in the soil. 
-Such discretization involves in generating two high computational power demanding matrices, 
-and this article demonstrates how Graphical Processing Units (GPU) can be used to accelerate this process. 
+Such discretization involves generating two high computational power demanding matrices, 
+and this article demonstrates how Graphical Processing Units (GPU) were used to accelerate 
+this process. For an experiment with 4000 Mesh elements and 1600 Boundary elements, 
+a speedup of 106.95 is obtained with such devices.
+
 \end{abstract}
      
 \section{Introduction}
 
-Since the computer was proven to be a useful machine, there always has been an interest of 
-building faster versions of it to solve bigger and more complex problems in a matter 
-of time that no human can. One way archiving this is by building more complex sequential 
-CPUs, with more transistors. Recently, as the size of CPU components got smaller, it became
-difficult to create such faster sequential CPUs \cite{brock:2006}. As consequence, 
-CPU manufacturers are investing in multicore CPUs, capable of running more than one task 
-asynchronously.
+Differential equations governing problems of Mathematical Physics only have analytical 
+solutions in cases in which both the domain geometry, boundary and initial conditions 
+are reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
+can only be solved in an approximate way, for example, by numerical techniques. These techniques 
+have experienced strong development due to the presence of increasingly powerful digital electronic 
+computers, allowing the solution of complex mathematical problems. 
 
-Parallel computing is hard to define, but intuitively, it is a computation method 
-that allows data to be distributed and processed simultaneously. In Flynn's taxonomy
-\cite{pacheco:2011},
-there are two types of parallel computer archictectures: 
+The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited 
+domains, since it naturally satisfies the 
+Sommerfeld radiation condition, also known as geometric damping.
+Such method can be used to numerically model the 3D stationary behavior of wave propagation in the soil 
+based on BEM with the objective of creating a computational tool which can assist in analysis such as 
+evaluation of vibrations in the soil rising from machine tools operation or railway lines as well as 
+to understand the role of soil during earthquakes or even in the design of offshore oil platforms.
 
-\begin{enumerate}
-\item Single Instruction, Multiple Data (SIMD); a processor that allows a chunk of
-data to be loaded and a single instruction to be used to process it. As example of SIMD,
-there is AMD's 3DNow! \cite{3dnow} and Graphics Processing Units (GPU). 
+With the invention of GPUs, several mathematical and engineering simulation problems were redesigned
+to be implemented into GPUs to explore its massively parallel capabilities. However, primitives 
+GPUs were designed to render graphics in real time and all first libraries that allowed GPU 
+resources to be used, such as OpenGL, was graphical focused. Such redesigns involved converting 
+the original problem into a graphical domain, requiring deep knowledge of the selected graphical library. 
 
-\item Multiple Instruction, Multiple Data (MIMD); a system consisting of
-multiple independent processing units, executing asynchronously. Multicore CPUs are a 
-example of MIMD.
-\end{enumerate}
-
-Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
-were the first libraries designed to access GPUs resources and provide graphics. 
-However, researchers realized that GPUs could be used for other applications different 
-from graphics. Consequently, these libraries were used by engineers and scientists 
-in their specific problems, however, they had to convert their problem into a graphical 
-domain.
+%Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
+%were the first libraries designed to access GPUs resources and provide graphics. 
+%However, researchers realized that GPUs could be used for other applications different 
+%from graphics. Consequently, these libraries were used by engineers and scientists 
+%in their specific problems, however, they had to convert their problem into a graphical 
+%domain.
 
 NVIDIA noticed a new demand for their products and created an API called CUDA to enable 
 the use of GPUs in general purpose situation. CUDA has the concept of kernels, which are
@@ -89,25 +91,14 @@ of threads that cooperate with each other \cite{patterson:2007}.
 GPU's memory is divided into global memory, local memory, and shared memory. First, it is 
 a memory that all threads can access. Second, it is a memory that is private to a thread. 
 Third, it is a  low-latency memory that is shared between all threads in the same block.
+
 \cite{patterson:2007}.
 
 
 \section{Context}
 
-Differential equations governing problems of Mathematical Physics only have analytical 
-solutions in cases in which both the domain geometry and the boundary and initial conditions 
-are reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
-can only be solved in an approximate way, for example, by numerical techniques. These techniques 
-have experienced strong development due to the presence of increasingly powerful digital electronic 
-computers, allowing the solution of complex mathematical problems. The Boundary Element Method (BEM) 
-is a very efficient alternative for modeling unlimited domains, since it naturally satisfies the 
-Sommerfeld radiation condition, also known as geometric damping.
-Such method can be used to numerically model the 3D stationary behavior of wave propagation in the soil 
-based on BEM with the objective of creating a computational tool which can assist in analysis such as 
-evaluation of vibrations in the soil rising from machine tools operation or railway lines as well as 
-to understand the role of soil during earthquakes or even in the design of offshore oil platforms.
 
-Wihout addressing details on the BEM formulation, the Bondary Integral Equation for Stationary
+Without addressing details on the BEM formulation, the Boundary Integral Equation for Stationary
 Elastodynamic Problems can be written as:
 
 \begin{equation}
@@ -120,38 +111,36 @@ After performing the geometry discretization, Equation (1) can still be represen
 	[H]\{u\} = [G]\{t\}
 \end{equation}
 
+
+Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
+present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
+called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
+points.
+To overcome this problem in the strong singularity, one use the artifice known as Regularization of 
+the Singular Integral that can be expressed as follows:
+
+\begin{equation}
+\begin{split}
+	c_{ij}(\xi)u_{j}(\xi, \omega) + \int_{S}\left[t_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} - t_{ij}^{*}(\xi, x)_{\text{STA}} \right]u_{j}(x, \omega) \text{d}S(x) + \\
+	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x)	
+\end{split}
+\end{equation}
+DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
+first one in Equation (3), does not present singularity when executed concomitantly as expressed because 
+they have the same order in the both problems.
+
+
 Algorithmically, equation (1) is implemented into a routine named $\texttt{Nonsingd}$, computing the
 integral using the Gaussian Quadrature without addressing problems related to singularity. 
 To overcome singularity problems, there is a special routine called $\texttt{Sigmaec}$ that uses an 
 artifice known as Regularization of the Singular Integral. By last, $\texttt{Ghmatecd}$ is a routine 
 developed to create both $H$ and $G$ matrices described in equation (2).
 
-%Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
-%present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
-%called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
-%points.
-%To overcome this problem in the strong singularity, one use the artifice known as Regularization of 
-%the Singular Integral that can be expressed as follows:
-%
-%\begin{equation}
-%\begin{split}
-%	c_{ij}(\xi)u_{j}(\xi, \omega) + \int_{S}\left[t_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} - t_{ij}^{*}(\xi, x)_{\text{STA}} \right]u_{j}(x, \omega) \text{d}S(x) + \\
-%	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x)	
-%\end{split}
-%\end{equation}
-%DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
-%first one in Equation (3), does not present singularity when executed concomitantly as expressed because 
-%they have the same order in the both problems.
-
-
-
-%Let now $\hat{x} \in \Cfield^n$
-%be a value that should have been $x$, but contains errors due to whatever
-%reasons. One can measure \textit{how far} $\hat{x}$ is from $x$ by computing
-%$\norm{x - \hat{x}}$. If the vector $\infty$-norm is used, then the result yielded
-%is the maximum difference between a single entry of the vector. If the matrix
-%$\infty$-norm is used, then the result is the biggest sum of errors of a matrix
-%row. The matrix 1-norm yields the biggest sum of erros of a matrix column.
+Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
+formulation of BEM for Stationary Elastodynamic Problems and the meaning of some functions displayed in 
+following sections. Next, Section 3 shows how the most computational expensive routine was optimized using 
+GPUs. Later, Section 4 discusses how the results were obtained and Section 5 presents and discusses those 
+results. Finally, Section 6 briefly discusses possible future works.
 
 \section{Parallelization Strategies}
 
@@ -194,11 +183,11 @@ it consumes all its resources. Since $\texttt{Nonsingd}$ is the cause of the hig
 the main effort was to implement
 an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
 case in the GPU, and leave $\texttt{Sigmaec}$ to be computed in the CPU after the computation of \texttt{Ghmatecd\_Nonsingd} 
-is completed. With this, a new strategy arises when also computing Nonsingd in parallel. Let $g$ be the number of Gauss quadrature 
+is completed. With this, a new strategy arises when also computing $\texttt{Nonsingd}$ in parallel. Let $g$ be the number of Gauss quadrature 
 points. The pseudocode in Algorithms 2 and 3 pictures this new strategy.
 
 \begin{algorithm}
-\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$ without Sigmaec part}
 \begin{algorithmic}[1]
 	\Procedure{Ghmatecd\_nonsingd}{}
 		\For{$j := 1, n$} 
@@ -252,7 +241,7 @@ amount of shared memory available in the GPU. Launching $m \times n$ blocks to c
 2 to 3 will generate the entire $H$ and $G$ without the $\texttt{Sigmaec}$ part. The $\texttt{Ghmatecd\_Sigmaec}$ can be parallelized with 
 a simple OpenMP Parallel for clause, and it will calculate the remaining $H$ and $G$. 
 
-\section{Methodology}
+\section{Methods}
 
 In order to check if the final result obtained by the parallel program is numerically 
 compatible with the original, the concept of matrix norms are necessary. 
@@ -265,7 +254,7 @@ matrix 1-norm as:
 	\norm{A}_{   1  } = \max\limits_{1 \leq j \leq n} \sum_{i=1}^{m} |a_{ij}| \quad
 \end{equation}
 
-All norms have the propierty that $\norm{A} = 0$ if and only if $A = 0$.
+All norms have the property that $\norm{A} = 0$ if and only if $A = 0$.
 Let $f$ and $g$ be two numerical 
 algorithms that solves the same problem, but in a different fashion. 
 Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
@@ -278,25 +267,29 @@ and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bello
 For experimenting, there were four data samples as illustrated in Table 1. The 
 application is executed in a computer with an AMD A10-7700K processor aided with 
 a GeForce GTX980 for each one of the samples using the original code (serial implementation), 
-the OpenMP version, and the CUDA and OpenMP together. 
+the OpenMP version with 4 CPU threads, and the CUDA and OpenMP together with 4 CPU threads.
+
 Before any data collection, a warm up procedure is executed, which 
 consists of running the application with the sample three times without getting any result. 
 Afterward, all experiments were executed 30 times per sample. Each execution produces a 
-file with total time elapsed. GPU total time was computed by the sum of 6 elements: 
+file with total time elapsed. 
+
+GPU total time was computed by the sum of 5 elements: 
 (1) total time to move data to GPU, (2) launch and execute the kernel, (3) elapsed time 
 to compute the result, (4) time to move data back to main memory, (5) time to compute 
-the remaining $H$ and $G$ parts in the CPU. The elapsed time was computed in seconds with the OpenMP library function 
+the remaining $H$ and $G$ parts in the CPU. 
+The elapsed time was computed in seconds with the OpenMP library function 
 $\texttt{OMP\_GET\_WTIME}$. This function calculates the elapsed wall clock time in seconds 
 with double precision. All experiments set the Gauss Quadrature Points to 8.
 
 \begin{table}[]
 \centering
-\caption{Table 1: Data experiment set}
+\caption{Data experiment set}
 \label{my-label}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 Number of Mesh elements    & 240 & 960 & 2160 & 4000 \\ \hline
-Number of Bondary elements & 100 & 400 & 900  & 1600 \\ \hline
+Number of Boundary elements & 100 & 400 & 900  & 1600 \\ \hline
 \end{tabular}
 \end{table}
 
@@ -327,11 +320,10 @@ latency between CPU-GPU communication, thus the usage of GPUs for smaller data m
 
 
 \section{Future Works}
-The current implemented code have limitations. First, there is no logic to assemble $H$ and $G$ by blocks by lauching 
-multiple kernels. This strategy would allow larger problems to be solved, since if the number of mesh elements is 
-large enough the application would crash due to insufficient GPU memory.  Second, the singular and nonsingular 
-part can be computed independently, so the CPU can be used to compute the singular part while the GPU is computing 
-the nonsingular part. The usage of GPUs in the singular case can also be analyzed.
+The current implemented code have limitations. First, there is no logic to construct both H and G by blocks to create several 
+GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sigmaec}$ in 
+parallel with respect to each other. The usage of GPUs in the singular case can also be analyzed.
+
 
 %\begin{figure}[ht]
 %\centering
