@@ -26,7 +26,7 @@
 Elastodynamic Problems implementation with GPUs}
 
 \author{Giuliano A. F. Belinassi\inst{1}, Rodrigo Siqueira\inst{1}, Ronaldo Carrion\inst{2}
-  Alfredo Goldman\inst{1} }
+, Alfredo Goldman\inst{1}, \\ Marco D. Gubitoso\inst{1} }
 
 
 \address{Instituto de Matemática e Estatística (IME) -- Universidade de São Paulo
@@ -70,17 +70,11 @@ evaluation of vibrations in the soil rising from machine tools operation or rail
 to understand the role of soil during earthquakes or even in the design of offshore oil platforms.
 
 With the invention of GPUs, several mathematical and engineering simulation problems were redesigned
-to be implemented into GPUs to explore its massively parallel capabilities. However, primitives 
-GPUs were designed to render graphics in real time and all first libraries that allowed GPU 
-resources to be used, such as OpenGL, was graphical focused. Such redesigns involved converting 
-the original problem into a graphical domain, requiring deep knowledge of the selected graphical library. 
-
-%Originally, GPU was designed to render graphics in real time and OpenGL and DirectX 
-%were the first libraries designed to access GPUs resources and provide graphics. 
-%However, researchers realized that GPUs could be used for other applications different 
-%from graphics. Consequently, these libraries were used by engineers and scientists 
-%in their specific problems, however, they had to convert their problem into a graphical 
-%domain.
+to be implemented into GPUs to explore its massively parallel capabilities. However, 
+first GPUs were designed to render graphics in real time, as a consequence, all the available 
+libraries were graphical oriented such as OpenGL. These redesigns involved converting 
+the original problem into a graphical domain, requiring deep knowledge of the selected 
+graphical library. 
 
 NVIDIA noticed a new demand for their products and created an API called CUDA to enable 
 the use of GPUs in general purpose situation. CUDA has the concept of kernels, which are
@@ -90,18 +84,16 @@ of threads that cooperate with each other \cite{patterson:2007}.
 
 GPU's memory is divided into global memory, local memory, and shared memory. First, it is 
 a memory that all threads can access. Second, it is a memory that is private to a thread. 
-Third, it is a  low-latency memory that is shared between all threads in the same block.
-\cite{patterson:2007}.
-
+Third, it is a  low-latency memory that is shared between all threads in the same block
+\cite{patterson:2007}. CUDA provides a mechanism to access all of them.
 
 Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
-formulation of BEM for Stationary Elastodynamic Problems and the meaning of some functions displayed in 
-following sections. Next, Section 3 shows how the most computational expensive routine was optimized using 
-GPUs. Later, Section 4 discusses how the results were obtained and Section 5 presents and discusses those 
-results. Finally, Section 6 briefly discusses possible future works.
+formulation of BEM for Stationary Elastodynamic Problems and the meaning of some functions presented in 
+the current work. Section 3 shows how the most computational expensive routine was optimized using GPUs. 
+Section 4 discusses how the results were obtained. Section 5 presents and discusses the results. Finally, 
+Section 6 provides an overview of our future work.
 
-
-\section{BEM Context}
+\section{Boundary Elements Method Background}
 
 
 Without addressing details on the BEM formulation, the Boundary Integral Equation for Stationary
@@ -131,14 +123,14 @@ the Singular Integral that can be expressed as follows:
 	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x)	
 \end{split}
 \end{equation}
-DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
+Where DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
 first one in Equation (3), does not present singularity when executed concomitantly as expressed because 
 they have the same order in the both problems.
 
 
 Algorithmically, equation (1) is implemented into a routine named $\texttt{Nonsingd}$, computing the
 integral using the Gaussian Quadrature without addressing problems related to singularity. 
-To overcome singularity problems, there is a special routine called $\texttt{Sigmaec}$ that uses an 
+To overcome singularity problems, there is a special routine called $\texttt{Sing\_de}$ that uses an 
 artifice known as Regularization of the Singular Integral. By last, $\texttt{Ghmatecd}$ is a routine 
 developed to create both $H$ and $G$ matrices described in equation (2).
 
@@ -147,14 +139,14 @@ developed to create both $H$ and $G$ matrices described in equation (2).
 
 A parallel implementation of BEM began by analyzing and modifying a sequential code 
 provided by \cite{carrion:02}. Gprof \cite{binutils}, a profiling tool by GNU, showed that the most time-consuming 
-routine was Nonsingd. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
+routine was $\texttt{Nonsingd}$. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
 was focused on that last routine.
 
 \subsection{Ghmatecd Parallelization}
 
 Algorithm 1 shows the pseudocode of $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh elements and $m$ the number of 
 boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing smaller $3\times3$ matrices returned 
-by $\texttt{Nonsingd}$ and $\texttt{Sigmaec}$.
+by $\texttt{Nonsingd}$ and $\texttt{Singi\_de}$.
 %
 \begin{algorithm}[H]
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
@@ -164,7 +156,7 @@ by $\texttt{Nonsingd}$ and $\texttt{Sigmaec}$.
 			\For{$i := 1, m$}
 				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
 				\If{$i == j$}
-					\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i)$}\Comment{two $3\times3$ complex matrices}					
+					\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}\Comment{two $3\times3$ complex matrices}					
 				\Else
 					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
 				\EndIf
@@ -178,15 +170,14 @@ by $\texttt{Nonsingd}$ and $\texttt{Sigmaec}$.
 %
 There is no interdependency between all iterations in lines 2-3 loops, thus, all iterations can be computed 
 in parallel. Since typically high-end CPUs have 8 cores, even a small number of mesh elements generate enough 
-workload to use all CPUs resources if this strategy alone is used. By another hand, a GPU contain thousands 
-of processors, thus even a considerable large amount of elements may not generate a workload in a way that 
-it consumes all its resources. Since $\texttt{Nonsingd}$ is the cause of the high time cost of $\texttt{Ghmatecd}$, 
+workload to use all CPUs resources if this strategy alone is used. On the other hand, a GPU contain thousands 
+of processors, hence even a considerable large amount of elements may not generate a workload in a way that 
+it consumes all the devices resources. Since $\texttt{Nonsingd}$ is the cause of the high time cost of $\texttt{Ghmatecd}$, 
 the main effort was to implement
 an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
-case in the GPU, and leave $\texttt{Sigmaec}$ to be computed in the CPU after the computation of \texttt{Ghmatecd\_Nonsingd} 
-is completed. With this, a new strategy arises when also computing $\texttt{Nonsingd}$ in parallel. Let $g$ be the number of Gauss quadrature 
-points. The pseudocode in Algorithm 2 pictures this new strategy.
-
+case in the GPU, and leave $\texttt{Sing\_de}$ to be computed in the CPU after the computation of $\texttt{Ghmatecd\_Nonsingd}$ 
+is completed. The pseudocode in Algorithm 2 pictures a new strategy where $\texttt{Nonsingd}$ is also computed in parallel.
+Let $g$ be the number of Gauss quadrature points.
 
 \begin{algorithm}[H]
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$ }
@@ -211,24 +202,24 @@ points. The pseudocode in Algorithm 2 pictures this new strategy.
 			\EndFor
 	 \EndFor
 	\EndProcedure
-	\Procedure{Ghmatecd\_Sigmaec}{}
+	\Procedure{Ghmatecd\_Sing\_de}{}
 		\For{$i := 1, m$}
 			\State{$ii := 3(i-1) + 1$}
-			\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i)$}	
+			\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}	
 			\State{$G[ii:ii+2][ii:ii+2] \leftarrow Gelement$}
 			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
 	 \EndFor
 	\EndProcedure
 	\Procedure{Ghmatecd}{} 
 		\State{$\text{Ghmatecd\_Nonsingd}()$}
-		\State{$\text{Ghmatecd\_Sigmaec}()$}
+		\State{$\text{Ghmatecd\_Sing\_de}()$}
 	\EndProcedure
 		
 \end{algorithmic}
 \end{algorithm}
 
 %\begin{algorithm}
-%\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$ without Sigmaec part}
+%\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$ without Sing_de part}
 %\begin{algorithmic}[1]
 %	\Procedure{Ghmatecd\_nonsingd}{}
 %		\For{$j := 1, n$} 
@@ -254,12 +245,12 @@ points. The pseudocode in Algorithm 2 pictures this new strategy.
 %\end{algorithm}
 %
 %\begin{algorithm}
-%\caption{Compute Sigmaec part of $H, G \in \Cfield^{(3m)\times(3n)}$}
+%\caption{Compute Sing_de part of $H, G \in \Cfield^{(3m)\times(3n)}$}
 %\begin{algorithmic}[1]
-%	\Procedure{Ghmatecd\_Sigmaec}{}
+%	\Procedure{Ghmatecd\_Sing_de}{}
 %		\For{$i := 1, m$}
 %			\State{$ii := 3(i-1) + 1$}
-%			\State{$Gelement, Helement \leftarrow \text{Sigmaec}(i)$}	
+%			\State{$Gelement, Helement \leftarrow \text{Sing_de}(i)$}	
 %			\State{$G[ii:ii+2][ii:ii+2] \leftarrow Gelement$}
 %			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
 %	 \EndFor
@@ -267,13 +258,13 @@ points. The pseudocode in Algorithm 2 pictures this new strategy.
 %\end{algorithmic}
 %\end{algorithm}
 
-The $\texttt{Ghmatecd\_Nonsingd}$ can be implemented as a CUDA kernel. Inside of a CUDA block, create $g \times g$ 
+The $\texttt{Ghmatecd\_Nonsingd}$ can be implemented as a CUDA kernel. Inside of a CUDA block, it is created $g \times g$ 
 threads to compute in parallel the two nested loops in lines 2-3 and allocate spaces in the shared 
 memory to keep the buffer of matrices ($\texttt{Hbuffer}$ and $\texttt{Gbuffer}$). Since these buffers contain matrices of size 
 $3 \times 3$, nine of these $g \times g$ threads can be used to 
 sum all matrices because one thread can be assigned to each matrix entry, unless $g < 3$. Notice that $g$ is also upper-bounded by the 
 amount of shared memory available in the GPU. Launching $m \times n$ blocks to cover the two nested loops in lines
-2 to 3 will generate the entire $H$ and $G$ without the $\texttt{Sigmaec}$ part. The $\texttt{Ghmatecd\_Sigmaec}$ can be parallelized with 
+2 to 3 will generate the entire $H$ and $G$ without the $\texttt{Sing\_de}$ part. The $\texttt{Ghmatecd\_Sing\_de}$ can be parallelized with 
 a simple OpenMP Parallel for clause, and it will calculate the remaining $H$ and $G$. 
 
 \section{Methods}
@@ -293,7 +284,7 @@ All norms have the property that $\norm{A} = 0$ if and only if $A = 0$.
 Let $f$ and $g$ be two numerical 
 algorithms that solves the same problem, but in a different fashion. 
 Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
-$g$. The \textit{error} between those two values can be measured computing
+$g$. The \textit{error} between these two values can be measured computing
 $\norm{y_f - y_g}$.
 
 The error between CPU and GPU versions of $H$ and $G$ matrices were computed by calculating $\norm{H_{cpu} - H_{gpu}}_1$
@@ -306,14 +297,15 @@ $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$
 $\texttt{--allow-expensive-optimizations=true}$ . 
 
 For experimenting, there were four data samples as illustrated in Table 1. The 
-application is executed in a computer with an AMD A10-7700K processor paired with 
-a GeForce GTX980 for each one of the samples using the original code (serial implementation), 
-the OpenMP version with 4 CPU threads, and the CUDA and OpenMP together with 4 CPU threads.
+application was executed in a computer with an AMD A10-7700K processor paired with 
+a GeForce GTX980. For each one of the samples using the original code (serial implementation), 
+the OpenMP version and the CUDA and OpenMP together. All tests but the sequential set the number
+of OpenMP threads to 4.
 
 Before any data collection, a warm up procedure is executed, which consists of running the 
 application with the sample three times without getting any result. Afterward, all experiments 
 were executed 30 times per sample. Each execution produces a file with total time elapsed, 
-where was collected the mean and standard deviation.
+where a script collected the mean and standard deviation.
 
 GPU total time was computed by the sum of 5 elements: 
 (1) total time to move data to GPU, (2) launch and execute the kernel, (3) elapsed time 
@@ -348,8 +340,8 @@ obtained was $2.6\%$ of the mean value.
 \label{fig:graphic1}
 \end{figure}
 
-Since the speedup acquired in the $4000$ mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
-algorithm are $2.68$ and $106.95$ respectively, the conclusion is that the presented strategy aided with GPUs can be 
+The speedup acquired in the $4000$ mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
+algorithm are $2.68$ and $106.95$ respectively. As a conclusion, the presented strategy paired with GPUs can be 
 used to accelerate the overall performance of the simulation for a large number of mesh elements. This is a consequence 
 of parallelizing the construction of both matrices $H$ and $G$, and the calculations in the $\texttt{Nonsingd}$ routine. 
 Notice that there is a performance loss in the 260 sample between OpenMP and CUDA+OpenMP, this is caused by the high 
@@ -358,7 +350,7 @@ latency between CPU-GPU communication, thus the usage of GPUs for smaller data m
 
 \section{Future Works}
 The current implemented code have limitations. First, there is no logic to construct both $H$ and $G$ by blocks to create several 
-GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sigmaec}$ in 
+GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sing\_de}$ in 
 parallel with respect to each other. The usage of GPUs in the singular case can also be analyzed.
 
 
