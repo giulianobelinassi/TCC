@@ -4,45 +4,45 @@ The top-level auxiliary file: sbc-template.aux
 The style file: sbc.bst
 Database file #1: sbc-template.bib
 Warning--empty year in binutils
-You've used 6 entries,
+You've used 7 entries,
             1935 wiz_defined-function locations,
-            501 strings with 4418 characters,
-and the built_in function-call counts, 1637 in all, are:
-= -- 167
-> -- 48
-< -- 7
-+ -- 14
-- -- 14
-* -- 104
-:= -- 322
-add.period$ -- 21
-call.type$ -- 6
-change.case$ -- 35
-chr.to.int$ -- 6
-cite$ -- 7
-duplicate$ -- 69
-empty$ -- 106
-format.name$ -- 22
-if$ -- 305
+            506 strings with 4477 characters,
+and the built_in function-call counts, 1957 in all, are:
+= -- 196
+> -- 61
+< -- 8
++ -- 20
+- -- 18
+* -- 127
+:= -- 379
+add.period$ -- 24
+call.type$ -- 7
+change.case$ -- 41
+chr.to.int$ -- 7
+cite$ -- 8
+duplicate$ -- 83
+empty$ -- 129
+format.name$ -- 29
+if$ -- 367
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 3
-newline$ -- 36
-num.names$ -- 18
-pop$ -- 25
+missing$ -- 5
+newline$ -- 41
+num.names$ -- 21
+pop$ -- 34
 preamble$ -- 1
-purify$ -- 37
+purify$ -- 44
 quote$ -- 0
-skip$ -- 58
+skip$ -- 68
 stack$ -- 0
-substring$ -- 72
-swap$ -- 4
+substring$ -- 86
+swap$ -- 5
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 34
+type$ -- 38
 warning$ -- 1
-while$ -- 12
+while$ -- 14
 width$ -- 0
-write$ -- 81
+write$ -- 93
 (There was 1 warning)

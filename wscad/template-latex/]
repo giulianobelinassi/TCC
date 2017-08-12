@@ -61,14 +61,6 @@ can only be solved in an approximate way, for example, by numerical techniques. 
 have experienced strong development due to the presence of increasingly powerful 
 computers, allowing the solution of complex mathematical problems. 
 
-The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains since
-it naturally satisfies the Sommerfeld radiation condition, also known as geometric damping. Such 
-method can be used to numerically model the 3D stationary behavior of wave propagation in 
-the soil based on BEM with the objective of creating a computational tool. This tool can assist 
-in analysis such as evaluation of vibrations in the soil rising from machine tools operation or 
-railway lines, as well as understand the role of soil during earthquakes or even in the design of 
-offshore oil platforms.
-
 The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited 
 domains, since it naturally satisfies the 
 Sommerfeld radiation condition, also known as geometric damping.
@@ -139,27 +131,16 @@ they have the same order in the both problems.
 Algorithmically, equation (1) is implemented into a routine named $\texttt{Nonsingd}$, computing the
 integral using the Gaussian Quadrature \cite{ascher:2011} without addressing problems related to singularity. 
 To overcome singularity problems, there is a special routine called $\texttt{Sing\_de}$ that uses the
-artifice described in equation (3). By last, $\texttt{Ghmatecd}$ is a routine 
+artifice in equation (3). By last, $\texttt{Ghmatecd}$ is a routine 
 developed to create both $H$ and $G$ matrices described in equation (2).
 
 
 \section{Parallelization Strategies}
 
 A parallel implementation of BEM began by analyzing and modifying a sequential code 
-provided by \cite{carrion:02}. Gprof \cite{binutils}, a profiling tool by GNU, revealed the two most time-consuming 
-routines as shown in Table 1. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
+provided by \cite{carrion:02}. Gprof \cite{binutils}, a profiling tool by GNU, showed that the most time-consuming 
+routine was $\texttt{Nonsingd}$. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
 was focused on that last routine.
-
-\begin{table}[]
-\centering
-\caption{Gprof Output for 960 Mesh Elements}
-\label{gprof-output}
-\begin{tabular}{|l|l|l|}
-\hline
-Name & Nonsingd & Ghmatecd \\ \hline
-Time & 58.3\%   & 60.9\%   \\ \hline
-\end{tabular}
-\end{table}
 
 \subsection{Ghmatecd Parallelization}
 
@@ -315,7 +296,7 @@ CUDA nvcc compiler are: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xp
 $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 
 $\texttt{--allow-expensive-optimizations=true}$ . 
 
-For experimenting, there were four data samples as illustrated in Table 2. The 
+For experimenting, there were four data samples as illustrated in Table 1. The 
 application was executed in a computer with an AMD A10-7700K processor paired with 
 a GeForce GTX980. For each one of the samples using the original code (serial implementation), 
 the OpenMP version and the CUDA and OpenMP together. All tests but the sequential set the number
@@ -354,7 +335,7 @@ obtained was $2.6\%$ of the mean value.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.9]{results1.pdf}
+\includegraphics[scale=1.0]{results1.pdf}
 \caption{Time elapsed by each implementation in logarithm scale}
 \label{fig:graphic1}
 \end{figure}
@@ -364,17 +345,13 @@ algorithm are $2.68$ and $106.95$ respectively. As a conclusion, the presented s
 used to accelerate the overall performance of the simulation for a large number of mesh elements. This is a consequence 
 of parallelizing the construction of both matrices $H$ and $G$, and the calculations in the $\texttt{Nonsingd}$ routine. 
 Notice that there is a performance loss in the 260 sample between OpenMP and CUDA+OpenMP, this is caused by the high 
-latency between CPU-GPU communication, thus the usage of GPUs here may not be attractive.
+latency between CPU-GPU communication, thus the usage of GPUs for smaller data may not be attractive.
 
 
 \section{Future Works}
-There are some issues related to the $g$ described in Algorithm 2. Detailed studies are required to determine what is 
-a $g$ that provides a good relation between precision-performance of the simulation. Also, better ways to compute the
-sum in lines 11-12 of Algorithm 2 would increase performance.  The usage of GPUs in the singular case can also be analyzed.
-
-%The current implemented code have limitations. First, there is no logic to construct both $H$ and $G$ by blocks to create several 
-%GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sing\_de}$ in 
-%parallel with respect to each other. The usage of GPUs in the singular case can also be analyzed.
+The current implemented code have limitations. First, there is no logic to construct both $H$ and $G$ by blocks to create several 
+GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sing\_de}$ in 
+parallel with respect to each other. The usage of GPUs in the singular case can also be analyzed.
 
 
 %\begin{figure}[ht]

@@ -1,5 +1,10 @@
 \begin{thebibliography}{}
 
+\bibitem[Ascher and Greif 2011]{ascher:2011}
+Ascher, U.~M. and Greif, C. (2011).
+\newblock {\em A first course on numerical methods}.
+\newblock SIAM.
+
 \bibitem[Carrion 2002]{carrion:02}
 Carrion, R. (2002).
 \newblock {\em Uma Implementação do Método dos Elementos de Contorno para
@@ -22,8 +27,7 @@ GNU.
 \bibitem[NVIDIA 2017]{cudatoolkit}
 NVIDIA (2017).
 \newblock Cuda toolkit documentation.
-\newblock
-  \url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html#axzz4pGcmz4XI}.
+\newblock \url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/}.
 \newblock Accessed: 2017-07-09.
 
 \bibitem[Patterson and Hennessy 2007]{patterson:2007}
