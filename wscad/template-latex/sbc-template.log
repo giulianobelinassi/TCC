@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.26)  12 AUG 2017 17:04
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  14 AUG 2017 10:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -396,7 +396,7 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 139.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 131.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
@@ -404,34 +404,38 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 ) [2]
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 153.
+               Default added (so using `tbp') on input line 145.
 
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 155.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 147.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 155.
- [3] [4]
-Underfull \hbox (badness 1286) in paragraph at lines 312--317
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 147.
+
+Underfull \vbox (badness 3746) has occurred while \output is active []
+
+ [3]
+[4]
+Underfull \hbox (badness 1286) in paragraph at lines 304--309
 []\OT1/ptm/m/n/12 Gfortran 5.4.0 [[]] and CUDA 8.0 [[]] were used
  []
 
 
-Underfull \hbox (badness 3735) in paragraph at lines 312--317
+Underfull \hbox (badness 3735) in paragraph at lines 304--309
 \OT1/ptm/m/n/12 to com-pile the ap-pli-ca-tion. The main flags used in Gfor-tra
 n are $[]$
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 337.
+               Default added (so using `tbp') on input line 329.
 
 <results1.pdf, id=29, 426.59375pt x 284.06125pt>
 File: results1.pdf Graphic file (type pdf)
  <use results1.pdf>
-Package pdftex.def Info: results1.pdf used on input line 357.
+Package pdftex.def Info: results1.pdf used on input line 349.
 (pdftex.def)             Requested size: 383.93082pt x 255.65274pt.
  [5]
 (./sbc-template.bbl
@@ -443,8 +447,8 @@ Underfull \hbox (badness 5077) in paragraph at lines 16--20
 ) [6 <./results1.pdf>] (./sbc-template.aux) ) 
 Here is how much of TeX's memory you used:
  4781 strings out of 493013
- 67031 string characters out of 6135682
- 147078 words of memory out of 5000000
+ 67031 string characters out of 6135683
+ 146075 words of memory out of 5000000
  8209 multiletter control sequences out of 15000+600000
  29364 words of font info for 63 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -463,7 +467,7 @@ mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts
 imes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on sbc-template.pdf (6 pages, 170770 bytes).
+Output written on sbc-template.pdf (6 pages, 170616 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  63 compressed objects within 1 object stream

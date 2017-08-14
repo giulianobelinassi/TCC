@@ -69,14 +69,6 @@ in analysis such as evaluation of vibrations in the soil rising from machine too
 railway lines, as well as understand the role of soil during earthquakes or even in the design of 
 offshore oil platforms.
 
-The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited 
-domains, since it naturally satisfies the 
-Sommerfeld radiation condition, also known as geometric damping.
-Such method can be used to numerically model the 3D stationary behavior of wave propagation in the soil 
-based on BEM with the objective of creating a computational tool which can assist in analysis such as 
-evaluation of vibrations in the soil rising from machine tools operation or railway lines as well as 
-to understand the role of soil during earthquakes or even in the design of offshore oil platforms.
-
 With the invention of GPUs, several mathematical and engineering simulation problems were redesigned
 to be implemented into GPUs to explore its massively parallel capabilities. However, 
 first GPUs were designed to render graphics in real time, as a consequence, all the available 
@@ -301,7 +293,7 @@ matrix 1-norm as:
 
 All norms have the property that $\norm{A} = 0$ if and only if $A = 0$.
 Let $f$ and $g$ be two numerical 
-algorithms that solves the same problem, but in a different fashion. 
+algorithms that solve the same problem, but in a different fashion. 
 Let now $y_f$ be the result computed by $f$ and $y_g$ be the result computed by
 $g$. The \textit{error} between these two values can be measured computing
 $\norm{y_f - y_g}$.
@@ -369,8 +361,8 @@ latency between CPU-GPU communication, thus the usage of GPUs here may not be at
 
 \section{Future Works}
 There are some issues related to the $g$ described in Algorithm 2. Detailed studies are required to determine what is 
-a $g$ that provides a good relation between precision-performance of the simulation. Also, better ways to compute the
-sum in lines 11-12 of Algorithm 2 would increase performance.  The usage of GPUs in the singular case can also be analyzed.
+a $g$ that provides a good relation between precision and performance. Also, better ways to compute the
+sum in lines 11-12 of Algorithm 2 may increase performance.  The usage of GPUs in the singular case can also be analyzed.
 
 %The current implemented code have limitations. First, there is no logic to construct both $H$ and $G$ by blocks to create several 
 %GPU kernels. Second, there is also no logic to compute both $\texttt{Ghmatecd\_Nonsingd}$ and $\texttt{Ghmatecd\_Sing\_de}$ in 
