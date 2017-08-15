@@ -12,6 +12,11 @@ Carrion, R. (2002).
   Abertos e Fechados}.
 \newblock PhD thesis, Universidade Estadual de Campinas.
 
+\bibitem[Dominguez 1993]{dominguez:1993}
+Dominguez, J. (1993).
+\newblock {\em Boundary elements in dynamics}.
+\newblock Wit Press.
+
 \bibitem[GFortran 2017]{gfortran}
 GFortran, G. (2017).
 \newblock Gnu gfortran options.
@@ -23,6 +28,12 @@ GNU.
 \newblock Gnu binutils.
 \newblock \url{https://www.gnu.org/software/binutils/}.
 \newblock Accessed: 2017-05-08.
+
+\bibitem[Katsikadelis 2016]{katsikadelis:2016}
+Katsikadelis, J.~T. (2016).
+\newblock {\em The Boundary Element Method for Engineers and Scientists: Theory
+  and Applications}.
+\newblock Academic Press.
 
 \bibitem[NVIDIA 2017]{cudatoolkit}
 NVIDIA (2017).

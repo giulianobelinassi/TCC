@@ -55,19 +55,18 @@ a speedup of 106.95 is obtained with a GeForce GTX980.
 \section{Introduction}
 
 Differential equations governing problems of Mathematical Physics only have analytical 
-solutions in cases in which both the domain geometry, boundary and initial conditions 
-are reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
-can only be solved in an approximate way, for example, by numerical techniques. These techniques 
-have experienced strong development due to the presence of increasingly powerful 
-computers, allowing the solution of complex mathematical problems. 
+solutions in cases in which both the domain geometry, boundary and initial conditions are
+reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
+are only solved with an approximate artifice, for example, by numerical techniques.
+These techniques were strongly developed due to the presence of increasingly powerful computers, 
+allowing the solution of complex mathematical problems.
 
 The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains since
-it naturally satisfies the Sommerfeld radiation condition, also known as geometric damping. Such 
-method can be used to numerically model the 3D stationary behavior of wave propagation in 
-the soil based on BEM with the objective of creating a computational tool. This tool can assist 
-in analysis such as evaluation of vibrations in the soil rising from machine tools operation or 
-railway lines, as well as understand the role of soil during earthquakes or even in the design of 
-offshore oil platforms.
+it naturally satisfies the Sommerfeld radiation condition, also known as geometric damping 
+\cite{katsikadelis:2016}. Such method can be used for numerically modeling the 3D stationary behavior 
+of wave propagation in the soil, being useful as a computation tool to aid in the analysis of evaluation 
+of vibrations in such medium \cite{dominguez:1993}. This tool can be used for analyzing the vibration created 
+by heavy machines, railway lines, earthquakes or even aid the design of offshore oil platforms.
 
 With the invention of GPUs, several mathematical and engineering simulation problems were redesigned
 to be implemented into GPUs to explore its massively parallel capabilities. However, 
@@ -87,6 +86,10 @@ a memory that all threads can access. Second, it is a memory that is private to 
 Third, it is a  low-latency memory that is shared between all threads in the same block
 \cite{patterson:2007}. CUDA provides mechanisms to access all of them.
 
+Regarding this work, this parallelization approach is useful because an analysis of a large domain 
+requires a proportionally large number of mesh elements. Such analysis can evaluate displacements 
+and tractions over the soil.
+
 Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
 formulation of BEM for Stationary Elastodynamic Problems and the meaning of some functions presented in 
 the current work. Section 3 shows how the most computational expensive routine was optimized using GPUs. 
@@ -96,25 +99,24 @@ Section 6 provides an overview of our future work.
 \section{Boundary Elements Method Background}
 
 
-Without addressing details on the BEM formulation, the Boundary Integral Equation for Stationary
+Without addressing details on BEM formulation, the Boundary Integral Equation for Stationary
 Elastodynamic Problems can be written as:
 
 \begin{equation}
 	c_{ij}u_{j}(\xi,\omega) + \int_S t_{ij}^*(\xi, x, \omega)u_j (x, \omega)\text{d}S(x) = \int_S u_{ij}^*(\xi, x, \omega) t_j(x, \omega)\text{d}S(x)
 \end{equation}
 
-After performing the geometry discretization, Equation (1) can still be represented in matrix form as:
+After performing the geometry discretization, Equation (1) can be represented in matrix form as:
 
 \begin{equation}
-	[H]\{u\} = [G]\{t\}
+	Hu = Gt
 \end{equation}
-
 
 Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
 present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
 called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
-points.
-To overcome this problem in the strong singularity, one use the artifice known as Regularization of 
+points. Integral of these functions, as represented in Eq. (1), will generate $G$ and $H$ matrices respectively showed in Eq. (2).
+To overcome this problem in the strong singularity, ones use the artifice known as Regularization of 
 the Singular Integral that can be expressed as follows:
 %
 \begin{equation}
@@ -123,7 +125,7 @@ the Singular Integral that can be expressed as follows:
 	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x)	
 \end{split}
 \end{equation}
-Where DYN = Dynamic, EST = Static. The integral of the difference between the dynamic and static nuclei, 
+Where DYN = Dynamic, STA = Static. The integral of the difference between the dynamic and static nuclei, 
 first one in Equation (3), does not present singularity when executed concomitantly as expressed because 
 they have the same order in the both problems.
 
@@ -132,14 +134,14 @@ Algorithmically, equation (1) is implemented into a routine named $\texttt{Nonsi
 integral using the Gaussian Quadrature \cite{ascher:2011} without addressing problems related to singularity. 
 To overcome singularity problems, there is a special routine called $\texttt{Sing\_de}$ that uses the
 artifice described in equation (3). By last, $\texttt{Ghmatecd}$ is a routine 
-developed to create both $H$ and $G$ matrices described in equation (2).
-
+developed to create both $H$ and $G$ matrices described in equation (2). Both $\texttt{Nonsingd}$
+and $\texttt{Sing\_de}$ are inside $\texttt{Ghmatecd}$ routine.
 
 \section{Parallelization Strategies}
 
 A parallel implementation of BEM began by analyzing and modifying a sequential code 
 provided by \cite{carrion:02}. Gprof \cite{binutils}, a profiling tool by GNU, revealed the two most time-consuming 
-routines as shown in Table 1. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
+routines as shown in Table \ref{gprof-output}. Since most calls to $\texttt{Nonsingd}$ were from $\texttt{Ghmatecd}$, most of the parallelization effort 
 was focused on that last routine.
 
 \begin{table}[]
@@ -155,11 +157,12 @@ Time & 58.3\%   & 60.9\%   \\ \hline
 
 \subsection{Ghmatecd Parallelization}
 
-Algorithm 1 shows the pseudocode of $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh elements and $m$ the number of 
-boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing smaller $3\times3$ matrices returned 
-by $\texttt{Nonsingd}$ and $\texttt{Singi\_de}$.
+Algorithm 1 shows the pseudocode of $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh 
+elements and $m$ the number of boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing 
+smaller $3\times3$ matrices returned by $\texttt{Nonsingd}$ and $\texttt{Singi\_de}$.
 %
 \begin{algorithm}[H]
+\label{ghmatecd_old}
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
 \begin{algorithmic}[1]
 	\Procedure{Ghmatecd}{}
@@ -187,11 +190,12 @@ it consumes all the device's resources. Since $\texttt{Nonsingd}$ is the cause o
 the main effort was to implement
 an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
 case in the GPU, and leave $\texttt{Sing\_de}$ to be computed in the CPU after the computation of $\texttt{Ghmatecd\_Nonsingd}$ 
-is completed. The pseudocode in Algorithm 2 pictures a new strategy where $\texttt{Nonsingd}$ is also computed in parallel.
+is completed. The pseudocode in Algorithm \ref{ghmatecd_new} pictures a new strategy where $\texttt{Nonsingd}$ is also computed in parallel.
 Let $g$ be the number of Gauss quadrature points.
 
 \begin{algorithm}[H]
 \caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$ }
+\label{ghmatecd_new}
 \begin{algorithmic}[1]
 	\Procedure{Ghmatecd\_nonsingd}{}
 		\For{$j := 1, n$} 
@@ -307,11 +311,11 @@ CUDA nvcc compiler are: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xp
 $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 
 $\texttt{--allow-expensive-optimizations=true}$ . 
 
-For experimenting, there were four data samples as illustrated in Table 2. The 
-application was executed in a computer with an AMD A10-7700K processor paired with 
-a GeForce GTX980. For each one of the samples using the original code (serial implementation), 
-the OpenMP version and the CUDA and OpenMP together. All tests but the sequential set the number
-of OpenMP threads to 4.
+For experimenting, there were four data samples as illustrated in Table 2. The application was 
+executed for each one of the samples using the original code (serial implementation), the OpenMP 
+version and the CUDA and OpenMP together. All tests but the sequential set the number of OpenMP 
+threads to 4. The machine used in all experiments have an AMD A10-7700K processor paired with a 
+GeForce GTX980.
 
 Before any data collection, a warm up procedure is executed, which consists of running the 
 application with the sample three times without getting any result. Afterward, all experiments 
@@ -329,10 +333,10 @@ with double precision. All experiments set the Gauss Quadrature Points to 8.
 \begin{table}[]
 \centering
 \caption{Data experiment set}
-\label{my-label}
+\label{experiments}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-Number of Mesh elements    & 240 & 960 & 2160 & 4000 \\ \hline
+Number of Mesh elements     & 240 & 960 & 2160 & 4000 \\ \hline
 Number of Boundary elements & 100 & 400 & 900  & 1600 \\ \hline
 \end{tabular}
 \end{table}
@@ -346,7 +350,7 @@ obtained was $2.6\%$ of the mean value.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.9]{results1.pdf}
+\includegraphics[scale=0.866]{results1.pdf}
 \caption{Time elapsed by each implementation in logarithm scale}
 \label{fig:graphic1}
 \end{figure}
@@ -360,7 +364,7 @@ latency between CPU-GPU communication, thus the usage of GPUs here may not be at
 
 
 \section{Future Works}
-There are some issues related to the $g$ described in Algorithm 2. Detailed studies are required to determine what is 
+There are some issues related to the $g$ described in Algorithm \ref{ghmatecd_new}. Detailed studies are required to determine what is 
 a $g$ that provides a good relation between precision and performance. Also, better ways to compute the
 sum in lines 11-12 of Algorithm 2 may increase performance.  The usage of GPUs in the singular case can also be analyzed.
 
