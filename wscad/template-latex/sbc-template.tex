@@ -87,9 +87,9 @@ Third, it is a  low-latency memory that is shared between all threads in the sam
 \cite{patterson:2007}. CUDA provides mechanisms to access all of them.
 
 Regarding this work, this parallelization approach is useful because an analysis of a large domain 
-requires a proportionally large number of mesh elements, and processing a single mesh have a high
+requires a proportionally large number of mesh elements, and processing a single element have a high
 time cost. Doing such analysis in parallel reduces the computational time requied for the entire
-program because multiple meshes are processed at the same time. This advantage was provided by this
+program because multiple elements are processed at the same time. This advantage was provided by this
 research.
 
 Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
@@ -320,7 +320,7 @@ $v$. The \textit{error} between these two values can be measured computing
 $\norm{y_u - y_v}$. The error between CPU and GPU versions of $H$ and $G$ matrices were computed by calculating $\norm{H_{cpu} - H_{gpu}}_1$
 and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
 
-Gfortran 5.4.0 \cite{gfortran} and CUDA 8.0 \cite{cudatoolkit} were used to compile the application. The main flags used in Gfortran are
+Gfortran 5.4.0 and CUDA 8.0 were used to compile the application. The main flags used in Gfortran are
 $\texttt{-Ofast}$ $\texttt{-march=native}$ $\texttt{-funroll-loops}$ $\texttt{-flto}$. The flags used in
 CUDA nvcc compiler are: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xptxas}$ $\texttt{--opt-level=3}$
 $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 

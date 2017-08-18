@@ -17,12 +17,6 @@ Dominguez, J. (1993).
 \newblock {\em Boundary elements in dynamics}.
 \newblock Wit Press.
 
-\bibitem[GFortran 2017]{gfortran}
-GFortran, G. (2017).
-\newblock Gnu gfortran options.
-\newblock \url{https://gcc.gnu.org/onlinedocs/gfortran/Option-Summary.html}.
-\newblock Accessed: 2017-07-09.
-
 \bibitem[GNU ]{binutils}
 GNU.
 \newblock Gnu binutils.
@@ -34,12 +28,6 @@ Katsikadelis, J.~T. (2016).
 \newblock {\em The Boundary Element Method for Engineers and Scientists: Theory
   and Applications}.
 \newblock Academic Press.
-
-\bibitem[NVIDIA 2017]{cudatoolkit}
-NVIDIA (2017).
-\newblock Cuda toolkit documentation.
-\newblock \url{http://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/}.
-\newblock Accessed: 2017-07-09.
 
 \bibitem[Patterson and Hennessy 2007]{patterson:2007}
 Patterson, D.~A. and Hennessy, J.~L. (2007).
