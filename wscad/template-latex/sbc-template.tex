@@ -48,7 +48,7 @@ and it can be used to analyze the 3D stationary behavior of wave propagation in 
 Such discretization involves generating two high computational power demanding matrices, 
 and this article demonstrates how Graphical Processing Units (GPU) were used to accelerate 
 this process. For an experiment with 4000 Mesh elements and 1600 Boundary elements, 
-a speedup of 107$\times$ was obtained with a GeForce GTX980\footnote{Thanks to NVIDIA for donating this GPU.}. 
+a speedup of 107$\times$ was obtained with a GeForce GTX980. 
 
 \end{abstract}
      
@@ -103,30 +103,30 @@ Section 6 provides an overview of our future work.
 Without addressing details on BEM formulation, the Boundary Integral Equation for Stationary
 Elastodynamic Problems can be written as:
 
+$\vspace{-1em}$
 \begin{equation}
-	\vspace{-1em}
 	c_{ij}u_{j}(\xi,\omega) + \int_S t_{ij}^*(\xi, x, \omega)u_j (x, \omega)\text{d}S(x) = \int_S u_{ij}^*(\xi, x, \omega) t_j(x, \omega)\text{d}S(x) \label{bem_formulation}
 \end{equation}
 
-After performing the geometry discretization, Equation ($\ref{bem_formulation}$) can be represented in matrix form as in equation ($\ref{eqmatrix}$).
+After performing the geometry discretization, Equation ($\ref{bem_formulation}$) can be represented in matrix form as: 
+%$\vspace{-0.5em}$
+\begin{equation}
+	Hu = Gt \label{eqmatrix}
+\end{equation}
 
-\noindent\begin{minipage}{0.5\linewidth}
-\begin{equation}
-Hu = Gt \label{eqmatrix}
-\end{equation}
-\end{minipage}%
-\begin{minipage}{0.5\linewidth}
-\begin{equation}
-	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature}
-\end{equation}
-\end{minipage}\par\vspace{\belowdisplayskip}
 
 Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
 present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
 called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
-points. Integral of these functions, as represented in Eq. ($\ref{bem_formulation}$), will generate $G$ and $H$ matrices respectively showed in Eq. ($\ref{eqmatrix}$).
+points. Integral of these functions, as represented in Eq. ($\ref{bem_formulation}$), will generate $G$ and $H$ matrices respectively
+showed in Eq. ($\ref{eqmatrix}$).
 For computing these integrals numerically, the Gaussian quadrature can be deployed. Briefly, it is an algorithm that approximates
 integrals by sums as shown in equation ($\ref{quadrature}$)\cite{ascher:2011}, where $g$ is the number of Gauss quadrature points.
+
+$\vspace{-1.2em}$
+\begin{equation}
+	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature}
+\end{equation}
 
 To overcome the mentioned problem in the strong singularity, ones use the artifice known as Regularization of 
 the Singular Integral that can be expressed as follows:
@@ -330,7 +330,7 @@ For experimenting, there were four data samples as illustrated in Table \ref{exp
 executed for each one of the samples using the original code (serial implementation), the OpenMP 
 version and the CUDA and OpenMP together. All tests but the sequential set the number of OpenMP 
 threads to 4. The machine used in all experiments have an AMD A10-7700K processor paired with a 
-GeForce GTX980.
+GeForce GTX980\footnote{Thanks to NVIDIA for donating this GPU.}.
 
 Before any data collection, a warm up procedure is executed, which consists of running the 
 application with the sample three times without getting any result. Afterward, all experiments 
