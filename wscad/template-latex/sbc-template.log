@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  15 AUG 2017 17:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  18 AUG 2017 14:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -395,43 +395,39 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 55.
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 133.
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 144.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [2]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 147.
-
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 149.
-
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
-File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
-)
-LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 149.
- [3] [4]
-Underfull \hbox (badness 1286) in paragraph at lines 308--313
+) [3] [4]
+Underfull \hbox (badness 1286) in paragraph at lines 323--328
 []\OT1/ptm/m/n/12 Gfortran 5.4.0 [[]] and CUDA 8.0 [[]] were used
  []
 
 
-Underfull \hbox (badness 3735) in paragraph at lines 308--313
+Underfull \hbox (badness 3735) in paragraph at lines 323--328
 \OT1/ptm/m/n/12 to com-pile the ap-pli-ca-tion. The main flags used in Gfor-tra
 n are $[]$
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 333.
+               Default added (so using `tbp') on input line 348.
 
-<results1.pdf, id=29, 426.59375pt x 284.06125pt>
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 350.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
+File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
+)
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 350.
+
+<results1.pdf, id=28, 426.59375pt x 284.06125pt>
 File: results1.pdf Graphic file (type pdf)
  <use results1.pdf>
-Package pdftex.def Info: results1.pdf used on input line 353.
+Package pdftex.def Info: results1.pdf used on input line 368.
 (pdftex.def)             Requested size: 369.42812pt x 245.99565pt.
  [5]
 (./sbc-template.bbl
@@ -442,11 +438,11 @@ Underfull \hbox (badness 5077) in paragraph at lines 21--25
 
 ) [6 <./results1.pdf>] (./sbc-template.aux) ) 
 Here is how much of TeX's memory you used:
- 4785 strings out of 493013
- 67097 string characters out of 6135683
- 147128 words of memory out of 5000000
- 8213 multiletter control sequences out of 15000+600000
- 29364 words of font info for 63 fonts, out of 8000000 for 9000
+ 4800 strings out of 493013
+ 67257 string characters out of 6135683
+ 147152 words of memory out of 5000000
+ 8225 multiletter control sequences out of 15000+600000
+ 32648 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,19n,28p,254b,305s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fon
@@ -463,7 +459,7 @@ mf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts
 imes/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pf
 b></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/t
 exlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on sbc-template.pdf (6 pages, 170765 bytes).
+Output written on sbc-template.pdf (6 pages, 170730 bytes).
 PDF statistics:
  88 PDF objects out of 1000 (max. 8388607)
  63 compressed objects within 1 object stream
