@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  18 AUG 2017 17:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  19 AUG 2017 11:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**sbc-template
+**sbc-template.tex
 (./sbc-template.tex
 LaTeX2e <2017/01/01> patch level 3
 Babel <3.9r> and hyphenation patterns for 83 language(s) loaded.
@@ -396,59 +396,66 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <13> not available
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-LaTeX Font Info:    Try loading font information for OT1+pcr on input line 144.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 141.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 323--328
+)
+LaTeX Font Info:    Font shape `OT1/pcr/bx/n' in size <12> not available
+(Font)              Font shape `OT1/pcr/b/n' tried instead on input line 172.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 172.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 172.
+ [3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 319--324
 []\OT1/ptm/m/n/12 Gfortran 5.4.0 and CUDA 8.0 were used to com-pile the ap-pli-
 ca-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 323--328
-\OT1/ptm/m/n/12 tion. The main flags used in Gfor-tran are $[]$ $[]$
+Underfull \hbox (badness 6412) in paragraph at lines 319--324
+\OT1/ptm/m/n/12 tion. The main flags used in Gfor-tran were $[]$ $[]$
  []
 
 
-Underfull \hbox (badness 4467) in paragraph at lines 323--328
-[]$ $[]$\OT1/ptm/m/n/12 . The flags used in CUDA nvcc com-piler are:
+Underfull \hbox (badness 3009) in paragraph at lines 319--324
+[]$ $[]$\OT1/ptm/m/n/12 . The flags used in CUDA nvcc com-piler were:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 323--328
+Underfull \hbox (badness 10000) in paragraph at lines 319--324
 []$ $[]$ $[]$ $[]$ $[]$
  []
 
 
 LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 348.
+               Default added (so using `tbp') on input line 344.
 
-LaTeX Font Info:    Try loading font information for OT1+phv on input line 350.
+LaTeX Font Info:    Try loading font information for OT1+phv on input line 346.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
 File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 )
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 350.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 346.
 
-<results1.pdf, id=28, 426.59375pt x 284.06125pt>
+<results1.pdf, id=29, 426.59375pt x 284.06125pt>
 File: results1.pdf Graphic file (type pdf)
  <use results1.pdf>
-Package pdftex.def Info: results1.pdf used on input line 368.
+Package pdftex.def Info: results1.pdf used on input line 364.
 (pdftex.def)             Requested size: 369.42812pt x 245.99565pt.
  [5]
 (./sbc-template.bbl) [6 <./results1.pdf>] (./sbc-template.aux) ) 
 Here is how much of TeX's memory you used:
- 4798 strings out of 493013
- 67234 string characters out of 6135683
+ 4828 strings out of 493013
+ 67566 string characters out of 6135683
  147124 words of memory out of 5000000
- 8223 multiletter control sequences out of 15000+600000
- 32648 words of font info for 73 fonts, out of 8000000 for 9000
+ 8242 multiletter control sequences out of 15000+600000
+ 37402 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,19n,28p,254b,305s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 39i,19n,34p,258b,305s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/tex
 live/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/font
 s/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type
@@ -458,15 +465,16 @@ onts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.
 pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></us
-r/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
-rw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8
-a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on sbc-template.pdf (6 pages, 170272 bytes).
+r/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb
+i8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/s
+hare/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on sbc-template.pdf (6 pages, 177179 bytes).
 PDF statistics:
- 88 PDF objects out of 1000 (max. 8388607)
- 63 compressed objects within 1 object stream
+ 92 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
