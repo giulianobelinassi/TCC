@@ -2,6 +2,126 @@
 \chapter{Introdução}
 \label{cap:introducao}
 
+
+Differential equations governing problems of Mathematical Physics have analytical 
+solutions only in cases in which the domain geometry, boundary and initial conditions are
+reasonably simple. Problems with arbitrary domains and fairly general boundary conditions 
+can only be solved approximately, for example, by using numerical techniques. 
+These techniques were strongly developed due to the presence of increasingly powerful computers, 
+enabling the solution of complex mathematical problems.
+
+The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains since
+it satisfies the Sommerfeld radiation condition, also known as geometric damping 
+\cite{katsikadelis:2016}. This method can be used for numerically modeling the stationary behavior of 3D 
+wave propagation in the soil and it is useful as a computational tool to aid in the analysis of soil vibration
+\cite{dominguez:1993}. A BEM based tool can be used for analyzing the vibration created 
+by heavy machines, railway lines, earthquakes, or even to aid the design of offshore oil platforms.
+
+With the advent of GPUs, several mathematical and engineering simulation problems were redesigned
+to be implemented into these massively parallel devices. However, 
+first GPUs were designed to render graphics in real time, as a consequence, all the available 
+libraries, such as OpenGL, were graphical oriented. These redesigns involved converting 
+the original problem to the graphics domain and required expert knowledge of the selected 
+graphical library. 
+
+NVIDIA noticed a new demand for their products and created an API called CUDA to enable 
+the use of GPUs for general purpose programming. CUDA uses the concept of kernels, which are
+functions called from the host to be executed by GPU threads. Kernels are organized into a set of blocks composed of a set 
+of threads that cooperate with each other \cite{patterson:2007}.
+
+The memory of a NVIDIA GPU is divided in global memory, local memory, and shared memory.
+Global memory is accessible by all threads, local memory is private to a thread and shared 
+memory is low-latency and accessible by all threads in a block\cite{patterson:2007}. CUDA 
+provides mechanisms to access all of them.
+
+Regarding this work, this parallelization approach is useful because an analysis of a large domain 
+requires a proportionally large number of mesh elements, and processing a single element have a high
+time cost. Doing such analysis in parallel reduces the computational time requied for the entire
+program because multiple elements are processed at the same time. This advantage was provided by this
+research.
+
+\textbf{Talk about the structure of this paper}.
+
+Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
+description of BEM for Stationary Elastodynamic Problems and the meaning of some functions presented in 
+this paper. Section 3 shows how the most computational intensive routine was optimized using GPUs. 
+Section 4 discusses how the results were obtained. Section 5 presents and discusses the results. Finally, 
+Section 6 provides an overview of our future work.
+
+\section{Boundary Elements Method Background}
+
+Without addressing details on BEM formulation, the Boundary Integral Equation for Stationary
+Elastodynamic Problems can be written as:
+
+$\vspace{-1em}$
+\begin{equation}
+	c_{ij}u_{j}(\xi,\omega) + \int_S t_{ij}^*(\xi, x, \omega)u_j (x, \omega)\text{d}S(x) = \int_S u_{ij}^*(\xi, x, \omega) t_j(x, \omega)\text{d}S(x) \label{bem_formulation}
+\end{equation}
+
+After performing the geometry discretization, Equation ($\ref{bem_formulation}$) can be represented in matrix form as: 
+%$\vspace{-0.5em}$
+\begin{equation}
+	Hu = Gt \label{eqmatrix}
+\end{equation}
+Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
+present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
+called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
+points. The integral of these functions, as seen in Eq. ($\ref{bem_formulation}$), will generate the $G$ and $H$ matrices respectively,
+as is shown in Eq. ($\ref{eqmatrix}$).
+
+To overcome the mentioned problem in the strong singularity, one can use the artifice known as Regularization of 
+the Singular Integral, expressed as follows:
+%
+\begin{equation}
+\begin{split}
+	c_{ij}(\xi)u_{j}(\xi, \omega) + \int_{S}\left[t_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} - t_{ij}^{*}(\xi, x)_{\text{STA}} \right]u_{j}(x, \omega) \text{d}S(x) + \\
+	+ \int_S t_{ij}(\xi, x)_\text{STA} u_j(x)\text{d}S(x) = \int_S u_{ij}^{*}(\xi, x, \omega)_{\text{DYN}} t_j(x, \omega)\text{d}S(x) \label{singular}
+\end{split}
+\end{equation}
+Where DYN = Dynamic, STA = Static. The integral of the difference between the dynamic and static nuclei, 
+the first term in Equation ($\ref{singular}$), does not present singularity when executed concomitantly as expressed because 
+they have the same order in the both problems.
+
+Algorithmically, equation ($\ref{bem_formulation}$) is implemented into a routine named $\texttt{Nonsingd}$, computing the
+integral using the Gaussian Quadrature without addressing problems related to singularity. 
+To overcome singularity problems, there is a special routine called $\texttt{Sing\_de}$ that uses the
+artifice described in equation ($\ref{singular}$). Lastly, $\texttt{Ghmatecd}$ is a routine 
+developed to create both the $H$ and $G$ matrices described in equation ($\ref{eqmatrix}$). Both $\texttt{Nonsingd}$
+and $\texttt{Sing\_de}$ are called from $\texttt{Ghmatecd}$ routine.
+
+\section{Gauss Quadrature Background}
+
+For computing these integrals numerically, the Gaussian quadrature can be deployed. Briefly, it is an algorithm that approximates
+integrals by sums as shown in equation ($\ref{quadrature}$)\cite{ascher:2011}, where $g$ is the number of Gauss quadrature points.
+
+$\vspace{-1.2em}$
+\begin{equation}
+	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature}
+\end{equation}
+
+\section{LU Decomposition Background}
+
+A system of linear equations is a set of linear equations concerning the same set of variables. In matrix form, 
+these systems can be represented as equation below, where $A \in \Cfield^{m \times n}, 
+	  x \in \Cfield^{m}, b \in \Cfield^{n}$:
+\begin{equation}
+	Ax = b \label{linsys}
+\end{equation}
+Where $x$ is the only unknown in the system. 
+In the special case where $A$ is a square ($m = n$) and nonsingular ($Ax = 0 \Longleftrightarrow x = 0$) matrix, 
+an algorithm named \textit{LU decomposition with partial pivoting} can be deployed to solve these systems.
+
+
+Let $A \in \Cfield^{n \times n}$ be a nonsingular matrix. Then the \textit{LU decomposition with partial pivoting} 
+decomposes $A$ into three matrices such that $A = PLU$, where $P$ is a pivoting matrix, a matrix that when multiplied 
+by a vector only interchanges the elements of the vector; $L$ is a lower triangular matrix, a matrix that only has zeroes 
+above the main diagonal; and $U$ is an upper triangular matrix.
+
+Replacing $A = PLU$ in equation ($\ref{linsys}$), one finds the equation $PLUx = b$, and $x$ can be found by solving 
+two triangular systems.
+
+\section{CUDA Programming Background}
+
 Uma monografia deve ter um capítulo inicial que é a Introdução e um
 capítulo final que é a Conclusão. Entre esses dois capítulos poderá
 ter uma sequência de capítulos que descrevem o trabalho em detalhes.
