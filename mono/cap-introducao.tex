@@ -101,24 +101,119 @@ $\vspace{-1.2em}$
 
 \section{LU Decomposition Background}
 
-A system of linear equations is a set of linear equations concerning the same set of variables. In matrix form, 
-these systems can be represented as equation below, where $A \in \Cfield^{m \times n}, 
-	  x \in \Cfield^{m}, b \in \Cfield^{n}$:
-\begin{equation}
-	Ax = b \label{linsys}
-\end{equation}
-Where $x$ is the only unknown in the system. 
-In the special case where $A$ is a square ($m = n$) and nonsingular ($Ax = 0 \Longleftrightarrow x = 0$) matrix, 
-an algorithm named \textit{LU decomposition with partial pivoting} can be deployed to solve these systems.
+In many areas of science concerning numerical methods, it is necessary to find a solution that 
+satisfies together many equations. In this subsection, we describe one of 
+most used algorithms to solve a specific kind of linear system of equations. 
+Before showing such algorithms, a set of definitions and theorems are required 
+to understand how it operates.
 
+A \textit{matrix} is denoted as an element of $\Cfield^{m \times n}$, where
+$m$ is the number of rows and $n$ is the number of columns. A \textit{vector} 
+is an element of $\Cfield^m$, where $m$ is the number of rows. Notice that a 
+vector is a single column matrix.
 
-Let $A \in \Cfield^{n \times n}$ be a nonsingular matrix. Then the \textit{LU decomposition with partial pivoting} 
-decomposes $A$ into three matrices such that $A = PLU$, where $P$ is a pivoting matrix, a matrix that when multiplied 
-by a vector only interchanges the elements of the vector; $L$ is a lower triangular matrix, a matrix that only has zeroes 
-above the main diagonal; and $U$ is an upper triangular matrix.
+\begin{definition}
+A system of linear equations is a equation of the form $Ax = b$, where 
+$A \in \Cfield^{m \times n}, b \in \Cfield^{n}$ are known and $x \in \Cfield^{m}$
+is the only unknown in the equation.
+\end{definition}
 
-Replacing $A = PLU$ in equation ($\ref{linsys}$), one finds the equation $PLUx = b$, and $x$ can be found by solving 
-two triangular systems.
+Although the definition above is general to any linear system, 
+here we will explore properties of linear systems characterized by a square and
+nonsingular matrix $A$.
+
+\begin{definition}
+	A \textbf{square} matrix is such that the number of rows is equal to
+	the number of columns. A matrix that is not square is called \textbf{rectangular}.
+\end{definition}
+
+\begin{definition}
+	A matrix $A \in \Cfield^{n \times n}$ is called nonsingular if and only if
+	$Ax = 0 \Leftrightarrow x = 0$.
+\end{definition}
+
+Linear systems that have nonsingular matrices have a nice property, the uniqueness of the solution, as demonstrated below.
+
+\begin{theorem}
+	Let $A \in \Cfield^{n \times n}$ be a nonsingular square matrix. Then the system
+	$Ax = b$ admits a unique solution $x \in \Cfield^{n}$.
+\end{theorem}
+\begin{proof}
+	Let $A$ be a nonsingular square matrix and suppose, by absurd, that $Ax = b$ have two distinct 
+	solutions named $x$ and $y$. Since $y$ is also a solution, then $Ay = b$. But then $Ax - Ay = b - b = 0$. 
+	Isolating $A$ we find that $A(x - y) = 0$. But since $A$ is nonsingular, then by definition of nonsingularity we 
+	have that $(x - y) = 0$, implying that $x = y$. This result is an absurd because we supposed that $x$ and $y$ 
+	are distinct solutions.
+\end{proof}
+
+There is also an interesting special case of square matrices, called triangular matrices. There are two types of 
+triangular matrices, lower triangular and upper triangular.
+
+\begin{definition}
+An upper triangular matrix is such that all elements below the main diagonal are $0$. Analogously, a lower 
+triangular matrix is such that all elements above the main diagonal are $0$.
+\end{definition}
+
+The matrices below are examples of triangular matrices. At the left, we have an upper triangular matrix. 
+At the right, we have a lower triangular matrix.
+
+\[ \begin{pmatrix}
+  1 & 2 & 3 \\
+  0 & 4 & 5 \\
+  0 & 0 & 6
+		\end{pmatrix} \qquad
+ \begin{pmatrix}
+  1 & 0 & 0 \\
+  2 & 3 & 0 \\
+  4 & 5 & 6
+		\end{pmatrix}
+\]
+
+Systems of equations with triangular matrices have an interesting property that it can be solved with an $O(n²)$ algorithm. 
+For lower triangular matrices, one uses the forward substitution. For upper triangular matrices, one uses the backward substitution.
+
+\begin{algorithm}[H]
+\caption{Solves $Ax = b$, where $A$ is a lower triangular nonsingular matrix. Replaces b with the result }
+\label{forward}
+\begin{algorithmic}[1]
+    \Procedure{forward\_substituition}{$A \in \Cfield^{n \times n}$, $b \in \Cfield^{n}$}
+		\For{$j := 1, n$}
+			\State{$b[j] \leftarrow A[j][j]/b[j]$}
+
+            \For{$i := j+1, n$}
+                \State{$b[i] \leftarrow b[i] - A[i][j]*b[j]$}
+            \EndFor
+     \EndFor
+    \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\caption{Solves $Ax = b$, where $A$ is a upper triangular nonsingular matrix. Replaces b with the result}
+\label{backward}
+\begin{algorithmic}[1]
+    \Procedure{backward\_substituition}{$A \in \Cfield^{n \times n}$, $b \in \Cfield^{n}$}
+		\For{$j := n, 1$}
+			\State{$b[j] \leftarrow A[j][j]/b[j]$}
+
+            \For{$i := 1, j$}
+                \State{$b[i] \leftarrow b[i] - A[i][j]*b[j]$}
+            \EndFor
+     \EndFor
+    \EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+The LU decomposition explores the $O(n²)$ cost to find a solution of these systems by decomposing 
+a square nonsingular matrix in two triangular matrices and solving two linear systems. 
+
+\begin{theorem}
+Let A be a square nonsingular matrix. Then the LU decomposition with partial pivoting decomposes $A$ in three matrices such that $A = PLU$, 
+where P is a permutation matrix.
+\end{theorem}
+\begin{proof}
+	See Theorem 1.8.8 of \cite{watkins:2004}
+\end{proof}
 
 \section{CUDA Programming Background}
 
