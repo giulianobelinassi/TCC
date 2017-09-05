@@ -89,20 +89,37 @@ artifice described in equation ($\ref{singular}$). Lastly, $\texttt{Ghmatecd}$ i
 developed to create both the $H$ and $G$ matrices described in equation ($\ref{eqmatrix}$). Both $\texttt{Nonsingd}$
 and $\texttt{Sing\_de}$ are called from $\texttt{Ghmatecd}$ routine.
 
-\section{Gauss Quadrature Background}
+\section{Gaussian Quadrature Background}
 
-For computing these integrals numerically, the Gaussian quadrature can be deployed. Briefly, it is an algorithm that approximates
-integrals by sums as shown in equation ($\ref{quadrature}$)\cite{ascher:2011}, where $g$ is the number of Gauss quadrature points.
-
-$\vspace{-1.2em}$
+Some integrals can only be approximated by numerical methods such as the Gaussian quadrature, that means:
 \begin{equation}
-	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature}
+	\int_{-1}^{1} f(x)\text{d}x \approx \sum_{j = 0}^{g}a_j f(x_j) \label{quadrature}
 \end{equation}
+
+Where $a_j$ are called weights and $x_j$ are called abscissae, and these values can be 
+computed using Legendre Polynomials, as introduced below.
+
+Legrenge Polynomials are solutions of the equation:
+\begin{equation}
+	\frac{\text{d}}{\text{d}x} \left( (1-x²) \frac{\text{d}}{\text{d}x} \phi_n(x) \right) + n\left( n+1 \right) \phi_n(x)
+       = 0
+\end{equation}
+
+It can be shown that $\phi$ can be obtained with the following recurrence: 
+
+\begin{equation}
+	  \phi_j(x)=\begin{cases}
+	      1, & \text{if $j = 0$}.\\
+	      x, & \text{if $j = 1$}.\\
+		  \frac{2j-1}{j}x\phi_{j-1}(x) - \frac{j-1}{j}\phi_{j-2}(x) & \text{if $j \in \mathbb{N} - \{0, 1\}$}
+	  \end{cases}
+\end{equation}
+
 
 \section{LU Decomposition Background}
 
 In many areas of science concerning numerical methods, it is necessary to find a solution that 
-satisfies together many equations. In this subsection, we describe one of 
+satisfies together many equations. In this subsection, we describe one of the 
 most used algorithms to solve a specific kind of linear system of equations. 
 Before showing such algorithms, a set of definitions and theorems are required 
 to understand how it operates.
@@ -132,7 +149,7 @@ nonsingular matrix $A$.
 	$Ax = 0 \Leftrightarrow x = 0$.
 \end{definition}
 
-Linear systems that have nonsingular matrices have a nice property, the uniqueness of the solution, as demonstrated below.
+Linear systems that have nonsingular matrices have a unique solution, as demonstrated below.
 
 \begin{theorem}
 	Let $A \in \Cfield^{n \times n}$ be a nonsingular square matrix. Then the system
@@ -179,7 +196,10 @@ illustrated in algorithms \ref{forward} and \ref{backward}.
 \begin{algorithmic}[1]
     \Procedure{forward\_substituition}{$A \in \Cfield^{n \times n}$, $b \in \Cfield^{n}$}
 		\For{$j := 1, n$}
-			\State{$b[j] \leftarrow A[j][j]/b[j]$}
+			\If{$A[j][j] == 0$}
+				\State{Error: $A$ is singular.}
+			\EndIf
+			\State{$b[j] \leftarrow b[j]/A[j][j]$}
 
             \For{$i := j+1, n$}
                 \State{$b[i] \leftarrow b[i] - A[i][j]*b[j]$}
@@ -195,8 +215,10 @@ illustrated in algorithms \ref{forward} and \ref{backward}.
 \begin{algorithmic}[1]
     \Procedure{backward\_substituition}{$A \in \Cfield^{n \times n}$, $b \in \Cfield^{n}$}
 		\For{$j := n, 1$}
-			\State{$b[j] \leftarrow A[j][j]/b[j]$}
-
+			\If{$A[j][j] == 0$}
+				\State{Error: $A$ is singular.}
+			\EndIf
+			\State{$b[j] \leftarrow b[j]/A[j][j]$}
             \For{$i := 1, j$}
                 \State{$b[i] \leftarrow b[i] - A[i][j]*b[j]$}
             \EndFor
@@ -206,13 +228,13 @@ illustrated in algorithms \ref{forward} and \ref{backward}.
 \end{algorithm}
 
 The question that rises now is now is how can we reduce a square nonsingular matrix $A$ to triangular matrices. 
-This is what LU with partial pivoting does, it decomposes $A$ in three matrices $PLU$, where $P$ is a pivoting matrix, 
-$L$ is lower triangular and $U$ is upper triangular. Briefly, a pivoting matrix is a matrix that when operated with a matrix, 
-it interchanges its columns; this is used to avoid divisions by $0$. Algorithm $\ref{lu}$ illustrates how $A$ can be decomposed
+This is what LU with partial pivoting does, it decomposes $A$ in three matrices $P^{\intercal}LU$, where $P$ is a pivoting matrix, 
+$L$ is lower triangular and $U$ is upper triangular. Briefly, a pivoting matrix is such that when operated with a matrix, 
+it interchanges its columns; this is used to avoid divisions by $0$ \citep{watkins:2004}. Algorithm $\ref{lu}$ illustrates how $A$ can be decomposed
 in such matrices.
 
 \begin{algorithm}[H]
-\caption{Decomposes $A$ in $PLU$, $P$ is a permutation matrix stored in a vector. Stores $L$ and $U$ over $A$.}
+\caption{Decomposes $A$ in $P^{\intercal}LU$, $P$ is a permutation matrix stored in a vector. Stores $L$ and $U$ over $A$.}
 \label{lu}
 \begin{algorithmic}[1]
     \Procedure{lu\_partial\_pivoting}{$A \in \Cfield^{n \times n}$}
@@ -243,12 +265,11 @@ in such matrices.
 \end{algorithmic}
 \end{algorithm}
 
-Using the fact that $A$ = $PLU$, one can solve $Ax=b$ by solving $PLUx = b$. Since $P$ is a permutation matrix, then its inverse $P^{-1} = P^{\intercal}$ 
-and now one must solve $LUx = P^{\intercal}b$. Let $y = Ux$. Solving $Ly = P^{T}b$ will result in a numerical value to $y$. Solving $Ux = y$ will finally 
+Using the fact that $A$ = $P^{\intercal}LU$, one can solve $Ax=b$ by solving $P^{\intercal}LUx = b$. Since $P$ is a permutation matrix, then its inverse $P^{-1} = P^{\intercal}$ 
+\citep{watkins:2004} and now one must solve $LUx = Pb$. Let $y = Ux$. Solving $Ly = Pb$ will result in a numerical value to $y$. Solving $Ux = y$ will finally 
 assert $x$. 
 
-
-Since the cost of decomposing $A$ into $PLU$ is $O(n³)$, the time required to compute $P^{T}b$ is, naively, $O(n²)$ and the time required to solve
+Since the cost of decomposing $A$ into $P^{\intercal}LU$ is $O(n³)$, the time required to compute $P^{\intercal}b$ is, naively, $O(n²)$ and the time required to solve
 the two triangular systems is $O(n²)$, then the cost of solving $Ax=b$ is $O(n³)$. 
 
 %\begin{theorem}
