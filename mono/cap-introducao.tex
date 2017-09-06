@@ -99,13 +99,9 @@ Some integrals can only be approximated by numerical methods such as the Gaussia
 Where $a_j$ are called weights and $x_j$ are called abscissae, and these values can be 
 computed using Legendre Polynomials, as introduced below.
 
-Legrenge Polynomials are solutions of the equation:
-\begin{equation}
-	\frac{\text{d}}{\text{d}x} \left( (1-x²) \frac{\text{d}}{\text{d}x} \phi_n(x) \right) + n\left( n+1 \right) \phi_n(x)
-       = 0
-\end{equation}
 
-It can be shown that $\phi$ can be obtained with the following recurrence: 
+\begin{definition}
+Legendre Polynomials are given by the following recurrence:
 
 \begin{equation}
 	  \phi_j(x)=\begin{cases}
@@ -114,7 +110,41 @@ It can be shown that $\phi$ can be obtained with the following recurrence:
 		  \frac{2j-1}{j}x\phi_{j-1}(x) - \frac{j-1}{j}\phi_{j-2}(x) & \text{if $j \in \mathbb{N} - \{0, 1\}$}
 	  \end{cases}
 \end{equation}
+\end{definition}
 
+It can be shown that those polynomials have the following properties:
+
+\begin{theorem}
+Legendre Polynomials satisfy the following properties \citep{ascher:2011}: 
+\begin{enumerate}
+	\item Orthogonality: for $i \neq j$, $\int_{-1}^{1} \phi_{i}(x)\phi_{j}(x) \text{d}x = 0$.
+	\item Calibration: $|\phi_j(x)| \leq 1$ for any $-1 \leq x \leq 1$, and $\phi_j(1) = 1$.
+	\item Oscillation: $\phi_j(x)$ has degree equal to $j$ and all its roots are inside $]-1; 1[$.
+\end{enumerate}
+\end{theorem}
+The proof of such theorem is beyond the scope of this work. See \citep{ascher:2011}.
+
+\begin{theorem}
+	Let $p(x)$ be a polynomial of degree less but not equal to $j$. Then $p(x)$ is orthogonal to $\phi_j(x)$, that is:
+	\begin{equation}
+		\int_{-1}^{1} p(x)\phi_j(x) \text{d}x = 0
+	\end{equation}
+\end{theorem}
+\begin{proof}
+	Since $\{\phi_0, \phi_1, \cdots, \phi_j\}$ is an orthogonal base of all polynomials of degree less or 
+	equal $j$, then all polynomials less or equal to $j$ can be written as linear combination of 
+	$\phi_0, \phi_1, \cdots, \phi_j$. This also applies to $p(x)$, since it has degree less but not 
+	equal than $j$. That means:
+
+	\begin{equation}
+		p(x) = \sum_{k = 0}^{j-1} \alpha_k\phi_k(x)
+	\end{equation}
+	with such information, just calculate:
+	\begin{equation}
+		\int_{-1}^{1} p(x)\phi_j(x)\text{d}x = \int_{-1}^{1} \left(\sum_{k = 0}^{j-1} \alpha_k \phi_k(x) \right)\phi_j(x)
+           \text{d}x  = \sum_{k = 0}^{j-1} \alpha_k \left(\underbrace{\int_{-1}^{1} \phi_k(x)\phi_j(x)\text{d}x}_{0, \text{orthogonality}} \right) = 0
+	\end{equation}
+\end{proof}
 
 \section{LU Decomposition Background}
 
