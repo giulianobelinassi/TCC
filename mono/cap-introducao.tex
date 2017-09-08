@@ -93,11 +93,12 @@ and $\texttt{Sing\_de}$ are called from $\texttt{Ghmatecd}$ routine.
 
 Some integrals can only be approximated by numerical methods such as the Gaussian quadrature, that means:
 \begin{equation}
-	\int_{-1}^{1} f(x)\text{d}x \approx \sum_{j = 0}^{g}a_j f(x_j) \label{quadrature}
+	\int_{-1}^{1} f(x)\text{d}x \approx \sum_{j = 1}^{n}a_j f(x_j) \label{quadrature}
 \end{equation}
 
 Where $a_j$ are called weights and $x_j$ are called abscissae, and these values can be 
 computed using Legendre Polynomials, as introduced below.
+
 
 
 \begin{definition}
@@ -112,7 +113,7 @@ Legendre Polynomials are given by the following recurrence:
 \end{equation}
 \end{definition}
 
-It can be shown that those polynomials have the following properties:
+It can be shown that those polynomials have the following important properties:
 
 \begin{theorem}
 Legendre Polynomials satisfy the following properties \citep{ascher:2011}: 
@@ -124,29 +125,57 @@ Legendre Polynomials satisfy the following properties \citep{ascher:2011}:
 \end{theorem}
 The proof of such theorem is beyond the scope of this work. See \citep{ascher:2011}.
 
-\begin{theorem}
-	Let $p(x)$ be a polynomial of degree less but not equal to $j$. Then $p(x)$ is orthogonal to $\phi_j(x)$, that is:
+\begin{theorem} \label{ortho}
+	Let $q(x)$ be a polynomial of degree $< n$. Then $q(x)$ is orthogonal to $\phi_n(x)$, that is:
 	\begin{equation}
-		\int_{-1}^{1} p(x)\phi_j(x) \text{d}x = 0
+		\int_{-1}^{1} q(x)\phi_n(x) \text{d}x = 0
 	\end{equation}
 \end{theorem}
 \begin{proof}
-	Since $\{\phi_0, \phi_1, \cdots, \phi_j\}$ is an orthogonal base of all polynomials of degree less or 
-	equal $j$, then all polynomials less or equal to $j$ can be written as linear combination of 
-	$\phi_0, \phi_1, \cdots, \phi_j$. This also applies to $p(x)$, since it has degree less but not 
-	equal than $j$. That means:
-
+	Since $\{\phi_0, \phi_1, \cdots, \phi_n\}$ is an orthogonal base of all polynomials of degree $\leq n$, 
+	then all polynomials of degree $\leq n$ can be written as linear combination of 
+	$\phi_0, \phi_1, \cdots, \phi_n$. Since $q(x)$ degree is $< n$, then:
 	\begin{equation}
-		p(x) = \sum_{k = 0}^{j-1} \alpha_k\phi_k(x)
+		q(x) = \sum_{k = 0}^{n-1} \alpha_k\phi_k(x)
 	\end{equation}
 	with such information, just calculate:
 	\begin{equation}
-		\int_{-1}^{1} p(x)\phi_j(x)\text{d}x = \int_{-1}^{1} \left(\sum_{k = 0}^{j-1} \alpha_k \phi_k(x) \right)\phi_j(x)
-           \text{d}x  = \sum_{k = 0}^{j-1} \alpha_k \left(\underbrace{\int_{-1}^{1} \phi_k(x)\phi_j(x)\text{d}x}_{0, \text{orthogonality}} \right) = 0
+		\int_{-1}^{1} q(x)\phi_n(x)\text{d}x = \int_{-1}^{1} \left(\sum_{k = 0}^{n-1} \alpha_k \phi_k(x) \right)\phi_n(x)
+           \text{d}x  = \sum_{k = 0}^{n-1} \alpha_k \left(\underbrace{\int_{-1}^{1} \phi_k(x)\phi_n(x)\text{d}x}_{0, \text{orthogonality}} \right) = 0
 	\end{equation}
 \end{proof}
 
+These two properties above are essential to capture the main concept of the Gaussian quadrature, which is to satisfy the equation below with equality.
+Let $r(x)$ be a polynomial of degree $< n$.
+\begin{equation}
+	\int_{-1}^{1} r(x) \text{d}x = \sum_{j = 1}^{n} a_jr(x_j)
+\end{equation}
+
+Let's now show a simple trick that can be done with Legendre Polynomials to enhance the quadrature precision. Let $p(x)$ be a polynomial of degree $< 2n$. 
+If we divide $p(x)$ by $\phi_n(x)$, both quotient $q(x)$ and the remainder $r(x)$ have degree $< n$ because $\phi_n(x)$ have degree equal to $n$. 
+That means:
+\begin{equation}
+	p(x) = q(x)\phi_n(x) + r(x)
+\end{equation}
+Integrating both sides:
+\begin{equation}
+	\int_{-1}^{1} p(x)\text{d}x = \underbrace{\int_{-1}^{1} q(x)\phi_n(x) \text{d}x}_{0, \text{by Theorem } \ref{ortho}} + \int_{-1}^{1} r(x) \text{d}x = \int_{-1}^{1} r(x) \text{d}x 
+\end{equation}
+
+Let's now select the abscissae points wisely. If all $x_j$ are zeroes of the Legendre Polynomials ($\phi_n(x_j) = 0$), then we would have:
+\begin{equation}
+	p(x_j) = q(x_j)\underbrace{\phi_n(x_j)}_{0} + r(x_j) = r(x_j)
+\end{equation}
+This means that the quadrature is exact to any polynomial of degree up to $2n-1$ if we could select the weights properly,
+thus the quadrature precision would be as good as we could approximate $f(x)$ by a polynomial of degree $2n-1$. For the weight points, \cite{hildebrand:1987}
+shows that one could use:
+\begin{equation}
+	a_j = \frac{2(1 - {x_j}^2)}{(n+1)^2 (\phi_{n+1}(x_j))^2}
+\end{equation}
+
 \section{LU Decomposition Background}
+
+
 
 In many areas of science concerning numerical methods, it is necessary to find a solution that 
 satisfies together many equations. In this subsection, we describe one of the 
