@@ -342,42 +342,24 @@ the two triangular systems is $O(n²)$, then the cost of solving $Ax=b$ is $O(n³)
 
 
 
-\section{CUDA Programming Background}
+\section{Parallel Programming Background}
 
-Uma monografia deve ter um capítulo inicial que é a Introdução e um
-capítulo final que é a Conclusão. Entre esses dois capítulos poderá
-ter uma sequência de capítulos que descrevem o trabalho em detalhes.
-Após o capítulo de conclusão, poderá ter apêndices e ao final deverá
-ter as referências bibliográficas.
+Imagine the following scenario: You have to build a bridge to connect two parts of a city, 
+named A and B, that are separated by a river. Let's say that if a single person builds 
+this bridge from A to B, the time required to do so is $t$. How can we build this bridge 
+faster? If we have another man building the same bridge in parallel to you but from B to A
+and connect it at the middle of the river, then the time required is $t/2$. 
+This silly example captures the essence of parallel computing. How can we use multiple 
+processors or multiple machines with some coordination to archive the same purpose?
 
+An important abstraction that makes parallel computing easier to understand is the concept 
+of processes and threads. A process is an abstraction layer that allows a program to have 
+the perception that it is running alone on a computer, although the process is controlled 
+by the operating system such as Windows. Every process has its own resources and multiple 
+execution units \cite{tanenbaum:2009}. A single execution unit is called a thread.
 
-Para a escrita de textos em Ciência da Computação, o livro de Justin Zobel, 
-\emph{Writing for Computer Science} \citep{zobel:04} é uma leitura obrigatória. 
-O livro \emph{Metodologia de Pesquisa para Ciência da Computação} de 
-\citet{waz:09} também merece uma boa lida.
+There are various computer architectures designed to handle parallel computing, as described by Flynn Taxonomy, but remarks are necessary to two architectures.
 
-O uso desnecessário de termos em lingua estrangeira deve ser evitado. No entanto,
-quando isso for necessário, os termos devem aparecer \emph{em itálico}.
+SIMD: Standing for Single Instruction, Multiple Data. This refers to vectorized processors allowing a single operation to be executed in a vector content. Examples are Intel SSE and GPUs, although this last one is not a pure SIMD, as described later.
 
-\begin{small}
-\begin{verbatim}
-Modos de citação:
-indesejável: [AF83] introduziu o algoritmo ótimo.
-indesejável: (Andrew e Foster, 1983) introduziram o algoritmo ótimo.
-certo : Andrew e Foster introduziram o algoritmo ótimo [AF83].
-certo : Andrew e Foster introduziram o algoritmo ótimo (Andrew e Foster, 1983).
-certo : Andrew e Foster (1983) introduziram o algoritmo ótimo.
-\end{verbatim}
-\end{small}
-
-Uma prática recomendável na escrita de textos é descrever as legendas das
-figuras e tabelas em forma auto-contida: as legendas devem ser razoavelmente
-completas, de modo que o leitor possa entender a figura sem ler o texto onde a
-figura ou tabela é citada.  
-
-Apresentar os resultados de forma simples, clara e completa é uma tarefa que
-requer inspiração. Nesse sentido, o livro de \citet{tufte01:visualDisplay},
-\emph{The Visual Display of Quantitative Information}, serve de ajuda na
-criação de figuras que permitam entender e interpretar dados/resultados de forma
-eficiente.
-
+MIMD: 
