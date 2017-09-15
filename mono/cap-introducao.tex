@@ -356,7 +356,7 @@ An important abstraction that makes parallel computing easier to understand is t
 of processes and threads. A process is an abstraction layer that allows a program to have 
 the perception that it is running alone on a computer, although the process is controlled 
 by the operating system such as Windows. Every process has its own resources and multiple 
-execution units \cite{tanenbaum:2009}. A single execution unit is called a thread.
+execution units \citep{tanenbaum:2009}. A single execution unit is called a thread.
 
 There are various computer architectures designed to handle parallel computing, as described 
 by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two architectures.
@@ -366,10 +366,24 @@ by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two archite
 		a single operation to be executed in a vector content. Examples are Intel SSE and GPUs, although GPUs 
 		are not a pure SIMD, as described later.
 
-	\item MIMD: Stands for Multiple Instruction, Multiple Data. This refers to independent multicore systems,
-		capable of executing tasks asynchronously.
+	\item MIMD: Stands for Multiple Instruction, Multiple Data. This refers to independent multicore systems, 
+	capable of executing tasks asynchronously. Here is located both shared memory systems and distributed 
+	memory systems. Shared memory systems are an example of it, where various processors reads and writes to 
+	a shared memory. For such systems, a collection of directives called OpenMP can be used to explore its 
+	parallel capabilities with little changes in the original code. \citep{pacheco:2011}
+	
 \end{enumerate}
 
-Shared memory systems are examples of MIND that the processors read and write to a global shared memory. 
-For such systems, a collection of directives called OpenMP can be used to explore its parallel capabilities.
+Although OpenMP uses simple pragmas to take advantage of multiple CPUs in a shared memory system, GPUs 
+requires severe modifications in the original code to run in such devices. NVIDIA developed CUDA for this 
+purpose.
 
+\subsection{CUDA Programming}
+
+CUDA is an acronym to Compute Unified Device Architecture and it is an extension to C++ language that allows 
+running code in NVIDIA GPUs. 
+
+CUDA execution is divided into two parts: a host(CPU) and device(GPU) parts. For the device part, CUDA uses 
+the concept of kernels, which are functions called from the host to be executed by GPU threads. The 
+memory space is also separated between the host and the device, and data should be manually transferred 
+between memories in order to allow a device to access them or to retrieve results computed by the GPU.
