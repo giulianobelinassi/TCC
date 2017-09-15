@@ -358,8 +358,18 @@ the perception that it is running alone on a computer, although the process is c
 by the operating system such as Windows. Every process has its own resources and multiple 
 execution units \cite{tanenbaum:2009}. A single execution unit is called a thread.
 
-There are various computer architectures designed to handle parallel computing, as described by Flynn Taxonomy, but remarks are necessary to two architectures.
+There are various computer architectures designed to handle parallel computing, as described 
+by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two architectures.
 
-SIMD: Standing for Single Instruction, Multiple Data. This refers to vectorized processors allowing a single operation to be executed in a vector content. Examples are Intel SSE and GPUs, although this last one is not a pure SIMD, as described later.
+\begin {enumerate}
+	\item SIMD: Standing for Single Instruction, Multiple Data. This refers to vectorized processors allowing 
+		a single operation to be executed in a vector content. Examples are Intel SSE and GPUs, although GPUs 
+		are not a pure SIMD, as described later.
 
-MIMD: 
+	\item MIMD: Stands for Multiple Instruction, Multiple Data. This refers to independent multicore systems,
+		capable of executing tasks asynchronously.
+\end{enumerate}
+
+Shared memory systems are examples of MIND that the processors read and write to a global shared memory. 
+For such systems, a collection of directives called OpenMP can be used to explore its parallel capabilities.
+
