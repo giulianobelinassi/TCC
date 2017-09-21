@@ -12,9 +12,9 @@ enabling the solution of complex mathematical problems.
 
 The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains since
 it satisfies the Sommerfeld radiation condition, also known as geometric damping 
-\cite{katsikadelis:2016}. This method can be used for numerically modeling the stationary behavior of 3D 
+\citep{katsikadelis:2016}. This method can be used for numerically modeling the stationary behavior of 3D 
 wave propagation in the soil and it is useful as a computational tool to aid in the analysis of soil vibration
-\cite{dominguez:1993}. A BEM based tool can be used for analyzing the vibration created 
+\citep{dominguez:1993}. A BEM based tool can be used for analyzing the vibration created 
 by heavy machines, railway lines, earthquakes, or even to aid the design of offshore oil platforms.
 
 With the advent of GPUs, several mathematical and engineering simulation problems were redesigned
@@ -26,13 +26,7 @@ graphical library.
 
 NVIDIA noticed a new demand for their products and created an API called CUDA to enable 
 the use of GPUs for general purpose programming. CUDA uses the concept of kernels, which are
-functions called from the host to be executed by GPU threads. Kernels are organized into a set of blocks composed of a set 
-of threads that cooperate with each other \cite{patterson:2007}.
-
-The memory of a NVIDIA GPU is divided in global memory, local memory, and shared memory.
-Global memory is accessible by all threads, local memory is private to a thread and shared 
-memory is low-latency and accessible by all threads in a block\cite{patterson:2007}. CUDA 
-provides mechanisms to access all of them.
+functions called from the host to be executed by GPU threads.
 
 Regarding this work, this parallelization approach is useful because an analysis of a large domain 
 requires a proportionally large number of mesh elements, and processing a single element have a high
@@ -41,12 +35,6 @@ program because multiple elements are processed at the same time. This advantage
 research.
 
 \textbf{Talk about the structure of this paper}.
-
-Before discussing any parallelization technique or results, Section 2 presents a very brief mathematical 
-description of BEM for Stationary Elastodynamic Problems and the meaning of some functions presented in 
-this paper. Section 3 shows how the most computational intensive routine was optimized using GPUs. 
-Section 4 discusses how the results were obtained. Section 5 presents and discusses the results. Finally, 
-Section 6 provides an overview of our future work.
 
 \section{Boundary Elements Method Background}
 
@@ -66,8 +54,8 @@ After performing the geometry discretization, Equation ($\ref{bem_formulation}$)
 Functions $u_{ij}^{*}(\xi, x, \omega)$ and $t_{ij}^{*}(\xi, x, \omega)$ (called fundamental solutions)
 present a singular behavior when $\xi = x$ ordely $O(1/r)$, called weak singularity, and $O(1/r^2)$,
 called strong singularity, respectively. The $r$ value represents the distance between $x$ and $\xi$
-points. The integral of these functions, as seen in Eq. ($\ref{bem_formulation}$), will generate the $G$ and $H$ matrices respectively,
-as is shown in Eq. ($\ref{eqmatrix}$).
+points. The integral of these functions, as seen in Eq. ($\ref{bem_formulation}$), will generate the 
+$G$ and $H$ matrices respectively, as is shown in Eq. ($\ref{eqmatrix}$).
 
 To overcome the mentioned problem in the strong singularity, one can use the artifice known as Regularization of 
 the Singular Integral, expressed as follows:
@@ -82,14 +70,8 @@ Where DYN = Dynamic, STA = Static. The integral of the difference between the dy
 the first term in Equation ($\ref{singular}$), does not present singularity when executed concomitantly as expressed because 
 they have the same order in the both problems.
 
-Algorithmically, equation ($\ref{bem_formulation}$) is implemented into a routine named $\texttt{Nonsingd}$, computing the
-integral using the Gaussian Quadrature without addressing problems related to singularity. 
-To overcome singularity problems, there is a special routine called $\texttt{Sing\_de}$ that uses the
-artifice described in equation ($\ref{singular}$). Lastly, $\texttt{Ghmatecd}$ is a routine 
-developed to create both the $H$ and $G$ matrices described in equation ($\ref{eqmatrix}$). Both $\texttt{Nonsingd}$
-and $\texttt{Sing\_de}$ are called from $\texttt{Ghmatecd}$ routine.
-
 \section{Gaussian Quadrature Background}
+\label{cap:quadrature}
 
 Some integrals can only be approximated by numerical methods such as the Gaussian quadrature, that means:
 \begin{equation}
@@ -98,8 +80,6 @@ Some integrals can only be approximated by numerical methods such as the Gaussia
 
 Where $a_j$ are called weights and $x_j$ are called abscissae, and these values can be 
 computed using Legendre Polynomials, as introduced below.
-
-
 
 \begin{definition}
 Legendre Polynomials are given by the following recurrence:
@@ -123,7 +103,7 @@ Legendre Polynomials satisfy the following properties \citep{ascher:2011}:
 	\item Oscillation: $\phi_j(x)$ has degree equal to $j$ and all its roots are inside $]-1; 1[$.
 \end{enumerate}
 \end{theorem}
-The proof of such theorem is beyond the scope of this work. See \citep{ascher:2011}.
+The proof of such theorem is beyond the scope of this work. See \cite{ascher:2011}.
 
 \begin{theorem} \label{ortho}
 	Let $q(x)$ be a polynomial of degree $< n$. Then $q(x)$ is orthogonal to $\phi_n(x)$, that is:
@@ -174,7 +154,7 @@ shows that one could use:
 \end{equation}
 
 \section{LU Decomposition Background}
-
+\label{cap:lu}
 
 
 In many areas of science concerning numerical methods, it is necessary to find a solution that 
@@ -247,8 +227,6 @@ At the right, we have a lower triangular matrix.
 
 Systems of equations with triangular matrices have an interesting property that it can be solved with an $O(n²)$ algorithm, as 
 illustrated in algorithms \ref{forward} and \ref{backward}.
-
-
 \begin{algorithm}[H]
 \caption{Solves $Ax = b$, where $A$ is a lower triangular nonsingular matrix. Replaces b with the result }
 \label{forward}
@@ -351,18 +329,22 @@ faster? If we have another man building the same bridge in parallel to you but f
 and connect it at the middle of the river, then the time required is $t/2$. 
 This silly example captures the essence of parallel computing. How can we use multiple 
 processors or multiple machines with some coordination to archive the same purpose?
+From this example comes the concept of speedup, as presented in the following definition.
 
-An important abstraction that makes parallel computing easier to understand is the concept 
-of processes and threads. A process is an abstraction layer that allows a program to have 
-the perception that it is running alone on a computer, although the process is controlled 
-by the operating system such as Windows. Every process has its own resources and multiple 
-execution units \citep{tanenbaum:2009}. A single execution unit is called a thread.
+\begin{definition}
+	Let $T_1$ be the time consumed to complete a task using one processor. Let $T_{||}$ be the time consumed 
+	to complete the same task using $n$ processors. The speedup $S_n$ is calculated by:
+	\begin{equation}
+		S_n = \frac{T_{1}}{T_{||}}
+	\end{equation}
+
+\end{definition}
 
 There are various computer architectures designed to handle parallel computing, as described 
 by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two architectures.
 
 \begin {enumerate}
-	\item SIMD: Standing for Single Instruction, Multiple Data. This refers to vectorized processors allowing 
+	\item SIMD: Stands for Single Instruction, Multiple Data. This refers to vectorized processors allowing 
 		a single operation to be executed in a vector content. Examples are Intel SSE and GPUs, although GPUs 
 		are not a pure SIMD, as described later.
 
@@ -374,17 +356,23 @@ by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two archite
 	
 \end{enumerate}
 
-Although OpenMP uses simple pragmas to take advantage of multiple CPUs in a shared memory system, GPUs 
+
+An important concept to parallel computing in shared memory systems is the concept 
+of processes and threads. A process is an abstraction layer that allows a program to have 
+the perception that it is running alone on a computer, although the process is controlled 
+by the operating system such as Windows. Every process has its own resources and multiple 
+execution units \citep{tanenbaum:2009}. A single execution unit is called a thread.
+
+Although OpenMP uses simple pragmas to take advantage of multiple CPUs in a shared memory system by 
+creating multiple threads within a process, GPUs 
 requires severe modifications in the original code to run in such devices. NVIDIA developed CUDA for this 
 purpose.
 
 \subsection{CUDA Programming}
 
 CUDA is an acronym to Compute Unified Device Architecture and it is an extension to C++ language that allows 
-running code in NVIDIA GPUs. 
-
-
-CUDA execution is divided into a host (CPU) and device (GPU) parts. For the device part, CUDA uses the concept of
+running general purpose code in NVIDIA GPUs. Its execution is divided into a host (CPU) and device (GPU) parts. 
+For the device part, CUDA uses the concept of
 kernels, which are functions called from the host to be executed by GPU threads. 
 The memory space is also separated between the host and the device, and data must be 
 manually transferred from host to device in order to allow a device to access them, 
@@ -399,16 +387,27 @@ Figure $\ref{fig:cuda_exec_flow}$ illustrates the execution flow of a CUDA progr
 
 CUDA kernels are organized into a set of blocks composed of a set of threads that cooperate 
 with each other. The number of threads within a block and the number of blocks are specified 
-at the launch moment, thus it can be adjusted to match the problem input size.
+at the launch moment, thus it can be adjusted to match the problem input size. The GPU's memory
+hierarchy also reflects this organization \citep{kirk:2016}, since it is divided into four types: 
+\begin{enumerate}
+\item Registers: Private to each thread, it is used to hold frequently accessed data.
 
+\item Shared Memory: It is a low latency memory shared between all threads within a block.
+
+\item Constant Memory: A read-only memory that provides short latency and high bandwidth access.
+
+\item Global Memory: A memory located outside the GPU processor chip. It can be accessed by all 
+threads, but it is slower than all before-mentioned memories. It is the most abundant memory in 
+the device. 
+\end{enumerate}
 
 \begin{figure}[htb]
 \centering \includegraphics[scale=0.6]{figuras/threads_blocks}
-\caption{\label{fig:cuda_exec_flow}Organization of kernel execution.}
+\caption{\label{fig:cuda_exec_flow}Organization of a kernel execution with 9 threads per block and 4 blocks.}
 \end{figure}
 
 It must be highlighted that all threads may not run in parallel since it is limited to the amount of 
 Streaming Multiprocessors (SM) the device has. Without entering in details, an SM is what schedules 
 a set of 32 threads called Warps, executing each instruction in a SIMD fashion. Hence, the number of 
 threads running in parallel is limited by the amount of SM available in the GPU. Because a GPU contains 
-multiple SM, it is not considered a pure SIMD device.
+multiples SM, it is not considered a pure SIMD device.
