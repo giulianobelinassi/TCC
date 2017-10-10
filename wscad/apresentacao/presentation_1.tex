@@ -86,6 +86,8 @@
 \usepackage[noend]{algpseudocode}
 \usepackage{caption}
 \usepackage{xcolor}
+\usepackage{datetime}
+\newdate{date}{17}{10}{2017}
 
 \newcommand{\Cfield}{\mathbb{C}}
 \newcommand{\Rfield}{\mathbb{R}}
@@ -96,16 +98,16 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[Short title]{Full Title of the Talk} % The short title appears at the bottom of every slide, the full title is only on the title page
+\title[Construção de H \& G]{Otimizando uma implementação do BEM com GPUs} % The short title appears at the bottom of every slide, the full title is only on the title page
 
 \author{Giuliano Belinassi, Rodrigo Siqueira, Ronaldo Carrion, Alfredo Goldman, Marco D. Gubitoso} % Your name
 \institute[IME-USP] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
 Universidade de São Paulo \\ % Your institution for the title page
 \medskip
-\textit{giuliano.belinassi@usp.br} % Your email address
+\textit{ } % Your email address
 }
-\date{\today} % Date, can be changed to a custom date
+\date{\displaydate{date}} % Date, can be changed to a custom date
 
 \begin{document}
 
@@ -144,7 +146,7 @@ Universidade de São Paulo \\ % Your institution for the title page
 \begin{frame}
 \frametitle{Introdução}
 \begin{itemize}
-\item The Boundary Elements Method (BEM) 
+\item The Boundary Elements Method (BEM). 
 \item Aplicação: Simulação de propagação de ondas no solo. 
 \end{itemize}
 \end{frame}
@@ -156,6 +158,7 @@ Universidade de São Paulo \\ % Your institution for the title page
 \begin{frame}
 \begin{figure}
 	\includegraphics[scale=0.5]{trincheira.png}
+	\caption{Exemplo de superfície}
 \end{figure}
 
 \end{frame}
@@ -168,154 +171,29 @@ Universidade de São Paulo \\ % Your institution for the title page
 \item Implementação fornecida era sequêncial.
 \item Para 4000 elementos de malha, o tempo total era de 167s.
 \item Objetivo: Encontrar as rotinas mais custosas e otimizá-las.
-\end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{O Problema}
-\begin{itemize}
 \item Subrotina mais custosa: \texttt{Ghmatecd}.
-\item Constrói as matrizes $H$ \& $G$ do problema dinâmico
-\item Cada fatia $3 \times 3$ das matrizes podem ser computadas em paralelo.
-\end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\begin{algorithm}[H]
-\label{ghmatecd_old}
-\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
-\begin{algorithmic}[1]
-	\Procedure{Ghmatecd}{}
-		\For{$j := 1, n$} 
-			\For{$i := 1, m$}
-				\State{$ii := 3(i-1) + 1$ }   
-				\State{$jj := 3(j-1) + 1$ }
-				\If{$i == j$}
-					\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}					
-				\Else
-					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
-				\EndIf
-				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
-				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
-			\EndFor
-	 \EndFor
-	\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-Como paralelizar com OpenMP?
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\begin{algorithm}[H]
-\label{ghmatecd_openmp}
-\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
-\begin{algorithmic}[1]
-	\Procedure{Ghmatecd}{}
-		\State{\text{\#pragma omp parallel for collapse(2)}}
-		\For{$j := 1, n$} 
-			\For{$i := 1, m$}
-				\State{$ii := 3(i-1) + 1$ }   
-				\State{$jj := 3(j-1) + 1$ }
-				\If{$i == j$}
-					\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}					
-				\Else
-					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
-				\EndIf
-				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
-				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
-			\EndFor
-	 \EndFor
-	\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-E na GPU?
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{O Problema}
 \begin{itemize}
-\item \texttt{Nonsingd} e \texttt{Sing\_de} computam uma integral numericamente.
-
-\begin{equation}
-	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature} \nonumber
-\end{equation}
-
-\item Em nosso caso, avaliar $f(x)$ em um ponto $x_i$ é custoso
-\item Uma forma de paralelizar estas rotinas e fazer uma redução.
-
+ Constrói as matrizes $H$ \& $G$ do problema dinâmico.
+\end{itemize}
 \end{itemize}
 \end{frame}
 
 %------------------------------------------------
 
-%\begin{frame}
-\frametitle{O Problema}
-Expandindo a rotina \texttt{Nonsingd}, temos:
-
-%\begin{algorithm}[H]
-%\algsetup{linenosize=\tiny}
-\scriptsize
-\label{ghmatecd_new}
-\begin{algorithmic}[1]
-	\Procedure{Ghmatecd\_nonsingd}{}
-		\For{$j := 1, n$} 
-			\For{$i := 1, m$}
-				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
-				\State{Allocate \textit{Hbuffer} \& \textit{Gbuffer}, buffer of matrices $3 \times 3$ of size $g^2$}
-				\If{$i \neq j$}
-					\For{$y := 1, g$}
-						\For{$x := 1, g$}
-							\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(i, j, x, y)$}
-							\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(i, j, x, y)$}
-						\EndFor
-					\EndFor
-				\EndIf
-				\State{$Gelement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Gbuffer})$} 
-				\State{$Helement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Hbuffer})$}
-				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
-				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
-			\EndFor
-	 \EndFor
-	\EndProcedure
-	\Procedure{Ghmatecd\_Sing\_de}{}
-		\For{$i := 1, m$}
-			\State{$ii := 3(i-1) + 1$}
-			\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}	
-			\State{$G[ii:ii+2][ii:ii+2] \leftarrow Gelement$}
-			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
-	 \EndFor
-	\EndProcedure
-	\Procedure{Ghmatecd}{} 
-		\State{$\text{Ghmatecd\_Nonsingd}()$}
-		\State{$\text{Ghmatecd\_Sing\_de}()$}
-	\EndProcedure
-		
-\end{algorithmic}
-%\end{algorithm}
-
-%\end{frame}
-
-%------------------------------------------------
 \begin{frame}
 \frametitle{O Problema}
+Construir as seguintes matrizes:
 
 \[
+ H, G = 
 \left[ 
 \begin{array}{c@{}c@{}c@{}c}
   \textcolor{red}{
-  \left[\begin{array}{ccc}
+  \left(\begin{array}{ccc}
          . & . & .\\
          . & . & .\\
          . & . & .\\
-  \end{array}\right]} & 
+  \end{array}\right)} & 
 
   \left[\begin{array}{ccc}
          . & . & .\\
@@ -342,11 +220,11 @@ Expandindo a rotina \texttt{Nonsingd}, temos:
   \end{array}\right] & 
   
   \textcolor{red}{
-  \left[\begin{array}{ccc}
+  \left(\begin{array}{ccc}
          . & . & .\\
          . & . & .\\
          . & . & .\\
-  \end{array}\right]} & 
+  \end{array}\right)} & 
 
   \left[\begin{array}{ccc}
          . & . & .\\
@@ -373,11 +251,11 @@ Expandindo a rotina \texttt{Nonsingd}, temos:
   \end{array}\right] &
 
   \textcolor{red}{
-  \left[\begin{array}{ccc}
+  \left(\begin{array}{ccc}
          . & . & .\\
          . & . & .\\
          . & . & .\\
-  \end{array}\right]} & 
+  \end{array}\right)} & 
 
   \left[\begin{array}{ccc}
          . & . & .\\
@@ -392,122 +270,353 @@ Expandindo a rotina \texttt{Nonsingd}, temos:
 %-----------------------------------------------
 
 \begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
-
-\begin{block}{Block 2}
-Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-\end{block}
-
-\begin{block}{Block 3}
-Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-\end{block}
+\begin{algorithm}[H]
+\label{ghmatecd_old}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
+\begin{algorithmic}[1]
+	\Procedure{Ghmatecd}{}
+		\For{$j := 1, n$} 
+			\For{$i := 1, m$}
+				\State{$ii := 3(i-1) + 1$ }   
+				\State{$jj := 3(j-1) + 1$ }
+				\If{$i == j$}
+					\State{\textcolor{red}{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}}					
+				\Else
+					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
+				\EndIf
+				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+			\EndFor
+	 \EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+Como paralelizar com OpenMP?
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Multiple Columns}
-\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-\column{.45\textwidth} % Left column and width
-\textbf{Heading}
-\begin{enumerate}
-\item Statement
-\item Explanation
-\item Example
-\end{enumerate}
-
-\column{.5\textwidth} % Right column and width
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-
-\end{columns}
-\end{frame}
-
-%------------------------------------------------
-\section{Second Section}
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Table}
-\begin{table}
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
-\end{tabular}
-\caption{Table caption}
-\end{table}
+\begin{algorithm}[H]
+\label{ghmatecd_openmp}
+\caption{Creates $H, G \in \Cfield^{(3m)\times(3n)}$}
+\begin{algorithmic}[1]
+	\Procedure{Ghmatecd}{}
+		\State{\textcolor{blue}{\text{\#pragma omp parallel for collapse(2)}}}
+		\For{$j := 1, n$} 
+			\For{$i := 1, m$}
+				\State{$ii := 3(i-1) + 1$ }   
+				\State{$jj := 3(j-1) + 1$ }
+				\If{$i == j$}
+					\State{\textcolor{red}{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}}					
+				\Else
+					\State{$Gelement, Helement \leftarrow \text{Nonsingd}(i, j)$}	
+				\EndIf
+				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+			\EndFor
+	 \EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+E na GPU?
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
+\frametitle{O Problema}
+\begin{itemize}
+\item \texttt{Nonsingd} e \texttt{Sing\_de} computam uma integral numericamente.
+
+\begin{equation}
+	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature} \nonumber
+\end{equation}
+
+\item Em nosso caso, avaliar $f(x)$ em um ponto $x_i$ é custoso.
+\item Uma forma de paralelizar estas rotinas e fazer uma redução.
+
+\end{itemize}
 \end{frame}
 
 %------------------------------------------------
 
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Verbatim}
-\begin{example}[Theorem Slide Code]
-\begin{verbatim}
+%\begin{frame}
+%\frametitle{O Problema}
+Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
+
+%\begin{algorithm}[H]
+%\algsetup{linenosize=\tiny}
+\scriptsize
+\label{ghmatecd_new}
+\begin{algorithmic}[1]
+	\Procedure{Ghmatecd\_nonsingd}{}
+		\For{$j := 1, n$} 
+			\For{$i := 1, m$}
+				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+				\State{Allocate \textit{Hbuffer} \& \textit{Gbuffer}, buffer of matrices $3 \times 3$ of size $g^2$}
+				\textcolor{orange}{
+				\If{$i \neq j$}
+					\For{$y := 1, g$}
+						\For{$x := 1, g$}
+							\State{$\textit{Hbuffer}(x, y) \leftarrow \text{GenerateMatrixH}(i, j, x, y)$}
+							\State{$\textit{Gbuffer}(x, y) \leftarrow \text{GenerateMatrixG}(i, j, x, y)$}
+						\EndFor
+					\EndFor
+				\EndIf
+				\State{$Gelement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Gbuffer})$} 
+				\State{$Helement \leftarrow \text{SumAllMatricesInBuffer}(\textit{Hbuffer})$}
+				}
+				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+			\EndFor
+	 \EndFor
+	\EndProcedure
+	\Procedure{Ghmatecd\_Sing\_de}{}
+	\textcolor{red}{	
+	\For{$i := 1, m$}
+			\State{$ii := 3(i-1) + 1$}
+			\State{$Gelement, Helement \leftarrow \text{Sing\_de}(i)$}	
+			\State{$G[ii:ii+2][ii:ii+2] \leftarrow Gelement$}
+			\State{$H[ii:ii+2][ii:ii+2] \leftarrow Helement$}
+	 \EndFor
+     }
+	\EndProcedure
+	\Procedure{Ghmatecd}{} 
+		\State{$\text{Ghmatecd\_Nonsingd}()$}
+		\State{$\text{Ghmatecd\_Sing\_de}()$}
+	\EndProcedure
+		
+\end{algorithmic}
+%\end{algorithm}
+
+%\end{frame}
+
+%------------------------------------------------
+
+%------------------------------------------------
+\normalsize
+
 \begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}\end{verbatim}
-\end{example}
+\frametitle{Estratégia}
+\begin{itemize}
+\item Aloque uma \textit{thread} para cada ponto da quadratura
+	\begin{itemize}
+	\item Como a integral é sobre um elemento quadrilateral, temos $g \times g$ pontos.
+	\item A soma gerará uma matriz $3 \times 3$.
+\[
+  \underbrace{
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right]
+  }_{\text{Final}}
+    =
+  \underbrace{ 
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right]
+  }_{\text{Thread 1}}
+    +
+  \underbrace{
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right]
+  }_{\text{Thread 2}}
+    +
+   \cdots
+    +
+  \underbrace{
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right]
+  }_{\text{Thread } g \times g}
+
+\]
+
+\item Armazene as fatias na memória compartilhada.
+\item Some.
+
+\end{itemize}
+
+\end{itemize}
 \end{frame}
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Figure}
-Uncomment the code on this slide to include your own image from the same directory as the template .TeX file.
-%\begin{figure}
-%\includegraphics[width=0.8\linewidth]{test}
-%\end{figure}
+\frametitle{O Problema}
+
+\[
+ H, G = 
+\left[ 
+\begin{array}{c@{}c@{}c@{}c}
+  \textcolor{red}{
+  \left(\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right)} & 
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] &
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & 
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & \\
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & 
+  
+  \textcolor{red}{
+  \left(\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right)} & 
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] &
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & \\
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & 
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] &
+
+  \textcolor{red}{
+  \left(\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right)} & 
+
+  \left[\begin{array}{ccc}
+         . & . & .\\
+         . & . & .\\
+         . & . & .\\
+  \end{array}\right] & \\
+\end{array}\right]
+\]
+
+\end{frame}
+
+%----------------------------------------------
+
+\begin{frame}
+\begin{itemize}
+\item Aloque um bloco para cada matrix $3 \times 3$.
+
+\[
+\left[ 
+\begin{array}{c@{}c@{}c@{}c}
+  \textcolor{red}{
+    B_{1,1}
+  } & 
+    B_{1,2}
+    &
+    B_{1,3}
+    &
+    B_{1,4} & \\
+    
+    B_{2,1} &
+  
+  \textcolor{red}{
+    B_{2,2}
+  } &
+    B_{2,3}
+    &
+    B_{2,4} & \\
+     
+    B_{3,1}
+   & 
+    B_{3,2}
+    &
+   \textcolor{red}{
+    B_{3,3}
+   }
+    &
+    B_{3,4}
+    & \\
+\end{array}\right]
+\]
+
+\item Compute os elementos da diagonal principal (\textcolor{red}{em vermelho}) na CPU.
+\begin{itemize}
+	A diagonal tem menos elementos. 
+\end{itemize}
+
+\end{itemize}
+\end{frame}
+%-----------------------------------------------
+
+\begin{frame}
+\frametitle{Testes}
+\begin{itemize}
+	\item Todos os testes executados em precisão simples.
+	\item Foram utilizados 8 pontos de gauss, totalizando 64 \textit{threads} por bloco.
+	\item Verificamos que $||H_{cpu} - H_{gpu}||_1 < 10^{-4}$ e $||G_{cpu} - G_{gpu}||_1 < 10^{-4}$.
+	\item Todos os experimentos foram executados $30$ vezes.
+	\item Processador: AMD A10-7700K; GPU: GeForce 980GTX.
+
+\end{itemize}
+
 \end{frame}
 
 %------------------------------------------------
+\begin{frame}
 
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.7]{results1.pdf}
+\caption{Time elapsed by each implementation in logarithm scale}
+\label{fig:graphic1}
+\end{figure}
 
-This statement requires citation \cite{p1}.
 \end{frame}
-
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{References}
-\footnotesize{
-\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-\bibitem[Smith, 2012]{p1} John Smith (2012)
-\newblock Title of the publication
-\newblock \emph{Journal Name} 12(3), 45 -- 678.
-\end{thebibliography}
-}
+\frametitle{Testes}
+\center{\Large{Obrigado!}}
+
 \end{frame}
 
-%------------------------------------------------
-
-\begin{frame}
-\Huge{\centerline{The End}}
-\end{frame}
-
-%----------------------------------------------------------------------------------------
 
 \end{document} 

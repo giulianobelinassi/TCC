@@ -1,4 +1,3 @@
 \select@language {brazilian}
 \beamer@sectionintoc {1}{Introdu\IeC {\c c}\IeC {\~a}o}{2}{0}{1}
 \beamer@sectionintoc {2}{Introdu\IeC {\c c}\IeC {\~a}o}{3}{0}{2}
-\beamer@sectionintoc {3}{Second Section}{13}{0}{3}

@@ -34,8 +34,6 @@ time cost. Doing such analysis in parallel reduces the computational time requie
 program because multiple elements are processed at the same time. This advantage was provided by this
 research.
 
-\textbf{Talk about the structure of this paper}.
-
 \section{Boundary Elements Method Background}
 
 Without addressing details on BEM formulation, the Boundary Integral Equation for Stationary
@@ -125,8 +123,9 @@ The proof of such theorem is beyond the scope of this work. See \cite{ascher:201
 	\end{equation}
 \end{proof}
 
-These two properties above are essential to capture the main concept of the Gaussian quadrature, which is to satisfy the equation below with equality.
-Let $r(x)$ be a polynomial of degree $< n$.
+These two theorems above are important for quadrature's precision. Let's now present the Gaussian Quadrature. 
+
+Let $r(x)$ be a polynomial of degree $< n$. The Gaussian Quadrature must satisfy the equation below with equality.
 \begin{equation}
 	\int_{-1}^{1} r(x) \text{d}x = \sum_{j = 1}^{n} a_jr(x_j)
 \end{equation}
@@ -411,3 +410,8 @@ Streaming Multiprocessors (SM) the device has. Without entering in details, an S
 a set of 32 threads called Warps, executing each instruction in a SIMD fashion. Hence, the number of 
 threads running in parallel is limited by the amount of SM available in the GPU. Because a GPU contains 
 multiples SM, it is not considered a pure SIMD device.
+
+In order to maximize the efficiency of a CUDA application, the programmer needs to minimize the memory 
+transfer between CPU and GPU and explore any parallelism structure of the problem, as discussed in
+\cite{devtalk_transfer:2012}.
+

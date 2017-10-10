@@ -12,6 +12,10 @@ error-prone because the code had a bug due to a misspelled variable in a file
 named \texttt{Solfundif.for} (the \texttt{RDN} variable was misspelled \texttt{DRN}),
 and the compiler did not complain about the uninitialized variable.
 
+There was also a need to call CUDA code from Fortran to avoid a complete rewrite of the 
+application in C or C++. The Portland Group (PGI) provides a paid CUDA Fortran compiler,
+so another solution was required.
+
 A parallel implementation of BEM began by analyzing the sequential code provided. 
 Gprof, a profiling tool by \cite{binutils}, revealed the two most time-consuming routines: 
 $\texttt{Ghmatecd}$ and $\texttt{Nonsingd}$, with $60.9\%$ and $58.3\%$ of the program total 
@@ -19,6 +23,46 @@ elapsed time, respectively.
 Since most calls to $\texttt{Nonsingd}$ were performed inside $\texttt{Ghmatecd}$, most
 of the parallelization effort was focused 
 on that last routine.
+
+
+\subsection{Calling CUDA from Fortran 77}
+
+Although The Portland Group (PGI) provides a CUDA Fortran compiler, it is not freeware software 
+and thus might increase the application development costs. An alternative to this is to 
+create C++ functions that are callable from Fortran and use CUDA C++ to program the kernels.
+
+Since GFortran appends an underscore to all compiled Fortran subroutines, manually appending an 
+underscore to a C routine makes it visible to Fortran. Since Fortran also passes all arguments 
+as reference, then the C routine needs to expect a pointer to a variable rather than the variable 
+itself. Now, to call C++ from Fortran it is necessary to just wrap the function with \texttt{extern "C"}
+clause, as exemplified below.
+
+\begin{minipage}{\textwidth}
+\lstset{language=C}
+\begin{lstlisting}
+extern "C"{
+	void callable_from_fortran_(int* a, int* b){
+		printf("%d\n", (*a) + (*b));
+	}
+}
+\end{lstlisting}
+\lstset{language=Fortran}
+\begin{lstlisting}
+      PROGRAM CALL_C
+        INTERFACE
+          SUBROUTINE callable_from_fortran(a, b)
+            IMPLICIT NONE
+            INTEGER a, b
+          END SUBROUTINE
+        END INTERFACE
+
+        CALL callable_from_fortran(40, 2)
+      END PROGRAM CALL_C
+\end{lstlisting}
+\end{minipage}
+It must be highlighted that matrices in Fortran are stored in column-major order and indexed from 1, 
+wherein C and C++ are stored in line-major order and indexed from 0. This means that when accessing 
+the position \texttt{A(i,j)} from a Fortran matrix in C, one must access \texttt{A[j-1][i-1]}.
 
 \subsection{$\texttt{Ghmatecd}$ Optimization and Parallelization}
 
@@ -233,9 +277,6 @@ of the static nuclei in the equation ($\ref{bem_formulation}$). Unfortunately, s
 algorithm $\ref{ghmatecd_new2}$ cannot be deployed efficiently because it would 
 generate too much workload to a group of blocks.
 
-\subsection{Parallelization of Interec subroutine}
-TODO.
-
 \subsection{Linear System Solving Optimization}
 In order to compute all regions surface forces and displacements, a linear system can be assembled 
 from the matrices $H$ and $G$ from the dynamic problem, that means solving: 
@@ -245,12 +286,12 @@ from the matrices $H$ and $G$ from the dynamic problem, that means solving:
 Where $A$ is a square nonsingular complex matrix. As described in chapter $\ref{cap:lu}$, 
 the LU decomposition with partial pivoting can be deployed to solve it.
 
-The original provided code used a sequential implementation provided by LAPACK. In order to explore multiple CPUs,
-a library called OpenBLAS implements this algorithm taking advantage of multicore architectures.  
+The original provided code used a sequential implementation provided by LAPACK within a routine called \texttt{CGESV}. In order to explore multiple CPUs,
+a library called OpenBLAS implements this routine taking advantage of multicore architectures.  
 
-CUDA provides within a library named CUBLAS functions to compute the LU decomposition of a set of matrices and another 
-function to solve triangular systems. Results show that this method is slower than a CPU-only LU decomposition for 
-decomposing one matrix, thus this was not feasible in practice.
+CUDA provides within a library named CUBLAS functions to compute the LU decomposition of a set of matrices and another
+function to solve triangular systems, respectively in \texttt{cublasCgetrfBatched} and \texttt{cublasCtrsm}. 
+Results show that this method is slower than a CPU-only LU decomposition provided by OpenBLAS \texttt{CGESV} for decomposing one matrix, thus this was not feasible in practice.
 
-A Library named MAGMA implements the LU decomposition with GPU acceleration that shows good results for this application.
+A Library named MAGMA implements the LU decomposition with GPU acceleration within a function named \texttt{magma\_cgesv\_gpu} that shows good results for this application.
 
