@@ -146,21 +146,12 @@ Universidade de São Paulo \\ % Your institution for the title page
 \begin{frame}
 \frametitle{Introdução}
 \begin{itemize}
-\item The Boundary Elements Method (BEM). 
-\item Aplicação: Simulação de propagação de ondas no solo. 
+\item The Boundary Elements Method (BEM)
+\item Aplicação: Simulação de propagação de ondas no solo
 \end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-% -----------------------------------------------
-\section{Introdução}
-\begin{frame}
 \begin{figure}
 	\includegraphics[scale=0.5]{trincheira.png}
-	\caption{Exemplo de superfície}
 \end{figure}
-
 \end{frame}
 
 %------------------------------------------------
@@ -168,12 +159,12 @@ Universidade de São Paulo \\ % Your institution for the title page
 \begin{frame}
 \frametitle{O Problema}
 \begin{itemize}
-\item Implementação fornecida era sequêncial.
-\item Para 4000 elementos de malha, o tempo total era de 167s.
-\item Objetivo: Encontrar as rotinas mais custosas e otimizá-las.
-\item Subrotina mais custosa: \texttt{Ghmatecd}.
+\item Implementação fornecida era sequencial
+\item Para 4000 elementos de malha, o tempo total era de 167s
+\item Objetivo: Encontrar as rotinas mais custosas e otimizá-las
+\item Subrotina mais custosa: \texttt{Ghmatecd}
 \begin{itemize}
- Constrói as matrizes $H$ \& $G$ do problema dinâmico.
+ Constrói as matrizes $H$ \& $G$ do problema dinâmico
 \end{itemize}
 \end{itemize}
 \end{frame}
@@ -327,14 +318,14 @@ E na GPU?
 \begin{frame}
 \frametitle{O Problema}
 \begin{itemize}
-\item \texttt{Nonsingd} e \texttt{Sing\_de} computam uma integral numericamente.
+\item \texttt{Nonsingd} e \texttt{Sing\_de} computam uma integral numericamente
 
 \begin{equation}
 	\int_{a}^{b} f(x)\text{d}x \approx \sum_{i = 1}^{g}w_i f(x_i) \label{quadrature} \nonumber
 \end{equation}
 
 \item Em nosso caso, avaliar $f(x)$ em um ponto $x_i$ é custoso.
-\item Uma forma de paralelizar estas rotinas e fazer uma redução.
+\item Uma forma de paralelizar esta rotina é fazer uma redução
 
 \end{itemize}
 \end{frame}
@@ -402,8 +393,8 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 \begin{itemize}
 \item Aloque uma \textit{thread} para cada ponto da quadratura
 	\begin{itemize}
-	\item Como a integral é sobre um elemento quadrilateral, temos $g \times g$ pontos.
-	\item A soma gerará uma matriz $3 \times 3$.
+	\item Como a integral é sobre um elemento quadrilateral, temos $g \times g$ pontos
+	\item A soma gerará uma matriz $3 \times 3$
 \[
   \underbrace{
   \left[\begin{array}{ccc}
@@ -441,8 +432,8 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 
 \]
 
-\item Armazene as fatias na memória compartilhada.
-\item Some.
+\item Armazene as fatias na memória compartilhada
+\item Some
 
 \end{itemize}
 
@@ -541,7 +532,7 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 
 \begin{frame}
 \begin{itemize}
-\item Aloque um bloco para cada matrix $3 \times 3$.
+\item Aloque um bloco para cada matrix $3 \times 3$
 
 \[
 \left[ 
@@ -577,9 +568,9 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 \end{array}\right]
 \]
 
-\item Compute os elementos da diagonal principal (\textcolor{red}{em vermelho}) na CPU.
+\item Compute os elementos da diagonal principal (\textcolor{red}{em vermelho}) na CPU
 \begin{itemize}
-	A diagonal tem menos elementos. 
+	A diagonal tem menos elementos
 \end{itemize}
 
 \end{itemize}
@@ -589,11 +580,11 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 \begin{frame}
 \frametitle{Testes}
 \begin{itemize}
-	\item Todos os testes executados em precisão simples.
-	\item Foram utilizados 8 pontos de gauss, totalizando 64 \textit{threads} por bloco.
-	\item Verificamos que $||H_{cpu} - H_{gpu}||_1 < 10^{-4}$ e $||G_{cpu} - G_{gpu}||_1 < 10^{-4}$.
-	\item Todos os experimentos foram executados $30$ vezes.
-	\item Processador: AMD A10-7700K; GPU: GeForce 980GTX.
+	\item Todos os testes executados em precisão simples
+	\item Foram utilizados 8 pontos de gauss, totalizando 64 \textit{threads} por bloco
+	\item Verificamos que $||H_{cpu} - H_{gpu}||_1 < 10^{-4}$ e $||G_{cpu} - G_{gpu}||_1 < 10^{-4}$
+	\item Todos os experimentos foram executados $30$ vezes
+	\item Processador: AMD A10-7700K; GPU: GeForce 980GTX
 
 \end{itemize}
 
@@ -605,7 +596,6 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.7]{results1.pdf}
-\caption{Time elapsed by each implementation in logarithm scale}
 \label{fig:graphic1}
 \end{figure}
 
@@ -613,9 +603,14 @@ Expandindo a rotina \textcolor{orange}{\texttt{Nonsingd}}, temos:
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Testes}
+\frametitle{Fim}
 \center{\Large{Obrigado!}}
-
+\scriptsize
+\begin{itemize}
+	\item CAPES
+	\item NVIDIA
+\end{itemize}
+\normalsize
 \end{frame}
 
 
