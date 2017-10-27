@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  6 OCT 2017 11:34
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  23 OCT 2017 12:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -522,20 +522,20 @@ LaTeX Warning: Label `fig:cuda_exec_flow' multiply defined.
 (./ape-exemplo.aux))
 \openout1 = `monografia_template.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 107.
-LaTeX Font Info:    ... okay on input line 107.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 108.
+LaTeX Font Info:    ... okay on input line 108.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -616,8 +616,8 @@ Package caption Info: End \AtBeginDocument code.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box33
-Package backref Info: ** backref set up for natbib ** on input line 107.
-Package hyperref Info: Link coloring ON on input line 107.
+Package backref Info: ** backref set up for natbib ** on input line 108.
+Package hyperref Info: Link coloring ON on input line 108.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 
@@ -626,9 +626,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count148
 )
-LaTeX Info: Redefining \ref on input line 107.
-LaTeX Info: Redefining \pageref on input line 107.
-LaTeX Info: Redefining \nameref on input line 107.
+LaTeX Info: Redefining \ref on input line 108.
+LaTeX Info: Redefining \pageref on input line 108.
+LaTeX Info: Redefining \nameref on input line 108.
 
 (./monografia_template.out) (./monografia_template.out)
 \@outlinefile=\write4
@@ -639,7 +639,7 @@ LaTeX Info: Redefining \nameref on input line 107.
 
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 196--202
+Underfull \hbox (badness 10000) in paragraph at lines 197--203
 
  []
 
@@ -647,18 +647,18 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.i}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.207 \chapter
+l.208 \chapter
               *{Abstract} [1
 
 ]pdfTeX warning (ext4): destination with the same identifier (name{page.ii}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.207 \chapter
+l.208 \chapter
               *{Abstract} [2
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 209--212
+Underfull \hbox (badness 10000) in paragraph at lines 210--213
 
  []
 
@@ -718,7 +718,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[6] <figuras/cuda_execution_flow.pdf, id=227, 402.50375pt x 363.3575pt>
+[6] <figuras/cuda_execution_flow.pdf, id=237, 402.50375pt x 363.3575pt>
 File: figuras/cuda_execution_flow.pdf Graphic file (type pdf)
 
 <use figuras/cuda_execution_flow.pdf>
@@ -726,7 +726,7 @@ Package pdftex.def Info: figuras/cuda_execution_flow.pdf used on input line 383
 .
 (pdftex.def)             Requested size: 322.00343pt x 290.68639pt.
 
-<figuras/threads_blocks.pdf, id=230, 332.24126pt x 393.47pt>
+<figuras/threads_blocks.pdf, id=240, 332.24126pt x 393.47pt>
 File: figuras/threads_blocks.pdf Graphic file (type pdf)
 
 <use figuras/threads_blocks.pdf>
@@ -739,7 +739,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7 <./figuras/cuda_execution_flow.pdf>]) (./cap-relacionados.tex
+[7 <./figuras/cuda_execution_flow.pdf>]) (./cap-desenvolvimentos.tex
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
@@ -748,12 +748,6 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [8 <./figuras/threads_blocks.pdf>]
 Chapter 2.
-) (./cap-desenvolvimentos.tex [9
-
-] [10
-
-]
-Chapter 3.
 
 Package hyperref Warning: Difference (2) between bookmark levels is greater 
 (hyperref)                than one, level fixed on input line 28.
@@ -777,7 +771,9 @@ Overfull \hbox (7.62482pt too wide) in paragraph at lines 40--66
 []$[]$
  []
 
-[11]
+[9
+
+]
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <14.4> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 67.
 
@@ -795,21 +791,21 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
+[10]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 14.49998pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[11]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 14.49998pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
 [12]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 14.49998pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[13]
-
-Package Fancyhdr Warning: \headheight is too small (12.0pt): 
- Make it at least 14.49998pt.
- We now make it that large for the rest of the document.
- This may cause the page layout to be inconsistent, however.
-
-[14]
 Overfull \hbox (9.44038pt too wide) in paragraph at lines 242--245
 []\T1/cmr/m/n/12 Algorithm $[][]\OT1/cmr/m/n/12 6[][]$ \T1/cmr/m/n/12 can be im
 -ple-mented as a CUDA ker-nel anal-o-gously as \T1/pcr/m/n/12 Ghmatecd_Nonsingd
@@ -830,26 +826,38 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[15]) (./cap-conclusoes.tex
+[13]) (./cap-conclusoes.tex
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[16]
-Chapter 4.
-) [17
+[14]
+Chapter 3.
+[15
 
-]
+] <./figuras/results1.pdf, id=349, 426.59375pt x 284.06125pt>
+File: ./figuras/results1.pdf Graphic file (type pdf)
+
+<use ./figuras/results1.pdf>
+Package pdftex.def Info: ./figuras/results1.pdf used on input line 70.
+(pdftex.def)             Requested size: 369.42812pt x 245.99565pt.
+)
+Overfull \hbox (19.5831pt too wide) in paragraph at lines 75--262
+[]\T1/cmr/m/n/12 The speedup ac-quired in the $\OT1/cmr/m/n/12 4000$ \T1/cmr/m/
+n/12 mesh el-e-ments sam-ple with OpenMP and CUDA+OpenMP
+ []
+
+[16 <./figuras/results1.pdf>]
 \openout2 = `ape-exemplo.aux'.
 
- (./ape-exemplo.tex [18
-
-
-]
+ (./ape-exemplo.tex
 Appendix A.
-) [19] [20
+) [17
+
+
+] [18
 
 
 ] (./monografia_template.bbl (./monografia_template.brf)
@@ -858,7 +866,7 @@ Appendix A.
 
 )
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 288.
- [21
+ [19
 
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 288.
@@ -867,9 +875,9 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 288.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 288.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 288.
 Package rerunfilecheck Info: File `monografia_template.out' has not changed.
-(rerunfilecheck)             Checksum: E8F971CC231391ADD1CD5219B12B3869;1038.
+(rerunfilecheck)             Checksum: 45275D10AA96F8B1A4CDC1615BCF1D29;1170.
 Package rerunfilecheck Info: File `monografia_template.brf' has not changed.
-(rerunfilecheck)             Checksum: 005BAB959833D3410ABF00E6DFB9C1EF;668.
+(rerunfilecheck)             Checksum: 552A7BEAA545F9D1D697B65647CEDE27;720.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -877,10 +885,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 288.
  ) 
 Here is how much of TeX's memory you used:
- 13555 strings out of 493013
- 195819 string characters out of 6135683
- 362425 words of memory out of 5000000
- 16718 multiletter control sequences out of 15000+600000
+ 13567 strings out of 493013
+ 196021 string characters out of 6135683
+ 362490 words of memory out of 5000000
+ 16728 multiletter control sequences out of 15000+600000
  30824 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,19n,49p,329b,1537s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -907,10 +915,10 @@ texmf/fonts/type1/public/cm-super/sfrm1728.pfb></usr/share/texmf/fonts/type1/pu
 blic/cm-super/sfti1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti12
 00.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/
 share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb>
-Output written on monografia_template.pdf (29 pages, 500130 bytes).
+Output written on monografia_template.pdf (27 pages, 512716 bytes).
 PDF statistics:
- 487 PDF objects out of 1000 (max. 8388607)
- 423 compressed objects within 5 object streams
- 117 named destinations out of 1000 (max. 500000)
- 131 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 503 PDF objects out of 1000 (max. 8388607)
+ 439 compressed objects within 5 object streams
+ 120 named destinations out of 1000 (max. 500000)
+ 152 words of extra memory for PDF output out of 10000 (max. 10000000)
 
