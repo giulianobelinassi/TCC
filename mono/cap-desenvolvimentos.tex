@@ -245,9 +245,9 @@ significant loss of precision in this version when compared to the previous one.
 
 \subsection{$\texttt{Ghmatece}$ Optimization and Parallelization}
 
-$\texttt{Ghmatece}$ is a routine developed to create both the $H$ and $G$ matrices for the static problem 
-described in equation ($\ref{eqmatrix}$). It is very similar to \texttt{Ghmatecd} routine as described by 
-Algorithm \ref{ghmatece_old}. 
+$\texttt{Ghmatece}$ is a routine developed to create both the $H$ and $G$ matrices for the static problem described in equation ($\ref{eqmatrix}$). 
+Unless by \texttt{RIGID} routine, a procedure designed to calculate $H$ diagonal by considerating the rigid body movement, 
+it is very similar to \texttt{Ghmatecd} routine as described by Algorithm \ref{ghmatece_old}. 
 
 \begin{algorithm}[H]
 \caption{Creates $H, G \in \Rfield^{(3m)\times(3n)}$}
@@ -265,8 +265,20 @@ Algorithm \ref{ghmatece_old}.
 				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
 				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
 			\EndFor
-	 \EndFor
+		\EndFor 
+		\State{$\text{Rigid}(H)$}
 	\EndProcedure
+
+	\Procedure{Rigid}{H}
+		\For{$i := 1, m$} 
+			\For{$j := 1, n$}
+				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+				\If{$i \neq j$}
+					\State{$H[ii:ii+2][ii:ii+2] \leftarrow H[ii:ii+2][ii:ii+2] + H[ii:ii+2][jj:jj+2]$}
+				\EndIf
+			\EndFor
+		\EndFor
+		\EndProcedure
 \end{algorithmic}
 \end{algorithm}
 
@@ -276,6 +288,9 @@ of the static nuclei in the equation ($\ref{bem_formulation}$). Unfortunately, s
 \texttt{Singge} makes 4 calls to \texttt{Nonsinge}, the strategy presented in 
 algorithm $\ref{ghmatecd_new2}$ cannot be deployed efficiently because it would 
 generate too much workload to a group of blocks.
+
+For the \texttt{RIGID} procedure, it has no interdependency between lines and thus it can be parallelized using the 
+\texttt{!\$OMP} \texttt{PARALLEL} \texttt{DO} pragma.
 
 \subsection{Linear System Solving Optimization}
 In order to compute all regions surface forces and displacements, a linear system can be assembled 

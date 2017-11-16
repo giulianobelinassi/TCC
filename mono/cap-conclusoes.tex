@@ -1,5 +1,5 @@
 %% ------------------------------------------------------------------------- %%
-\chapter{Methods, Results, and Conclusion}
+\chapter{Methods, Results, and Conclusions}
 \label{cap:conclusoes}
 
 \section{Methods}
@@ -22,27 +22,31 @@ $v$. The \textit{error} between these two values can be measured computing
 $\norm{y_u - y_v}$. The error between CPU and GPU versions of $H$ and $G$ matrices was computed by calculating $\norm{H_{cpu} - H_{gpu}}_1$
 and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
 
-Gfortran 5.4.0 and CUDA 8.0 were used to compile the application. The main flags used in Gfortran were
+Gfortran and CUDA 8.0 were used to compile the application. The main flags used in Gfortran were
 $\texttt{-Ofast}$ $\texttt{-march=native}$ $\texttt{-funroll-loops}$ $\texttt{-flto}$. The flags used in
 CUDA nvcc compiler were: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xptxas}$ $\texttt{--opt-level=3}$
 $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 
 $\texttt{--allow-expensive-optimizations=true}$ . 
 
-For experimenting, there were four data samples as shown in Table \ref{experiments}. The application was 
-executed for each sample using the original code (serial implementation), the OpenMP 
-version and the CUDA and OpenMP together. All tests but the sequential set the number of OpenMP 
-threads to 4. The machine used in all experiments had an AMD A10-7700K processor paired with a 
-GeForce GTX980\footnote{Thanks to NVIDIA for donating this GPU.}.
+For experimenting, there were four data samples as shown in Table \ref{experiments}. Each routine defines 
+the label \texttt{gpu} in its context, but the \texttt{cpu} label means that the routine was executed only in CPU. 
 
 Before any data collection, a warm up procedure is executed, which consists of running the 
 application with the sample three times without getting any result. Afterward, all experiments 
 were executed 30 times per sample. Each execution produced a file with total time elapsed, 
 where a script computed averages and standard deviations for all experiments.
 
+The graphs labels consist of the implementation name concatenated with the number of OpenMP threads used, 
+for example, \texttt{cpu8} implies that only the CPU was used with 8 OpenMP threads. All its points 
+are the mean of the time in seconds of 30 executions, and the errorbars illustrate a 95\% confidence interval.
+
+The number of threads used were defined considerating the number of CPU cores the testing machine has. 
+We used two machines for the tests, \texttt{BrucutuIV} and \texttt{Venus}, as defined in Appendix $\ref{cap:ape}$
+
 GPU total time was computed by the sum of 5 elements: 
 (1) total time to move data to GPU, (2) launch and execute the kernel, (3) elapsed time 
 to compute the result, (4) time to move data back to main memory, (5) time to compute 
-the remaining $H$ and $G$ parts in the CPU. 
+any remaining parts in the CPU. 
 The elapsed time was computed in seconds with the OpenMP library function 
 $\texttt{OMP\_GET\_WTIME}$. This function calculates the elapsed wall clock time in seconds 
 with double precision. All experiments set the Gauss Quadrature Points to 8.
@@ -51,30 +55,87 @@ with double precision. All experiments set the Gauss Quadrature Points to 8.
 \centering
 \caption{Data experiment set}
 \label{experiments}
-\begin{tabular}{|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-Number of Mesh elements     & 240 & 960 & 2160 & 4000 \\ \hline
-Number of Boundary elements & 100 & 400 & 900  & 1600 \\ \hline
+Number of Mesh elements     & 240 & 960 & 2160 & 4000 & 14400\\ \hline
+Number of Boundary elements & 100 & 400 & 900  & 1600 & 6400\\ \hline
 \end{tabular}
 \end{table}
 
 \section{Results}
 
+\subsection{Ghmatecd Routine}
 
-The logarithmic scale graphic at Figure 1 illustrates the results. All points are the mean of the 
-time in seconds of 30 executions as described in Methodology. The average is meaningful as the maximum standard deviation
-obtained was $2.6\%$ of the mean value.
+This routine has three parallel implementations: (1) Using only CPU threads 
+(\texttt{cpu}); (2) Using GPU for the nonsingular part and the CPU for the 
+singular part, as described by Algorithm $\ref{ghmatecd_new}$ (\texttt{gpu}); 
+(3) Using GPU for both singular and nonsingular parts, as described by Algorithm 
+$\ref{ghmatecd_new2}$ (\texttt{gpu\_sing}).                                    
+
+\subsubsection{BrucutuIV Data}
+
+The logarithmic scale graphic at Figure $\ref{fig:ghmatecd_brucutuiv_non_sequential}$ illustrates the
+results for \texttt{BrucutuIV}. We removed the points from the graph that represents the sequential data for legibility.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.866]{results1.pdf}
-\caption{Time elapsed by each implementation in logarithm scale}
-\label{fig:graphic1}
+\includegraphics[scale=1]{ghmatecd_brucutuiv_non_sequential.pdf}
+\caption{GHMATECD: Time elapsed by each implementation in logarithm scale}
+\label{fig:ghmatecd_brucutuiv_non_sequential}
 \end{figure}
 
-The speedup acquired in the $4000$ mesh elements sample with OpenMP and CUDA+OpenMP with respect to the sequential 
-algorithm are $2.7$ and $107$ respectively. As a conclusion, the presented strategy paired with GPUs can be 
-used to accelerate the overall performance of the simulation for a large number of mesh elements. This is a consequence 
-of parallelizing the construction of both matrices $H$ and $G$, and the calculations in the $\texttt{Nonsingd}$ routine. 
-Notice that there was a performance loss in the 260 sample between OpenMP and CUDA+OpenMP, this was caused by the high 
-latency between CPU-GPU communication, thus the usage of GPUs may not be attractive for small meshes.
+The speedup acquired in the $14400$ mesh elements sample with \texttt{cpu48}, \texttt{cpu24} 
+\texttt{gpu8} and \texttt{gpu\_sing1} with respect to the sequential algorithm are 
+$25$, $19$, $22$ and $22$ respectively in BrucutuIV. For this sample we can see that a single Tesla K40
+was faster than a single Xeon E5-2650 v4, but slower than two of those processors.
+
+Notice that with respect to time, \texttt{gpu8} and \texttt{cpu\_sing1} behaves very similarly, 
+but there is an interesting observation about the error, as illustrated by Figure $\ref{fig:ghmatecd_brucutuiv_error}$. 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{ghmatecd_brucutuiv_error.pdf}
+\caption{GHMATECD: Error of each implementation compared with the CPU implementation}
+\label{fig:ghmatecd_brucutuiv_error}
+\end{figure}
+
+Since there is an error gap in the $H$ matrix between the \texttt{gpu8} and \texttt{gpu\_sing1}, it suggests that most 
+errors concentrate arround computation of the singular case and it is more sensible to floating point erros, thus better 
+precision is required here.
+
+As a conclusion, the presented method can be used to accelerate the overall performance of the mentioned routine, 
+and a load balancer can be developed from these results for even higher speedups because of two items: (1) similar 
+computational time elapsed between \texttt{gpu\_sing1} and \texttt{cpu24} in the $14400$ sample, and (2) 
+the fact that \texttt{gpu\_sing1} only uses one CPU thread, allowing other threads to also consume workload.
+
+\subsubsection{Venus Data}
+
+Here the obtained speedup was $3$, $100$ and $100$ respectively for the \texttt{cpu4}, 
+\texttt{gpu4} and \texttt{gpu\_sing1} on the $4000$ mesh sample. We could not run the $14400$ 
+sample because it requires around $16$ Gigabytes of RAM, but the machine only had $8$ Gigabytes.
+Notice that the GeForce GTX980 was faster than the AMD A10-7700K even for the 960 sample. This was due to 
+lower CPU-GPU memory transfer latency. The logarithm graph at 
+Figure $\ref{fig:ghmatecd_venus_1}$ illustrates the results.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{ghmatecd_venus_1.pdf}
+\caption{Time elapsed by each implementation in logarithm scale}
+\label{fig:ghmatecd_venus_1}
+\end{figure}
+
+The errors followed the same behavior as discussed in \texttt{BrucutuIV Data} section, as illustrated in 
+Figure $\ref{fig:ghmatecd_venus_error}$. Notice that the errors in $H$ are worse when compared to
+\texttt{BrucutuIV}.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{ghmatecd_venus_error.pdf}
+\caption{GHMATECD: Error of each implementation compared with the CPU implementation}
+\label{fig:ghmatecd_venus_error}
+\end{figure}
+
+From these data, we can conclude that the presented method can also accelerate the performance in 
+the case that there is a low number of CPU cores available, and such CPU cores can be allocated to 
+compute the singular case to reduce errors. 
+

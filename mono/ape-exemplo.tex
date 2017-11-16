@@ -1,7 +1,52 @@
-\chapter{Título do apêndice}
+\chapter{Computers used in tests}
 \label{cap:ape}
 
-Texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto texto texto texto texto texto texto texto
-texto texto texto texto texto texto.
+\begin{itemize}
+	\item Computer BrucutuIV:
 
+		Processor: 2x Intel(R) Xeon(R) CPU E5-2650 v4 @ 2.20GHz
+		
+		Núcleos: 24
+		
+		Threads: 48
+		
+		Number of OpenMP threads used in experiments: 1, 8, 24, 48
+
+		GPU: NVIDIA Corporation GK110BGL [Tesla K40c]
+		
+		RAM: 378G
+
+		Version of GFortran: 4.9.2
+
+		Topology: Figure $\ref{fig:brucutuiv_top}$
+
+		\begin{figure}[htb]
+		\centering \includegraphics[scale=0.425,angle=90]{figuras/brucutuiv}
+		\caption{\label{fig:brucutuiv_top}Topology of BrucutuIV.}
+		\end{figure}
+
+
+	\item Computer Venus:
+
+		Processor: AMD A10-7700K Radeon R7, 10 Compute Cores 4C+6G
+
+		Núcleos: 4
+
+		Threads: 4
+
+		Number of OpenMP threads used in experiments: 1, 4
+
+		RAM: 8G
+
+		GPU: NVIDIA Corporation GM204 [GeForce GTX 980]
+
+		Version of GFortran: 5.4.0
+
+		Topology: Figure $\ref{fig:venus_top}$
+
+		\begin{figure}[htb]
+		\centering \includegraphics[scale=1.0,angle=90]{figuras/venus}
+		\caption{\label{fig:venus_top}Topology of Venus.}
+		\end{figure}
+
+\end{itemize}
