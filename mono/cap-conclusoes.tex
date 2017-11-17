@@ -86,11 +86,12 @@ results for \texttt{BrucutuIV}. We removed the points from the graph that repres
 
 The speedup acquired in the $14400$ mesh elements sample with \texttt{cpu48}, \texttt{cpu24} 
 \texttt{gpu8} and \texttt{gpu\_sing1} with respect to the sequential algorithm are 
-$25$, $19$, $22$ and $22$ respectively in BrucutuIV. For this sample we can see that a single Tesla K40
+$25$, $19$, $22$ and $22$ respectively in \texttt{BrucutuIV}. For this sample we can see that a single Tesla K40
 was faster than a single Xeon E5-2650 v4, but slower than two of those processors.
 
 Notice that with respect to time, \texttt{gpu8} and \texttt{cpu\_sing1} behaves very similarly, 
-but there is an interesting observation about the error, as illustrated by Figure $\ref{fig:ghmatecd_brucutuiv_error}$. 
+but there is an interesting observation about the error, as illustrated by 
+Figure $\ref{fig:ghmatecd_brucutuiv_error}$. 
 
 \begin{figure}[ht]
 \centering
@@ -114,7 +115,7 @@ Here the obtained speedup was $3$, $100$ and $100$ respectively for the \texttt{
 \texttt{gpu4} and \texttt{gpu\_sing1} on the $4000$ mesh sample. We could not run the $14400$ 
 sample because it requires around $16$ Gigabytes of RAM, but the machine only had $8$ Gigabytes.
 Notice that the GeForce GTX980 was faster than the AMD A10-7700K even for the 960 sample. This was due to 
-lower CPU-GPU memory transfer latency. The logarithm graph at 
+lower CPU-GPU memory transfer latency. The logarithm graphic at 
 Figure $\ref{fig:ghmatecd_venus_1}$ illustrates the results.
 
 \begin{figure}[ht]
@@ -139,3 +140,35 @@ From these data, we can conclude that the presented method can also accelerate t
 the case that there is a low number of CPU cores available, and such CPU cores can be allocated to 
 compute the singular case to reduce errors. 
 
+\subsection{Ghmatece Routine}
+
+This routine has two parallel implementations: (1) Using only CPU threads (\texttt{cpu}); 
+(2) Using GPU for the nonsingular part and the CPU for the singular part (\texttt{gpu}), 
+as presented by the technique in Algorithm $\ref{ghmatecd_new}$. 
+
+\subsubsection{BrucutuIV Data}
+
+The logarithm graphic in Figure $\ref{fig:ghmatece_brucutuiv_1}$ illustrates the results.
+The speedup acquired in the 14400 mesh elements sample with \texttt{cpu24}, \texttt{cpu48}, and \texttt{gpu8} 
+with respect to the sequential algorithm are 15, 19, and 13 respectively in \texttt{BrucutuIV}. For this sample, 
+we can see that the Tesla K40 was slower than a single Xeon E5-2650 v4. Although \texttt{Ghmatece} routine is similar 
+to \texttt{Ghmatecd}, it does fewer computations and thus the usage of GPUs here may not be attractive here.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{ghmatece_brucutuiv_1.pdf}
+\caption{Time elapsed by each implementation in logarithm scale}
+\label{fig:ghmatece_brucutuiv_1}
+\end{figure}
+
+
+As for the error, the $14400$ was the only sample that had errors bigger than $10^{-5}$. Since the $||\bullet||_1$
+grows as the number of matrix rows increases, this result was expected. Figure $\ref{fig:ghmatece_brucutuiv_error}$
+illustrates the results.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=1]{ghmatece_brucutuiv_error.pdf}
+\caption{GHMATECE: Error of each implementation compared with the CPU implementation}
+\label{fig:ghmatece_brucutuiv_error}
+\end{figure}
