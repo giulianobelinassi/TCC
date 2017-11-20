@@ -1,22 +1,29 @@
 %% ------------------------------------------------------------------------- %%
 \chapter{Development}
 
-The original code provided by Carrion to had issues common to legacy code. 
+The first goal of the project was to compile and execute the code with at least one sample. 
+From this point we found a few issues such as:
+
+\begin{itemize}
+\item The original code provided by Carrion had issues common to legacy code. 
 It depended on some features offered by Compaq Visual Fortran, thus the code needed 
 modifications to be able to compile with the GFortran compiler. The code also had 
 indentation issues and used several GOTO statements to execute simple tasks such 
 as looping because of limitations imposed by Fortran 77.
 
-Fortran has a feature called implicit variable declaration that showed to be 
+\item Fortran has a feature called implicit variable declaration that showed to be 
 error-prone because the code had a bug due to a misspelled variable in a file 
 named \texttt{Solfundif.for} (the \texttt{RDN} variable was misspelled \texttt{DRN}),
 and the compiler did not complain about the uninitialized variable.
 
-There was also a need to call CUDA code from Fortran to avoid a complete rewrite of the 
+\item There was a need to call CUDA code from Fortran to avoid a complete rewrite of the 
 application in C or C++. The Portland Group (PGI) provides a paid CUDA Fortran compiler,
 so another solution was required.
 
-A parallel implementation of BEM began by analyzing the sequential code provided. 
+\end{itemize}
+
+
+After all those issues were addressed, A parallel optimization of BEM began by analyzing the sequential code provided. 
 Gprof, a profiling tool by \cite{binutils}, revealed the two most time-consuming routines: 
 $\texttt{Ghmatecd}$ and $\texttt{Nonsingd}$, with $60.9\%$ and $58.3\%$ of the program total 
 elapsed time, respectively.
@@ -301,12 +308,8 @@ from the matrices $H$ and $G$ from the dynamic problem, that means solving:
 Where $A$ is a square nonsingular complex matrix. As described in chapter $\ref{cap:lu}$, 
 the LU decomposition with partial pivoting can be deployed to solve it.
 
-The original provided code used a sequential implementation provided by LAPACK within a routine called \texttt{CGESV}. In order to explore multiple CPUs,
+The original code used a sequential implementation provided by Compaq within a routine called \texttt{CGESV}. In order to explore multiple CPUs,
 a library called OpenBLAS implements this routine taking advantage of multicore architectures.  
-
-CUDA provides within a library named CUBLAS functions to compute the LU decomposition of a set of matrices and another
-function to solve triangular systems, respectively in \texttt{cublasCgetrfBatched} and \texttt{cublasCtrsm}. 
-Results show that this method is slower than a CPU-only LU decomposition provided by OpenBLAS \texttt{CGESV} for decomposing one matrix, thus this was not feasible in practice.
 
 A Library named MAGMA implements the LU decomposition with GPU acceleration within a function named \texttt{magma\_cgesv\_gpu} that shows good results for this application.
 

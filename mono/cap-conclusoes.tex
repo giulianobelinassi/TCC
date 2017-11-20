@@ -20,7 +20,7 @@ algorithms that solve the same problem, but in a different way.
 Now let $y_u$ be the result computed by $u$ and $y_v$ be the result computed by
 $v$. The \textit{error} between these two values can be measured computing
 $\norm{y_u - y_v}$. The error between CPU and GPU versions of $H$ and $G$ matrices was computed by calculating $\norm{H_{cpu} - H_{gpu}}_1$
-and $\norm{G_{cpu} - G_{gpu}}_1$. An automated test check if this value is bellow $10^{-4}$.
+and $\norm{G_{cpu} - G_{gpu}}_1$.
 
 Gfortran and CUDA 8.0 were used to compile the application. The main flags used in Gfortran were
 $\texttt{-Ofast}$ $\texttt{-march=native}$ $\texttt{-funroll-loops}$ $\texttt{-flto}$. The flags used in
@@ -62,7 +62,7 @@ Number of Boundary elements & 100 & 400 & 900  & 1600 & 6400\\ \hline
 \end{tabular}
 \end{table}
 
-\section{Results}
+\section{Results and isolated conclusions}
 
 \subsection{Ghmatecd Routine}
 
@@ -79,8 +79,9 @@ results for \texttt{BrucutuIV}. We removed the points from the graph that repres
 
 \begin{figure}[ht]
 \centering
+\textbf{Average of times of \texttt{Ghmatecd} in \texttt{BrucutuIV}}\par\medskip
 \includegraphics[scale=1]{ghmatecd_brucutuiv_non_sequential.pdf}
-\caption{GHMATECD: Time elapsed by each implementation in logarithm scale}
+\caption{\texttt{Ghmatecd}: Time elapsed by each implementation in \texttt{BrucutuIV}}
 \label{fig:ghmatecd_brucutuiv_non_sequential}
 \end{figure}
 
@@ -95,13 +96,14 @@ Figure $\ref{fig:ghmatecd_brucutuiv_error}$.
 
 \begin{figure}[ht]
 \centering
+\textbf{Errors between computations of \texttt{Ghmatecd} in \texttt{BrucutuIV}}\par\medskip
 \includegraphics[scale=1]{ghmatecd_brucutuiv_error.pdf}
-\caption{GHMATECD: Error of each implementation compared with the CPU implementation}
+\caption{\texttt{Ghmatecd}: Error of each implementation compared with the CPU implementation in \texttt{BrucutuIV}}
 \label{fig:ghmatecd_brucutuiv_error}
 \end{figure}
 
 Since there is an error gap in the $H$ matrix between the \texttt{gpu8} and \texttt{gpu\_sing1}, it suggests that most 
-errors concentrate arround computation of the singular case and it is more sensible to floating point erros, thus better 
+errors concentrate around computation of the singular case and it is more sensible to floating point errors, thus better 
 precision is required here.
 
 As a conclusion, the presented method can be used to accelerate the overall performance of the mentioned routine, 
@@ -114,14 +116,15 @@ the fact that \texttt{gpu\_sing1} only uses one CPU thread, allowing other threa
 Here the obtained speedup was $3$, $100$ and $100$ respectively for the \texttt{cpu4}, 
 \texttt{gpu4} and \texttt{gpu\_sing1} on the $4000$ mesh sample. We could not run the $14400$ 
 sample because it requires around $16$ Gigabytes of RAM, but the machine only had $8$ Gigabytes.
-Notice that the GeForce GTX980 was faster than the AMD A10-7700K even for the 960 sample. This was due to 
+In this machine, the GeForce GTX980 was faster than the AMD A10-7700K even for the 960 sample. This was due to 
 lower CPU-GPU memory transfer latency. The logarithm graphic at 
 Figure $\ref{fig:ghmatecd_venus_1}$ illustrates the results.
 
 \begin{figure}[ht]
 \centering
+\textbf{Average of times of \texttt{Ghmatecd} in \texttt{Venus}}\par\medskip
 \includegraphics[scale=1]{ghmatecd_venus_1.pdf}
-\caption{Time elapsed by each implementation in logarithm scale}
+\caption{\texttt{Ghmatecd}: Time elapsed by each implementation in \texttt{Venus}}
 \label{fig:ghmatecd_venus_1}
 \end{figure}
 
@@ -131,8 +134,9 @@ Figure $\ref{fig:ghmatecd_venus_error}$. Notice that the errors in $H$ are worse
 
 \begin{figure}[ht]
 \centering
+\textbf{Errors between computations of \texttt{Ghmatecd} in \texttt{BrucutuIV}}\par\medskip
 \includegraphics[scale=1]{ghmatecd_venus_error.pdf}
-\caption{GHMATECD: Error of each implementation compared with the CPU implementation}
+\caption{\texttt{Ghmatecd}: Error of each implementation compared with the CPU implementation in \texttt{Venus}}
 \label{fig:ghmatecd_venus_error}
 \end{figure}
 
@@ -144,23 +148,27 @@ compute the singular case to reduce errors.
 
 This routine has two parallel implementations: (1) Using only CPU threads (\texttt{cpu}); 
 (2) Using GPU for the nonsingular part and the CPU for the singular part (\texttt{gpu}), 
-as presented by the technique in Algorithm $\ref{ghmatecd_new}$. 
+as presented by the technique in Algorithm $\ref{ghmatecd_new}$. Here we present the results 
+for the \texttt{Ghmatece} routine wihout the \texttt{Rigid} part. We present in this way because we present 
+a detailed analysis of the \texttt{Rigid} routine also in this chapter.
 
 \subsubsection{BrucutuIV Data}
 
-The logarithm graphic in Figure $\ref{fig:ghmatece_brucutuiv_1}$ illustrates the results.
-The speedup acquired in the 14400 mesh elements sample with \texttt{cpu24}, \texttt{cpu48}, and \texttt{gpu8} 
-with respect to the sequential algorithm are 15, 19, and 13 respectively in \texttt{BrucutuIV}. For this sample, 
-we can see that the Tesla K40 was slower than a single Xeon E5-2650 v4. Although \texttt{Ghmatece} routine is similar 
-to \texttt{Ghmatecd}, it does fewer computations and thus the usage of GPUs here may not be attractive here.
+The logarithm graphic in Figure $\ref{fig:ghmatece_brucutuiv_1}$ illustrates the results 
+for \texttt{BrucutuIV}. The speedup acquired in the 14400 mesh elements sample with 
+\texttt{cpu24}, \texttt{cpu48}, and \texttt{gpu8} with respect to the sequential algorithm 
+are 15, 19, and 13 respectively in \texttt{BrucutuIV}. For this sample, we can see that 
+the Tesla K40 was slower than a single Xeon E5-2650 v4. Although \texttt{Ghmatece} 
+routine is similar to \texttt{Ghmatecd}, it does fewer computations and thus offloading 
+this task alone to the GPU may not be attractive.
 
 \begin{figure}[ht]
 \centering
+\textbf{Average of times of \texttt{Ghmatece} in \texttt{BrucutuIV}}\par\medskip
 \includegraphics[scale=1]{ghmatece_brucutuiv_1.pdf}
-\caption{Time elapsed by each implementation in logarithm scale}
+\caption{\texttt{Ghmatece}: Time elapsed by each implementation in \texttt{BrucutuIV}}
 \label{fig:ghmatece_brucutuiv_1}
 \end{figure}
-
 
 As for the error, the $14400$ was the only sample that had errors bigger than $10^{-5}$. Since the $||\bullet||_1$
 grows as the number of matrix rows increases, this result was expected. Figure $\ref{fig:ghmatece_brucutuiv_error}$
@@ -168,7 +176,92 @@ illustrates the results.
 
 \begin{figure}[ht]
 \centering
+\textbf{Errors between computations of \texttt{Ghmatece} in \texttt{BrucutuIV}}\par\medskip
 \includegraphics[scale=1]{ghmatece_brucutuiv_error.pdf}
-\caption{GHMATECE: Error of each implementation compared with the CPU implementation}
+\caption{\texttt{Ghmatece}: Error of each implementation compared with the CPU implementation in \texttt{BrucutuIV}}
 \label{fig:ghmatece_brucutuiv_error}
 \end{figure}
+
+As a conclusion, the GPU can be used to speedup this routine, but a load balancer is required for a 
+better resource usage because of: (1) Smaller speedup when compared to the CPU implementation with 
+24 threads and (2) better than the theoretical possible speedup with only 8 CPU threads. 
+
+\subsubsection{Venus Data}
+
+The logarithm graphic in Figure $\ref{fig:ghmatece_venus_1}$ illustrates the results for \texttt{Venus}. 
+From the figure, we can conclude that for all samples but for the 240 meshes there were speedups. The speedup 
+acquired in the 4000 mesh elements sample with \texttt{cpu4} and \texttt{gpu4} with respect to the sequential algorithm are 2 and 32 respectively.
+As for the error, all results were below  $10^{-6}$
+
+As a conclusion, for this hardware, the presented implementation provides acceleration if the number of meshes is large enough. 
+
+\begin{figure}[ht]
+\centering
+\textbf{Average of times of \texttt{Ghmatece} in \texttt{BrucutuIV}}\par\medskip
+\includegraphics[scale=1]{ghmatece_venus_1.pdf}
+\caption{\texttt{Ghmatece}: Time elapsed by each implementation in \texttt{BrucutuIV}}
+\label{fig:ghmatece_venus_1}
+\end{figure}
+
+\subsection{Rigid routine}
+
+We only present a parallel implementation of this routine using the CPU due to the low time 
+consumption of it when compared to the other analysed routines. We only present the \texttt{BrucutuIV} 
+data because the $14400$ sample was the only one that provides a meaning information about the elapsed time.
+
+\subsubsection{BrucutuIV Results}
+
+Figure $\ref{fig:rigid_brucutuiv_1}$ illustrates the results. The speedup acquired in the $14400$ mesh elements 
+sample with  \texttt{cpu24} and \texttt{cpu{48}} with respect to the sequential implementation are $12$ and $13$ 
+respectively in \texttt{BrucutuIV}. 
+Since all those results but the sequential are below $1s$ and this routine is called only once in the entire program, 
+there is no requirement for vast improvements here.
+
+\begin{figure}[ht]
+\textbf{Average of times of \texttt{Rigid} in \texttt{BrucutuIV}}\par\medskip
+\centering
+\includegraphics[scale=1]{rigid_brucutuiv_1.pdf}
+\caption{\texttt{Ghmatece}: Time elapsed by each implementation in \texttt{BrucutuIV}}
+\label{fig:rigid_brucutuiv_1}
+\end{figure}
+
+\subsection{Linear system solving routine}
+
+This routine has two parallel implementations: (1) Using OpenBLAS \texttt{CGESV} 
+(\texttt{cpu}) and (2) Using MAGMA's \texttt{cgesv\_gpu} routine (\texttt{gpu}). 
+
+\subsubsection{BrucutuIV results}
+
+Figure $\ref{fig:linsolve_brucutuiv_1}$ illustrates the results for \texttt{BrucutuIV}. The acquired speedup in the 14400 mesh 
+elements sample in \texttt{cpu24}, \texttt{cpu48}, \texttt{gpu1} and \texttt{gpu48} with respect to 
+the sequential algorithm are 10, 7, 29 and 30. 
+
+From these results, we can conclude that MAGMA's \texttt{cgesv\_gpu} can be used 
+to accelerate programs that require solving dense linear systems. Notice the slowdown when comparing 
+\texttt{cpu24} with \texttt{cpu48}. We could not identify its causes, but we suspect of cache related issues 
+because there are two processors in this machine, thus cache invalidation may be a problem.
+
+\begin{figure}[ht]
+\centering
+\textbf{Average of times of \texttt{Linsolve} in \texttt{BrucutuIV}}\par\medskip
+\includegraphics[scale=1]{linsolve_brucutuiv_1.pdf}
+\caption{\texttt{Linsolve}: Time elapsed by each implementation in \texttt{BrucutuIV}}
+\label{fig:linsolve_brucutuiv_1}
+\end{figure}
+
+\subsubsection{Venus results}
+
+Figure $\ref{fig:linsolve_venus_1}$ illustrates the results 
+for \texttt{Venus}. The acquired speedup in the 4000 mesh 
+elements sample in \texttt{cpu4} and \texttt{gpu4} are 2 and 38, 
+and the \texttt{BrucutuIV} conclusions about this routine also prevails in this machine.
+
+\begin{figure}[ht]
+\centering
+\textbf{Average of times of \texttt{Linsolve} in \texttt{BrucutuIV}}\par\medskip
+\includegraphics[scale=1]{linsolve_venus_1.pdf}
+\caption{\texttt{Linsolve}: Time elapsed by each implementation in \texttt{Venus}}
+\label{fig:linsolve_venus_1}
+\end{figure}
+
+\subsection{Final Conclusions}
