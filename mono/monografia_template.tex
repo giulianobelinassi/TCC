@@ -132,8 +132,8 @@ framexrightmargin=10pt
     
 
     \vspace{3cm}
-    \textbf{\Large{Optimizing a Boundary Elements Method \\
-    Implementation with GPUs}}
+	\textbf{\Large{Optimizing a Boundary Elements Method for Stationary \\
+			        Elastodynamic Problems Implementation with GPUs}}
     
        
     \vskip 5cm
@@ -149,8 +149,8 @@ framexrightmargin=10pt
 \thispagestyle{empty}
     \begin{center}
         \vspace*{2.3 cm}
-		\textbf{\Large{Optimizing a Boundary Elements Method \\
-		Implementation with GPUs}}
+		\textbf{\Large{Optimizing a Boundary Elements Method for Stationary \\
+		               Elastodynamic Problems Implementation with GPUs}}
         \vspace*{2 cm}
     \end{center}
 
@@ -194,24 +194,29 @@ framexrightmargin=10pt
 % Resumo
 \chapter*{Resumo}
 
-Elemento obrigatório, constituído de uma sequência de frases concisas e
-objetivas, em forma de texto.  Deve apresentar os objetivos, métodos empregados,
-resultados e conclusões.  O resumo deve ser redigido em parágrafo único, conter
-no máximo 500 palavras e ser seguido dos termos representativos do conteúdo do
-trabalho (palavras-chave).
+O Método de Elementos de Contorno é um método eficiente para modelar domínios ilimitados, 
+podendo ser utilizado para simular vibrações no solo. Utilizando como base uma implementação legada, 
+conseguimos um speedup de $20\times$ no tempo total de simulação utilizando uma Tesla K40c quando comparado com o programa 
+original, obtendo um speedup de $100\times$ na construção das matrizes $H$ e $G$ do problema dinâmico em 
+uma das máquinas de teste que contém uma GeForce GTX 980. Com estes resultados é possível simular 
+superfícies com mais pontos de malha.
 \\
 
-\noindent \textbf{Palavras-chave:} palavra-chave1, palavra-chave2, palavra-chave3.
+\noindent \textbf{Palavras-chave:} Método de Elementos de Contorno, MEC, GPU, Computação Paralela, Computação de Alto Desempenho, Métodos Numéricos
 
 % ---------------------------------------------------------------------------- %
 % Abstract
 \chapter*{Abstract}
 
-Elemento obrigatório, elaborado com as mesmas características do resumo em
-língua portuguesa.
+The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited 
+domains, being useful to simulate soil vibrations. Using a legacy implementation as a basis, 
+we obtained a $20\times$ speedup in the total time of simulation using a Tesla K40c 
+when compared to the original implementation, and a $100\times$ speedup when building the 
+$H$ and $G$ matrices of the dynamic problem in a computer with a GeForce GTX 980. 
+With these results, it is possible to simulate surfaces with a higher number of mesh elements.
 \\
-
-\noindent \textbf{Keywords:} keyword1, keyword2, keyword3.
+ 
+\noindent \textbf{Keywords:} Boundary Elements Method, BEM, GPU, Parallel Computing, High Performance Computing, Numerical Methods
 
 
 % ---------------------------------------------------------------------------- %
@@ -258,6 +263,7 @@ língua portuguesa.
 
 \input cap-introducao        % associado ao arquivo: 'cap-introducao.tex'
 \input cap-desenvolvimentos  % associado ao arquivo: 'cap-desenvolvimento.tex'
+\input cap-resultados
 \input cap-conclusoes        % associado ao arquivo: 'cap-conclusoes.tex'
 
 % cabeçalho para os apêndices

@@ -11,6 +11,8 @@ modifications to be able to compile with the GFortran compiler. The code also ha
 indentation issues and used several GOTO statements to execute simple tasks such 
 as looping because of limitations imposed by Fortran 77.
 
+\item There were no automated tests for the program.
+
 \item Fortran has a feature called implicit variable declaration that showed to be 
 error-prone because the code had a bug due to a misspelled variable in a file 
 named \texttt{Solfundif.for} (the \texttt{RDN} variable was misspelled \texttt{DRN}),
@@ -32,7 +34,7 @@ of the parallelization effort was focused
 on that last routine.
 
 
-\subsection{Calling CUDA from Fortran 77}
+\section{Calling CUDA from Fortran 77}
 
 Although The Portland Group (PGI) provides a CUDA Fortran compiler, it is not freeware software 
 and thus might increase the application development costs. An alternative to this is to 
@@ -71,7 +73,7 @@ It must be highlighted that matrices in Fortran are stored in column-major order
 wherein C and C++ are stored in line-major order and indexed from 0. This means that when accessing 
 the position \texttt{A(i,j)} from a Fortran matrix in C, one must access \texttt{A[j-1][i-1]}.
 
-\subsection{$\texttt{Ghmatecd}$ Optimization and Parallelization}
+\section{$\texttt{Ghmatecd}$ Optimization and Parallelization}
 
 $\texttt{Ghmatecd}$ is a routine developed to create both the $H$ and $G$ matrices for the dynamic problem 
 described in equation ($\ref{eqmatrix}$). It does so by making several calls to \texttt{Nonsingd}, a routine
@@ -250,7 +252,7 @@ Algorithm $\ref{ghmatecd_new2}$ can be implemented as a CUDA kernel analogously 
 of only using the GPU to compute the entire $H$ and $G$ and there are no idle blocks as in Algorithm $\ref{ghmatecd_new}$, but tests show a 
 significant loss of precision in this version when compared to the previous one.
 
-\subsection{$\texttt{Ghmatece}$ Optimization and Parallelization}
+\section{$\texttt{Ghmatece}$ Optimization and Parallelization}
 
 $\texttt{Ghmatece}$ is a routine developed to create both the $H$ and $G$ matrices for the static problem described in equation ($\ref{eqmatrix}$). 
 Unless by \texttt{RIGID} routine, a procedure designed to calculate $H$ diagonal by considerating the rigid body movement, 
@@ -299,7 +301,7 @@ generate too much workload to a group of blocks.
 For the \texttt{RIGID} procedure, it has no interdependency between lines and thus it can be parallelized using the 
 \texttt{!\$OMP} \texttt{PARALLEL} \texttt{DO} pragma.
 
-\subsection{Linear System Solving Optimization}
+\section{Linear System Solving Optimization}
 In order to compute all regions surface forces and displacements, a linear system can be assembled 
 from the matrices $H$ and $G$ from the dynamic problem, that means solving: 
 \begin{equation}
