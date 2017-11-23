@@ -3,6 +3,7 @@
 \label{cap:conclusoes}
 
 \section{Methods}
+\label{sec:methods}
 
 Matrix norms were used to assert the correctness of our results. 
 Let %$x \in \Cfield^n$ and 
@@ -83,7 +84,7 @@ $25$, $19$, $22$ and $22$ respectively in \texttt{BrucutuIV}. For this sample we
 was faster than a single Xeon E5-2650 v4, but slower than two of those processors.
 
 Notice that with respect to time, \texttt{gpu8} and \texttt{cpu\_sing1} behaves very similarly, 
-but there is an interesting observation about the error, as illustrated by 
+but there is an interesting observation about the error (computed as described in Section $\ref{sec:methods}$), as illustrated by 
 Figure $\ref{fig:ghmatecd_brucutuiv_error}$. 
 
 Since there is an error gap in the $H$ matrix between the \texttt{gpu8} and \texttt{gpu\_sing1}, it suggests that most 

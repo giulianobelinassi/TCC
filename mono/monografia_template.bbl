@@ -1,0 +1,88 @@
+\begin{thebibliography}{13}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ascher e Greif(2011)]{ascher:2011}{\bf Ascher e Greif(2011)}
+Uri~M Ascher e Chen Greif.
+\newblock \emph{A first course on numerical methods}.
+\newblock SIAM.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Carrion(2002)]{carrion:02}{\bf Carrion(2002)}
+Ronaldo Carrion.
+\newblock \emph{Uma Implementação do Método dos Elementos de Contorno para
+  problemas Viscoelastodinâmicos Estacionários Tridimensionais em Domínios
+  Abertos e Fechados}.
+\newblock Tese de Doutorado, Universidade Estadual de Campinas.   {\scriptsize
+  Citado na p\'{a}g.}
+
+\bibitem[Corden(2010)]{intel_mcmodel:2010}{\bf Corden(2010)}
+Martyn Corden.
+\newblock Avoiding relocation errors when building applications with large
+  global or static data on intel64 linux.
+\newblock
+  \url{https://software.intel.com/en-us/articles/avoiding-relocation-errors-when-building-applications-with-large-global-or-static-data-on-intel64/},
+  2010.
+\newblock Accessed: 2017-11-23.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[devTalk(2012)]{devtalk_transfer:2012}{\bf devTalk(2012)}
+NVIDIA devTalk.
+\newblock How to optimize data transfers in cuda c/c++.
+\newblock
+  \url{https://devblogs.nvidia.com/parallelforall/how-optimize-data-transfers-cuda-cc/},
+  2012.
+\newblock Accessed: 2017-08-06.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Dominguez(1993)]{dominguez:1993}{\bf Dominguez(1993)}
+Jose Dominguez.
+\newblock \emph{Boundary elements in dynamics}.
+\newblock Wit Press.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[GNU()]{binutils}{\bf GNU()}
+GNU.
+\newblock Gnu binutils.
+\newblock \url{https://www.gnu.org/software/binutils/}.
+\newblock Accessed: 2017-05-08.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Hildebrand(1987)]{hildebrand:1987}{\bf Hildebrand(1987)}
+Francis~Begnaud Hildebrand.
+\newblock \emph{Introduction to numerical analysis}.
+\newblock Courier Corporation.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Katsikadelis(2016)]{katsikadelis:2016}{\bf Katsikadelis(2016)}
+John~T Katsikadelis.
+\newblock \emph{The Boundary Element Method for Engineers and Scientists:
+  Theory and Applications}.
+\newblock Academic Press.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Kirk e Wen-Mei(2016)]{kirk:2016}{\bf Kirk e Wen-Mei(2016)}
+David~B Kirk e W~Hwu Wen-Mei.
+\newblock \emph{Programming massively parallel processors: a hands-on
+  approach}.
+\newblock Morgan kaufmann.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Pacheco(2011)]{pacheco:2011}{\bf Pacheco(2011)}
+Peter Pacheco.
+\newblock \emph{An introduction to parallel programming}.
+\newblock Elsevier.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Tanenbaum(2009)]{tanenbaum:2009}{\bf Tanenbaum(2009)}
+Andrew Tanenbaum.
+\newblock \emph{Modern operating systems}.
+\newblock Pearson Education, Inc.,.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Torky e Rashed(2017)]{torky:2017}{\bf Torky e Rashed(2017)}
+Ahmed~A Torky e Youssef~F Rashed.
+\newblock Gpu acceleration of the boundary element method for shear-deformable
+  bending of plates.
+\newblock \emph{Engineering Analysis with Boundary Elements}, 74:\penalty0
+  34--48.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Watkins(2004)]{watkins:2004}{\bf Watkins(2004)}
+David~S Watkins.
+\newblock \emph{Fundamentals of matrix computations}, volume~64.
+\newblock John Wiley \& Sons.   {\scriptsize Citado na p\'{a}g.}
+
+\end{thebibliography}

@@ -22,6 +22,11 @@ and the compiler did not complain about the uninitialized variable.
 application in C or C++. The Portland Group (PGI) provides a paid CUDA Fortran compiler,
 so another solution was required.
 
+\item The original code only used static memory allocation for loading all data. 
+This resulted in the following problems: (1) Huge memory usage for small inputs because the 
+application does not know the memory requirement to load the data, and (2) A limit of 2Gb of 
+memory for the total of statically allocated variables \cite{intel_mcmodel:2010}. 
+
 \end{itemize}
 
 

@@ -1,0 +1,17 @@
+\backcite {katsikadelis:2016}{{1}{1.1}{section.1.1}}
+\backcite {dominguez:1993}{{1}{1.1}{section.1.1}}
+\backcite {carrion:02}{{1}{1.2}{section.1.2}}
+\backcite {ascher:2011}{{3}{1}{theorem.1}}
+\backcite {ascher:2011}{{3}{1.4}{Item.3}}
+\backcite {hildebrand:1987}{{4}{1.4}{equation.1.4.12}}
+\backcite {watkins:2004}{{5}{1.5}{algorithm.2}}
+\backcite {watkins:2004}{{6}{1.5}{algorithm.3}}
+\backcite {pacheco:2011}{{6}{1.6}{equation.1.6.14}}
+\backcite {pacheco:2011}{{7}{2}{Item.5}}
+\backcite {tanenbaum:2009}{{7}{1.6}{Item.5}}
+\backcite {kirk:2016}{{7}{1.6.1}{figure.caption.4}}
+\backcite {devtalk_transfer:2012}{{8}{1.6.1}{figure.caption.5}}
+\backcite {torky:2017}{{8}{1.7}{section.1.7}}
+\backcite {intel_mcmodel:2010}{{11}{2}{chapter.2}}
+\backcite {binutils}{{11}{2}{chapter.2}}
+\backcite {watkins:2004}{{17}{3.1}{section.3.1}}
