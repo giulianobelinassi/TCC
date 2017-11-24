@@ -35,6 +35,14 @@ time cost. Doing such analysis in parallel reduces the computational time requie
 program because multiple elements are processed at the same time. This advantage was provided by this
 research.
 
+\section{Research Approach}
+
+Although BEM has a very interesting mathematical background showing why it 
+works, here we focus mainly on subjects pertinent to the computational 
+nature of such method, such as algorithms used and implementation questions. 
+Hence, we do not show any detailed proof about any mathematical property of 
+BEM or discuss how it can be used to solve a particular set of problems.
+
 \section{Objectives}
 The main objective of this work is to provide an optimized version of the code provided by \cite{carrion:02}, 
 eighter by (1) reducing the number of calculations, (2) improving cache usage, or (3) paralelizing costly routines.  
@@ -43,7 +51,17 @@ caused by floating point imprecisions.
 
 There was another objective that was to extend the number of mesh elements that the program could accept as input. 
 
-\section{Boundary Elements Method Background}
+\section{Thesis Structure}
+This document is presented in the following order: Chapter $\ref{cap:background}$ presents an overview of theoretical background required, 
+from the Boundary Elements Method formulation to the Gaussian Quadrature (used to calculate integrals numerically) 
+and LU Decomposition (used to solve dense linear systems). Chapter $\ref{cap:dev}$ discusses all development process, including 
+how routines were optimized and parallelized. Chapter $\ref{cap:results}$ presents the methodology used in this research and present 
+the results obtained. Finally, Chapter $\ref{cap:conclusoes}$ present conclusions from obtained data and as a CUDA developer.
+
+\chapter{Theoretical Background}
+\label{cap:background}
+
+\section{The Boundary Elements Method}
 
 Without addressing details on BEM formulation, the Boundary Integral Equation for Stationary
 Elastodynamic Problems can be written as:
@@ -77,7 +95,7 @@ Where DYN = Dynamic, STA = Static. The integral of the difference between the dy
 the first term in Equation ($\ref{singular}$), does not present singularity when executed concomitantly as expressed because 
 they have the same order in the both problems.
 
-\section{Gaussian Quadrature Background}
+\section{Gaussian Quadrature}
 \label{cap:quadrature}
 
 Some integrals can only be approximated by numerical methods such as the Gaussian quadrature, that means:
@@ -161,7 +179,7 @@ shows that one could use:
 	a_j = \frac{2(1 - {x_j}^2)}{(n+1)^2 (\phi_{n+1}(x_j))^2}
 \end{equation}
 
-\section{LU Decomposition Background}
+\section{LU Decomposition}
 \label{cap:lu}
 
 
