@@ -31,7 +31,7 @@ functions called from the host to be executed by GPU threads.
 
 Regarding this work, this parallelization approach is useful because an analysis of a large domain 
 requires a proportionally large number of mesh elements, and processing a single element have a high
-time cost. Doing such analysis in parallel reduces the computational time requied for the entire
+time cost. Doing such analysis in parallel reduces the computational time required for the entire
 program because multiple elements are processed at the same time. This advantage was provided by this
 research.
 
@@ -44,14 +44,18 @@ Hence, we do not show any detailed proof about any mathematical property of
 BEM or discuss how it can be used to solve a particular set of problems.
 
 \section{Objectives}
+
 The main objective of this work is to provide an optimized version of the code provided by \cite{carrion:02}, 
 eighter by (1) reducing the number of calculations, (2) improving cache usage, or (3) paralelizing costly routines.  
 After all optimizations, the program must still yield acceptable results, that means we must still minimize errors 
 caused by floating point imprecisions.
 
+contemporary world, where multicore machines and Linux prevails. 
+
 There was another objective that was to extend the number of mesh elements that the program could accept as input. 
 
 \section{Thesis Structure}
+
 This document is presented in the following order: Chapter $\ref{cap:background}$ presents an overview of theoretical background required, 
 from the Boundary Elements Method formulation to the Gaussian Quadrature (used to calculate integrals numerically) 
 and LU Decomposition (used to solve dense linear systems). Chapter $\ref{cap:dev}$ discusses all development process, including 
@@ -382,12 +386,10 @@ by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two archite
 	
 \end{enumerate}
 
-
-An important concept to parallel computing in shared memory systems is the concept 
-of processes and threads. A process is an abstraction layer that allows a program to have 
-the perception that it is running alone on a computer, although the process is controlled 
-by the operating system such as Windows. Every process has its own resources and multiple 
-execution units \citep{tanenbaum:2009}. A single execution unit is called a thread.
+An important concept regarding to parallel computing is the concept of processes and threads. A process is an 
+operating system (OS) abstraction that allows a program to have the illusion that it monopolizes the entire CPU 
+\citep{love:2005}. Every process has at least one execution flow, which is named thread. Modern OS can handle 
+multiple threads within a process, allowing many different executions flows in the same process. \citep{tanenbaum:2009}
 
 Although OpenMP uses simple pragmas to take advantage of multiple CPUs in a shared memory system by 
 creating multiple threads within a process, GPUs 
@@ -444,22 +446,22 @@ transfer between CPU and GPU and explore any parallelism structure of the proble
 
 \section {Related Works}
 
-As GPUs became famous by its massively parallel capabilities and 
-applications were developed to explore its potential, there is no 
-surprise that researchers would use GPUs to accelerate
-Boundary Elements Method implementations. 
 
-\cite{torky:2017} presented an implementation for generating 
-both $H$ and $G$ matrices of equation 1.2 with GPU acceleration 
-using two CUDA kernels: One for computing the $G$ matrix and one 
-for computing $H$ matrix. They also manage to keep the $H$ matrix 
-in GPU memory to avoid host to device memory transfer to solve 
-the linear system on the GPU, managing a 
-108$\times$ speedup when building both $H$ and $G$ using single 
-precision on a NVIDIA GeForce 770GTX when compared with an 
-Intel Core i7-3770. For the linear system solving, the CPU required 
-2.5h to complete, whereas with the GPU it would take 4s. This implies 
-in a 2250 times speedup. As for precision, there is no further discussion 
+
+As GPUs became famous by its massively parallel capabilities and applications were developed 
+to explore its potential, there is no surprise that researchers would use GPUs to accelerate
+Boundary Elements Method implementations.
+
+\cite{torky:2017} presented an implementation for generating
+both $H$ and $G$ matrices of equation 1.2 with GPU acceleration using two CUDA kernels: 
+One for computing the $G$ matrix and one for the $H$ matrix.
+
+While assembling both $H$ and $G$ matrices, the authors managed a speedup of 25 times and kept 
+the $H$ matrix in GPU memory to avoid memory transfers between device and host. Regarding to solve 
+the linear system, they obtained a speedup of 1300 times. Both results were obtained sing an 
+Intel Core i7-3770 paired GeForce GTX 970.
+
+As for precision, there is no further discussion 
 rather than the usage of 10 points for the Gaussian Quadrature and that both 
 CPU and GPU processed data in exactly the same manner and with reliable 
 accuracy. 

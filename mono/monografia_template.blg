@@ -5,45 +5,45 @@ A level-1 auxiliary file: ape-exemplo.aux
 The style file: plainnat-ime.bst
 Database file #1: bibliografia.bib
 Warning--empty year in binutils
-You've used 13 entries,
+You've used 15 entries,
             2750 wiz_defined-function locations,
-            670 strings with 6752 characters,
-and the built_in function-call counts, 3893 in all, are:
-= -- 331
-> -- 163
-< -- 14
-+ -- 61
-- -- 48
-* -- 182
-:= -- 649
-add.period$ -- 42
-call.type$ -- 13
-change.case$ -- 33
-chr.to.int$ -- 13
-cite$ -- 27
-duplicate$ -- 208
-empty$ -- 369
-format.name$ -- 67
-if$ -- 808
+            682 strings with 7082 characters,
+and the built_in function-call counts, 4737 in all, are:
+= -- 404
+> -- 221
+< -- 15
++ -- 81
+- -- 66
+* -- 245
+:= -- 789
+add.period$ -- 49
+call.type$ -- 15
+change.case$ -- 42
+chr.to.int$ -- 15
+cite$ -- 31
+duplicate$ -- 243
+empty$ -- 431
+format.name$ -- 87
+if$ -- 979
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 17
-newline$ -- 76
-num.names$ -- 52
-pop$ -- 150
+missing$ -- 20
+newline$ -- 87
+num.names$ -- 60
+pop$ -- 175
 preamble$ -- 1
-purify$ -- 29
+purify$ -- 37
 quote$ -- 0
-skip$ -- 133
+skip$ -- 156
 stack$ -- 0
-substring$ -- 45
-swap$ -- 14
+substring$ -- 68
+swap$ -- 16
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 103
+type$ -- 120
 warning$ -- 1
-while$ -- 41
+while$ -- 49
 width$ -- 0
-write$ -- 200
+write$ -- 231
 (There was 1 warning)

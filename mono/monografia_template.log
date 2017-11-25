@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  24 NOV 2017 21:33
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  25 NOV 2017 20:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -706,7 +706,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [5]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 257.
+put line 261.
 
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -721,19 +721,19 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[7] <figuras/cuda_execution_flow.pdf, id=306, 402.50375pt x 363.3575pt>
+[7] <figuras/cuda_execution_flow.pdf, id=313, 402.50375pt x 363.3575pt>
 File: figuras/cuda_execution_flow.pdf Graphic file (type pdf)
 
 <use figuras/cuda_execution_flow.pdf>
-Package pdftex.def Info: figuras/cuda_execution_flow.pdf used on input line 410
+Package pdftex.def Info: figuras/cuda_execution_flow.pdf used on input line 412
 .
 (pdftex.def)             Requested size: 322.00343pt x 290.68639pt.
 
-<figuras/threads_blocks.pdf, id=309, 332.24126pt x 393.47pt>
+<figuras/threads_blocks.pdf, id=316, 332.24126pt x 393.47pt>
 File: figuras/threads_blocks.pdf Graphic file (type pdf)
 
 <use figuras/threads_blocks.pdf>
-Package pdftex.def Info: figuras/threads_blocks.pdf used on input line 431.
+Package pdftex.def Info: figuras/threads_blocks.pdf used on input line 433.
 (pdftex.def)             Requested size: 199.34628pt x 236.0838pt.
 
 
@@ -760,9 +760,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 Chapter 3.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 9.
-[11
-
-] (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
@@ -777,12 +775,16 @@ File: lstlang1.sty 2015/06/04 1.6 listings language file
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
-Overfull \hbox (7.62482pt too wide) in paragraph at lines 55--81
-[]$[]$
+Overfull \hbox (1.41666pt too wide) in paragraph at lines 49--81
+[]$ \T1/cmr/m/n/12 It
  []
 
+[11
+
+]
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <17.28> not available
 (Font)              Font shape `T1/pcr/b/n' tried instead on input line 82.
+
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 82.
@@ -841,14 +843,12 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 [16]
 Chapter 4.
-
-Overfull \hbox (54.36707pt too wide) in paragraph at lines 26--31
-\T1/cmr/m/n/12 CUDA nvcc com-piler were: $[]$ $[]$ $[]$ $[]$ $[]$
- []
-
 [17
 
 ]
+LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 68.
+
 
 Package Fancyhdr Warning: \headheight is too small (12.0pt): 
  Make it at least 14.49998pt.
@@ -863,7 +863,7 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
  This may cause the page layout to be inconsistent, however.
 
 [19]
-<./figuras/ghmatecd_brucutuiv_non_sequential.pdf, id=462, 426.59375pt x 284.061
+<./figuras/ghmatecd_brucutuiv_non_sequential.pdf, id=470, 426.59375pt x 284.061
 25pt>
 File: ./figuras/ghmatecd_brucutuiv_non_sequential.pdf Graphic file (type pdf)
  <use ./figuras/ghmatecd_brucutuiv_non_sequential.pdf>
@@ -873,7 +873,7 @@ n input line 191.
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <10.95> not available
 (Font)              Font shape `T1/pcr/m/sl' tried instead on input line 192.
 
-<./figuras/ghmatecd_brucutuiv_error.pdf, id=463, 426.59375pt x 284.06125pt>
+<./figuras/ghmatecd_brucutuiv_error.pdf, id=471, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatecd_brucutuiv_error.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatecd_brucutuiv_error.pdf>
@@ -881,7 +881,7 @@ Package pdftex.def Info: ./figuras/ghmatecd_brucutuiv_error.pdf used on input l
 ine 199.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/ghmatecd_venus_1.pdf, id=464, 426.59375pt x 284.06125pt>
+<./figuras/ghmatecd_venus_1.pdf, id=472, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatecd_venus_1.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatecd_venus_1.pdf>
@@ -889,7 +889,7 @@ Package pdftex.def Info: ./figuras/ghmatecd_venus_1.pdf used on input line 207.
 
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/ghmatecd_venus_error.pdf, id=465, 426.59375pt x 284.06125pt>
+<./figuras/ghmatecd_venus_error.pdf, id=473, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatecd_venus_error.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatecd_venus_error.pdf>
@@ -897,7 +897,7 @@ Package pdftex.def Info: ./figuras/ghmatecd_venus_error.pdf used on input line
 215.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/ghmatece_brucutuiv_1.pdf, id=466, 426.59375pt x 284.06125pt>
+<./figuras/ghmatece_brucutuiv_1.pdf, id=474, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatece_brucutuiv_1.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatece_brucutuiv_1.pdf>
@@ -905,7 +905,7 @@ Package pdftex.def Info: ./figuras/ghmatece_brucutuiv_1.pdf used on input line
 223.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/ghmatece_brucutuiv_error.pdf, id=467, 426.59375pt x 284.06125pt>
+<./figuras/ghmatece_brucutuiv_error.pdf, id=475, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatece_brucutuiv_error.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatece_brucutuiv_error.pdf>
@@ -913,7 +913,7 @@ Package pdftex.def Info: ./figuras/ghmatece_brucutuiv_error.pdf used on input l
 ine 231.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/ghmatece_venus_1.pdf, id=468, 426.59375pt x 284.06125pt>
+<./figuras/ghmatece_venus_1.pdf, id=476, 426.59375pt x 284.06125pt>
 File: ./figuras/ghmatece_venus_1.pdf Graphic file (type pdf)
 
 <use ./figuras/ghmatece_venus_1.pdf>
@@ -921,7 +921,7 @@ Package pdftex.def Info: ./figuras/ghmatece_venus_1.pdf used on input line 239.
 
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/rigid_brucutuiv_1.pdf, id=469, 426.59375pt x 284.06125pt>
+<./figuras/rigid_brucutuiv_1.pdf, id=477, 426.59375pt x 284.06125pt>
 File: ./figuras/rigid_brucutuiv_1.pdf Graphic file (type pdf)
 
 <use ./figuras/rigid_brucutuiv_1.pdf>
@@ -929,7 +929,7 @@ Package pdftex.def Info: ./figuras/rigid_brucutuiv_1.pdf used on input line 247
 .
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/linsolve_brucutuiv_1.pdf, id=470, 426.59375pt x 284.06125pt>
+<./figuras/linsolve_brucutuiv_1.pdf, id=478, 426.59375pt x 284.06125pt>
 File: ./figuras/linsolve_brucutuiv_1.pdf Graphic file (type pdf)
 
 <use ./figuras/linsolve_brucutuiv_1.pdf>
@@ -937,7 +937,7 @@ Package pdftex.def Info: ./figuras/linsolve_brucutuiv_1.pdf used on input line
 255.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
 
-<./figuras/linsolve_venus_1.pdf, id=471, 426.59375pt x 284.06125pt>
+<./figuras/linsolve_venus_1.pdf, id=479, 426.59375pt x 284.06125pt>
 File: ./figuras/linsolve_venus_1.pdf Graphic file (type pdf)
 
 <use ./figuras/linsolve_venus_1.pdf>
@@ -990,19 +990,24 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 
 ]
 Chapter 5.
-<./figuras/total_brucutuiv.pdf, id=579, 426.59375pt x 284.06125pt>
+<./figuras/total_brucutuiv.pdf, id=589, 426.59375pt x 284.06125pt>
 File: ./figuras/total_brucutuiv.pdf Graphic file (type pdf)
 
 <use ./figuras/total_brucutuiv.pdf>
-Package pdftex.def Info: ./figuras/total_brucutuiv.pdf used on input line 28.
+Package pdftex.def Info: ./figuras/total_brucutuiv.pdf used on input line 29.
 (pdftex.def)             Requested size: 426.5927pt x 284.06053pt.
- [27]) [28 <./figuras/total_brucutuiv.pdf>]
+ [27])
+Overfull \hbox (107.28502pt too wide) in paragraph at lines 68--268
+[]\T1/cmr/m/n/12 A bet-ter par-al-lel strat-egy for re-duc-ing the ma-trix (as 
+il-lus-trated by the func-tion \T1/pcr/m/n/12 SumAllMatricesInBuffer
+ []
+
+[28 <./figuras/total_brucutuiv.pdf>]
 \openout2 = `ape-exemplo.aux'.
 
-
-(./ape-exemplo.tex
+ (./ape-exemplo.tex
 Appendix A.
-<figuras/brucutuiv.pdf, id=597, 1405.25pt x 1134.2375pt>
+<figuras/brucutuiv.pdf, id=610, 1405.25pt x 1134.2375pt>
 File: figuras/brucutuiv.pdf Graphic file (type pdf)
 
 <use figuras/brucutuiv.pdf>
@@ -1013,7 +1018,7 @@ Overfull \hbox (13.72066pt too wide) in paragraph at lines 24--25
  [][] 
  []
 
-<figuras/venus.pdf, id=599, 560.0925pt x 381.425pt>
+<figuras/venus.pdf, id=612, 560.0925pt x 381.425pt>
 File: figuras/venus.pdf Graphic file (type pdf)
  <use figuras/venus.pdf>
 Package pdftex.def Info: figuras/venus.pdf used on input line 48.
@@ -1038,24 +1043,24 @@ Package Fancyhdr Warning: \headheight is too small (12.0pt):
 \openout6 = `monografia_template.brf'.
 
 
-Overfull \hbox (49.0368pt too wide) in paragraph at lines 29--29
+Overfull \hbox (49.0368pt too wide) in paragraph at lines 38--38
 \T1/cmr/m/n/12 avoiding-[]relocation-[]errors-[]when-[]building-[]applications-
 []with-[]large-[]global-[]or-[]static-[]data-[]on-[]intel64/$[][],
  []
 
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 294.
- [33
+[33
 
-]
+])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 294.
+ [34]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 294.
  (./monografia_template.aux (./ape-exemplo.aux))
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 294.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 294.
 Package rerunfilecheck Info: File `monografia_template.out' has not changed.
-(rerunfilecheck)             Checksum: 61E2B7BCBF677F11C7A957BEE6839199;1889.
+(rerunfilecheck)             Checksum: 45E70917D3213A1CFABD67BB048A5794;1947.
 Package rerunfilecheck Info: File `monografia_template.brf' has not changed.
-(rerunfilecheck)             Checksum: CDE510501F726A3FDE8EB98B0D944529;826.
+(rerunfilecheck)             Checksum: 9382FA36EC46248B16978279EC9FE0F9;917.
 
 
 LaTeX Warning: There were multiply-defined labels.
@@ -1063,11 +1068,11 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 294.
  ) 
 Here is how much of TeX's memory you used:
- 13727 strings out of 493013
- 199557 string characters out of 6135683
- 362433 words of memory out of 5000000
- 16823 multiletter control sequences out of 15000+600000
- 33111 words of font info for 84 fonts, out of 8000000 for 9000
+ 13747 strings out of 493013
+ 199868 string characters out of 6135683
+ 365824 words of memory out of 5000000
+ 16838 multiletter control sequences out of 15000+600000
+ 33732 words of font info for 86 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,19n,49p,329b,1537s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf/
@@ -1093,10 +1098,10 @@ texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/share/texmf/fonts/type1/pu
 blic/cm-super/sfti1200.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/couri
 er/ucrb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb
 ></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrro8a.pfb>
-Output written on monografia_template.pdf (41 pages, 632207 bytes).
+Output written on monografia_template.pdf (42 pages, 635609 bytes).
 PDF statistics:
- 783 PDF objects out of 1000 (max. 8388607)
- 677 compressed objects within 7 object streams
- 166 named destinations out of 1000 (max. 500000)
- 308 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 803 PDF objects out of 1000 (max. 8388607)
+ 696 compressed objects within 7 object streams
+ 170 named destinations out of 1000 (max. 500000)
+ 316 words of extra memory for PDF output out of 10000 (max. 10000000)
 

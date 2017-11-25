@@ -26,7 +26,7 @@ so another solution was required.
 \item The original code only used static memory allocation for loading all data. 
 This resulted in the following problems: (1) Huge memory usage for small inputs because the 
 application does not know the memory requirement to load the data, and (2) A limit of 2Gb of 
-memory for the total of statically allocated variables \cite{intel_mcmodel:2010}. 
+memory for the total of statically allocated variables \citep{intel_mcmodel:2010}. 
 
 \end{itemize}
 
@@ -46,12 +46,12 @@ Although The Portland Group (PGI) provides a CUDA Fortran compiler, it is not fr
 and thus might increase the application development costs. An alternative to this is to 
 create C++ functions that are callable from Fortran and use CUDA C++ to program the kernels.
 
-Since GFortran appends an underscore to all compiled Fortran subroutines, manually appending an 
-underscore to a C routine makes it visible to Fortran. Since Fortran also passes all arguments 
+Since GFortran appends an underscore to all compiled Fortran subroutines, manually appending it 
+ to a C routine makes it visible to Fortran. Since Fortran also passes all arguments 
 as reference, then the C routine needs to expect a pointer to a variable rather than the variable 
 itself. Now, to call C++ from Fortran it is necessary to just wrap the function with \texttt{extern "C"}
 clause, as exemplified below.
-
+\\
 \begin{minipage}{\textwidth}
 \lstset{language=C}
 \begin{lstlisting}

@@ -8,6 +8,7 @@
 \backcite {watkins:2004}{{7}{2.3}{algorithm.3}}
 \backcite {pacheco:2011}{{7}{2.4}{equation.2.4.14}}
 \backcite {pacheco:2011}{{8}{2}{Item.5}}
+\backcite {love:2005}{{8}{2.4}{Item.5}}
 \backcite {tanenbaum:2009}{{8}{2.4}{Item.5}}
 \backcite {kirk:2016}{{8}{2.4.1}{figure.caption.4}}
 \backcite {devtalk_transfer:2012}{{9}{2.4.1}{figure.caption.5}}
@@ -15,3 +16,4 @@
 \backcite {intel_mcmodel:2010}{{11}{3}{chapter.3}}
 \backcite {binutils}{{11}{3}{chapter.3}}
 \backcite {watkins:2004}{{17}{4.1}{section.4.1}}
+\backcite {belinassi:2017}{{27}{5.1}{section.5.1}}

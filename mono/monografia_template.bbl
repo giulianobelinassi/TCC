@@ -1,4 +1,4 @@
-\begin{thebibliography}{13}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -9,6 +9,15 @@
 Uri~M Ascher e Chen Greif.
 \newblock \emph{A first course on numerical methods}.
 \newblock SIAM.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Belinassi {\rm{\em et~al.}}(2017)Belinassi, Siqueira, Carrion,
+  Goldman, e Gubitoso]{belinassi:2017}{\bf Belinassi {\rm{\em et~al.}}(2017)}
+Giuliano Belinassi, Rodrigo Siqueira, Ronaldo Carrion, Alfredo Goldman e Marco
+  Gubitoso.
+\newblock Optimizing a boundary elements method for stationary elastodynamic
+  problems implementation with gpus.
+\newblock \emph{WSCAD--WIC}, 18:\penalty0 51--56.   {\scriptsize Citado na
+  p\'{a}g.}
 
 \bibitem[Carrion(2002)]{carrion:02}{\bf Carrion(2002)}
 Ronaldo Carrion.
@@ -62,6 +71,12 @@ David~B Kirk e W~Hwu Wen-Mei.
 \newblock \emph{Programming massively parallel processors: a hands-on
   approach}.
 \newblock Morgan kaufmann.   {\scriptsize Citado na p\'{a}g.}
+
+\bibitem[Love(2005)]{love:2005}{\bf Love(2005)}
+Robert Love.
+\newblock \emph{Linux Kernel Development (2Nd Edition) (Novell Press)}.
+\newblock Novell Press.
+\newblock ISBN 0672327201.   {\scriptsize Citado na p\'{a}g.}
 
 \bibitem[Pacheco(2011)]{pacheco:2011}{\bf Pacheco(2011)}
 Peter Pacheco.

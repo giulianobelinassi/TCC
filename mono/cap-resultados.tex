@@ -25,7 +25,7 @@ and $\norm{G_{cpu} - G_{gpu}}_1$.
 
 Gfortran and CUDA 8.0 were used to compile the application. The main flags used in Gfortran were
 $\texttt{-Ofast}$ $\texttt{-march=native}$ $\texttt{-funroll-loops}$ $\texttt{-flto}$. The flags used in
-CUDA nvcc compiler were: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xptxas}$ $\texttt{--opt-level=3}$
+CUDA nvcc compiler were: $\texttt{-use\_fast\_math}$  $\texttt{-O3}$ $\texttt{-Xptxas}$ $\texttt{--opt-level=3}$ \\
 $\texttt{-maxrregcount=32}$ $\texttt{-Xptxas}$ 
 $\texttt{--allow-expensive-optimizations=true}$ . 
 
@@ -41,7 +41,7 @@ The graphs labels consist of the implementation name concatenated with the numbe
 for example, \texttt{cpu8} implies that only the CPU was used with 8 OpenMP threads. All its points 
 are the mean of the time in seconds of 30 executions, and the errorbars illustrate a 95\% confidence interval.
 
-The number of threads used were defined considerating the number of CPU cores the testing machine has. 
+The number of threads used were defined considering the number of CPU cores the testing machine has. 
 We used two machines for the tests, \texttt{BrucutuIV} and \texttt{Venus}, as defined in Appendix $\ref{cap:ape}$
 
 GPU total time was computed by the sum of 5 elements: 
@@ -65,7 +65,7 @@ Number of Boundary elements & 100 & 400 & 900  & 1600 & 6400\\ \hline
 
 \section{Results and isolated conclusions}
 
-\subsection{Ghmatecd Routine}
+\subsection{\texttt{Ghmatecd} Routine}
 
 This routine has three parallel implementations: (1) Using only CPU threads 
 (\texttt{cpu}); (2) Using GPU for the nonsingular part and the CPU for the 
@@ -73,7 +73,7 @@ singular part, as described by Algorithm $\ref{ghmatecd_new}$ (\texttt{gpu});
 (3) Using GPU for both singular and nonsingular parts, as described by Algorithm 
 $\ref{ghmatecd_new2}$ (\texttt{gpu\_sing}).                                    
 
-\subsubsection{BrucutuIV Data}
+\subsubsection{\texttt{BrucutuIV} Data}
 
 The logarithmic scale graphic at Figure $\ref{fig:ghmatecd_brucutuiv_non_sequential}$ illustrates the
 results for \texttt{BrucutuIV}. We removed the points from the graph that represents the sequential data for legibility.
@@ -113,12 +113,12 @@ From these data, we can conclude that the presented method can also accelerate t
 the case that there is a low number of CPU cores available, and such CPU cores can be allocated to 
 compute the singular case to reduce errors. 
 
-\subsection{Ghmatece Routine}
+\subsection{\texttt{Ghmatece} Routine}
 
 This routine has two parallel implementations: (1) Using only CPU threads (\texttt{cpu}); 
 (2) Using GPU for the nonsingular part and the CPU for the singular part (\texttt{gpu}), 
 as presented by the technique in Algorithm $\ref{ghmatecd_new}$. Here we present the results 
-for the \texttt{Ghmatece} routine wihout the \texttt{Rigid} part. We present in this way because we present 
+for the \texttt{Ghmatece} routine without the \texttt{Rigid} part. We present in this way because we present 
 a detailed analysis of the \texttt{Rigid} routine also in this chapter.
 
 \subsubsection{BrucutuIV Data}
@@ -148,7 +148,7 @@ As for the error, all results were below  $10^{-6}$
 
 As a conclusion, for this hardware, the presented implementation provides acceleration if the number of meshes is large enough. 
 
-\subsection{Rigid routine}
+\subsection{\texttt{Rigid} routine}
 
 We only present a parallel implementation of this routine using the CPU due to the low time 
 consumption of it when compared to the other analysed routines. We only present the \texttt{BrucutuIV} 
