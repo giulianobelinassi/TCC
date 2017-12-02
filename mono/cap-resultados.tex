@@ -63,7 +63,7 @@ Number of Boundary elements & 100 & 400 & 900  & 1600 & 6400\\ \hline
 \end{tabular}
 \end{table}
 
-\section{Results and isolated conclusions}
+\section{Results and Isolated Conclusions}
 
 \subsection{\texttt{Ghmatecd} Routine}
 
@@ -148,7 +148,7 @@ As for the error, all results were below  $10^{-6}$
 
 As a conclusion, for this hardware, the presented implementation provides acceleration if the number of meshes is large enough. 
 
-\subsection{\texttt{Rigid} routine}
+\subsection{\texttt{Rigid} Routine}
 
 We only present a parallel implementation of this routine using the CPU due to the low time 
 consumption of it when compared to the other analysed routines. We only present the \texttt{BrucutuIV} 
@@ -162,7 +162,7 @@ respectively in \texttt{BrucutuIV}.
 Since all those results but the sequential are below $1s$ and this routine is called only once in the entire program, 
 there is no requirement for vast improvements here.
 
-\subsection{Linear system solving routine}
+\subsection{Linear System Solving Routine}
 
 This routine has two parallel implementations: (1) Using OpenBLAS \texttt{CGESV} 
 (\texttt{cpu}) and (2) Using MAGMA's \texttt{cgesv\_gpu} routine (\texttt{gpu}). 

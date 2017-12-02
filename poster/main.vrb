@@ -1,0 +1,124 @@
+\centering
+
+\begin{columns}[T]
+
+%%%% First Column
+\begin{column}{.46\textwidth}
+
+\begin{block}{Introduction}\justifying
+
+\begin{itemize}
+
+\item The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains.
+\item This method can be used for numerically modeling the stationary behavior of 3D wave propagation in the soil. [$\citenum{katsikadelis:2016}$]
+\item It can be used for analyzing the vibration created by heavy machines, railway lines, or earthquakes.
+
+\end{itemize}
+
+\vspace{0.5cm}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.7]{trincheira.png}
+	\caption{Example of a surface.}
+
+\end{figure}
+
+\end{block}
+
+\begin{block}{BEM Formulation Background}\justifying
+
+\begin{itemize}
+\item Boundary Integral Equation for Stationary Elastodynamic Problems [$\citenum{carrion:02}$]:
+\begin{equation}
+\begin{split}
+	c_{ij}u_{j}(\xi,\omega) + \int_S t_{ij}^*(\xi, x, \omega)u_j (x, \omega)\text{d}S(x) = \\
+	= \int_S u_{ij}^*(\xi, x, \omega) t_j(x, \omega)\text{d}S(x) \label{bem_formulation} \nonumber
+\end{split}
+\end{equation}
+
+\item After performing the geometry discretization, above equation can be represented in matrix form as $Hu = Gt$.
+\item Numerically, these integrals can be computed using the Gaussian quadrature.
+
+\end{itemize}
+\end{block}
+
+\begin{block}{Objectives}\justifying
+\begin{itemize}
+
+\item Bring a legacy implementation of BEM for Estationary Elastodynamics Problems to a contemporary computing scenario, enabling the usage of multicore processors and GPUs.
+\item Accelerate the overall performance to simulate surfaces with a higher number of mesh elements
+
+\end{itemize}
+\end{block}
+
+\end{column}
+
+%%%% Second Column
+\begin{column}{.46\textwidth}
+
+
+
+\begin{block}{Results}
+
+We applied the paralelization approach described in [$\citenum{belinassi:2017}$] together with MAGMA's LU decomposition.
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=1.4]{venus_total.pdf}
+	\caption{Total elapsed time in a \texttt{AMD A10-7700K} paired with a \texttt{GeForce GTX 980}}
+	\label{fig:venus}
+\end{figure}
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=1.4]{total_brucutuiv.pdf}
+	\caption{Total elapsed time in a \texttt{$2\times$ Xeon E6-2650 v4} paired with a \texttt{Tesla K40}}
+	\label{fig:total_brucutuiv}
+	\label{fig:brucutuiv}
+\end{figure}
+
+\end{block}
+
+\begin{block}{Conclusions}\justifying
+\begin{itemize}
+
+%\item GPUs can be used to accelerate the overall application's performance.
+\item Better speedups can be obtained if a load balancer is implemented. The current implementation does not use both CPU and GPU simultaneously.
+
+
+\end{itemize}
+\end{block}
+
+
+\begin{block}{References}
+%\bibliographystyle{plainnat}
+\bibliographystyle{unsrtnat}
+{\footnotesize
+\bibliography{ref.bib}}
+%\bibliography{ref.bib}
+%\bibliographystyle{sbc}
+%\bibliography{ref.bib}
+\end{block}
+
+\end{column}
+\end{columns}
+
+%\begin{block}{Proposal}
+%\begin{itemize}
+%\item Search all scalability technics for Complex Event Processing and find which ones can be combined to lower resource usage.
+%\item Monitor the CPU, memory and bandwidth usage to more easily adapt to the addition or subtraction of available machines for processing
+%\item Discover Smart Cities requirements that may affect the  Scalability of the CEP system and try to overcome them.
+%\item Maybe use the city natural disposition and features to improve the processing, based on the correlation between geographical localization and information relevance to people on that place.
+%\end{itemize}
+%\end{block}
+%\begin{columns}[T]
+%\begin{column}{.9\linewidth}
+%\begin{block}{}
+%This Research is funded by CAPES \\(Coordenação de Aperfeiçoamento de Pessoal de Nível Superior)
+%\end{block}
+%\end{column}
+%\begin{column}{.1\linewidth}
+%\includegraphics[height=5cm,width=5cm]{capes.jpg}
+%\end{column}
+%\end{columns}

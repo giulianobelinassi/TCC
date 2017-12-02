@@ -8,7 +8,7 @@
 \contentsline {section}{\numberline {2.1}The Boundary Elements Method}{3}{section.2.1}
 \contentsline {section}{\numberline {2.2}Gaussian Quadrature}{3}{section.2.2}
 \contentsline {section}{\numberline {2.3}LU Decomposition}{5}{section.2.3}
-\contentsline {section}{\numberline {2.4}Parallel Programming Background}{7}{section.2.4}
+\contentsline {section}{\numberline {2.4}Parallel Programming}{7}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}CUDA Programming}{8}{subsection.2.4.1}
 \contentsline {section}{\numberline {2.5}Related Works}{9}{section.2.5}
 \contentsline {chapter}{\numberline {3}Development}{11}{chapter.3}
@@ -18,16 +18,16 @@
 \contentsline {section}{\numberline {3.4}Linear System Solving Optimization}{16}{section.3.4}
 \contentsline {chapter}{\numberline {4}Methods and Results}{17}{chapter.4}
 \contentsline {section}{\numberline {4.1}Methods}{17}{section.4.1}
-\contentsline {section}{\numberline {4.2}Results and isolated conclusions}{18}{section.4.2}
+\contentsline {section}{\numberline {4.2}Results and Isolated Conclusions}{18}{section.4.2}
 \contentsline {subsection}{\numberline {4.2.1}\texttt {Ghmatecd} Routine}{18}{subsection.4.2.1}
 \contentsline {subsubsection}{\texttt {BrucutuIV} Data}{18}{section*.7}
 \contentsline {subsubsection}{Venus Data}{18}{section*.8}
 \contentsline {subsection}{\numberline {4.2.2}\texttt {Ghmatece} Routine}{19}{subsection.4.2.2}
 \contentsline {subsubsection}{BrucutuIV Data}{19}{section*.9}
 \contentsline {subsubsection}{Venus Data}{19}{section*.10}
-\contentsline {subsection}{\numberline {4.2.3}\texttt {Rigid} routine}{19}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.3}\texttt {Rigid} Routine}{19}{subsection.4.2.3}
 \contentsline {subsubsection}{BrucutuIV Results}{19}{section*.11}
-\contentsline {subsection}{\numberline {4.2.4}Linear system solving routine}{20}{subsection.4.2.4}
+\contentsline {subsection}{\numberline {4.2.4}Linear System Solving Routine}{20}{subsection.4.2.4}
 \contentsline {subsubsection}{BrucutuIV results}{20}{section*.12}
 \contentsline {subsubsection}{Venus results}{20}{section*.13}
 \contentsline {chapter}{\numberline {5}Final Conclusions}{27}{chapter.5}
