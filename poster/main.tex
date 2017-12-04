@@ -6,7 +6,7 @@
 %% IME
 %% Instituto de Matemática e Estatística
 \usepackage[size=a1,orientation=portrait,scale=1.8]{beamerposter}
-
+\usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{libertine}
@@ -31,6 +31,7 @@
 \setbeamercolor{bibliography entry location}{fg=black} 
 \setbeamercolor{bibliography entry note}{fg=black} 
 
+\setbeamertemplate{caption}[numbered]
 
 \author[giuliano.belinassi@usp.br]{Giuliano Augusto Faulin Belinassi}
 \title{Optimizing a Boundary Elements Method for Stationary Elastodynamic Problems Implementation with GPUs}
@@ -88,9 +89,9 @@
 
 \begin{itemize}
 
-\item The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains.
-\item This method can be used for numerically modeling the stationary behavior of 3D wave propagation in the soil. [$\citenum{katsikadelis:2016}$]
-\item It can be used for analyzing the vibration created by heavy machines, railway lines, or earthquakes.
+\item The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains
+\item This method can be used for numerically modeling the stationary behavior of 3D wave propagation in the soil [$\citenum{katsikadelis:2016}$]
+\item It can be used for analyzing the vibration created by heavy machines, railway lines, or earthquakes
 
 \end{itemize}
 
@@ -100,7 +101,7 @@
 	\centering
 	\includegraphics[scale=0.7]{trincheira.png}
 	\caption{Example of a surface.}
-
+	\label{fig:surface}
 \end{figure}
 
 \end{block}
@@ -116,8 +117,8 @@
 \end{split}
 \end{equation}
 
-\item After performing the geometry discretization, above equation can be represented in matrix form as $Hu = Gt$.
-\item Numerically, these integrals can be computed using the Gaussian quadrature.
+\item After performing the geometry discretization, the equation above can be represented in matrix form as $Hu = Gt$
+\item Numerically, these integrals can be computed using the Gaussian quadrature
 
 \end{itemize}
 \end{block}
@@ -125,7 +126,7 @@
 \begin{block}{Objectives}\justifying
 \begin{itemize}
 
-\item Bring a legacy implementation of BEM for Estationary Elastodynamics Problems to a contemporary computing scenario, enabling the usage of multicore processors and GPUs.
+\item Bring a legacy implementation of BEM for Stationary Elastodynamics Problems to a contemporary computing scenario, enabling the usage of multicore processors and GPUs
 \item Accelerate the overall performance to simulate surfaces with a higher number of mesh elements
 
 \end{itemize}
@@ -140,20 +141,19 @@
 
 \begin{block}{Results}
 
-We applied the paralelization approach described in [$\citenum{belinassi:2017}$] together with MAGMA's LU decomposition. 
+We applied the parallelization approach described in [$\citenum{belinassi:2017}$] together with MAGMA's LU decomposition
 
 \begin{figure}
 	\centering
 	\includegraphics[scale=1.4]{venus_total.pdf}
-	\caption{Total elapsed time in a \texttt{AMD A10-7700K} paired with a \texttt{GeForce GTX 980}}
+	\caption{Elapsed time in a \texttt{AMD A10-7700K} with a \texttt{GeForce GTX 980}}
 	\label{fig:venus}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=1.4]{total_brucutuiv.pdf}
-	\caption{Total elapsed time in a \texttt{$2\times$ Xeon E6-2650 v4} paired with a \texttt{Tesla K40}}
-	\label{fig:total_brucutuiv}
+	\caption{Elapsed time in a \texttt{$2\times$ Xeon E6-2650 v4} with a \texttt{Tesla K40}}
 	\label{fig:brucutuiv}
 \end{figure}
 
@@ -163,7 +163,9 @@ We applied the paralelization approach described in [$\citenum{belinassi:2017}$]
 \begin{itemize}
 
 %\item GPUs can be used to accelerate the overall application's performance.
-\item Better speedups can be obtained if a load balancer is implemented. The current implementation does not use both CPU and GPU simultaneously.
+\item Speedups of $3$ (CPU) and $34$ (GPU) in Figure $\ref{fig:venus}$
+\item Speedups of $18$ (CPU) and $20$ (GPU) in Figure $\ref{fig:brucutuiv}$
+\item Better speedups can be obtained if a load balancer is implemented 
 
 
 \end{itemize}

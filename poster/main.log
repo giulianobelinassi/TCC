@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  2 DEC 2017 11:19
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2017.7.6)  4 DEC 2017 09:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1461,64 +1461,64 @@ Package caption Info: Hyperref support is turned off
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/nxlmi/m/it on input line 79.
-LaTeX Font Info:    Try loading font information for OML+nxlmi on input line 79
+LaTeX Font Info:    Checking defaults for OML/nxlmi/m/it on input line 80.
+LaTeX Font Info:    Try loading font information for OML+nxlmi on input line 80
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/omlnxlmi.fd
 File: omlnxlmi.fd 2013/11/19 Fontinst v1.933 font definitions for OML/nxlmi.
 )
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 79.
-LaTeX Font Info:    Try loading font information for U+ntxexa on input line 79.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for U/ntxexa/m/n on input line 80.
+LaTeX Font Info:    Try loading font information for U+ntxexa on input line 80.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxexa.fd
 File: untxexa.fd 2012/04/16 Fontinst v1.933 font definitions for U/ntxexa.
 )
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 79.
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 79.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 79.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 80.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 80.
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 79.
-LaTeX Font Info:    Try loading font information for LMS+ntxsy on input line 79
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for LMS/ntxsy/m/n on input line 80.
+LaTeX Font Info:    Try loading font information for LMS+ntxsy on input line 80
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/lmsntxsy.fd
 File: lmsntxsy.fd 2016/07/02 Fontinst v1.933 font definitions for LMS/ntxsy.
 )
-LaTeX Font Info:    ... okay on input line 79.
-LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 79.
-LaTeX Font Info:    Try loading font information for LMX+ntxexx on input line 7
-9.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for LMX/ntxexx/m/n on input line 80.
+LaTeX Font Info:    Try loading font information for LMX+ntxexx on input line 8
+0.
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/lmxntxexx.fd
 File: lmxntxexx.fd 2016/07/03 Fontinst v1.933 font definitions for LMX/ntxexx.
 )
-LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    ... okay on input line 80.
 LaTeX Font Info:    Try loading font information for T1+LinuxBiolinumT-TLF on i
-nput line 79.
+nput line 80.
 
 (/usr/share/texlive/texmf-dist/tex/latex/libertine/T1LinuxBiolinumT-TLF.fd
 File: T1LinuxBiolinumT-TLF.fd 2012/11/26 (autoinst) Font definitions for T1/Lin
 uxBiolinumT-TLF.
 )
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 31.6pt on input line 79.
+(Font)              scaled to size 31.6pt on input line 80.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1586,7 +1586,7 @@ e
 ))
 ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box54
-Package hyperref Info: Link coloring OFF on input line 79.
+Package hyperref Info: Link coloring OFF on input line 80.
 
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1596,9 +1596,9 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count176
 )
-LaTeX Info: Redefining \ref on input line 79.
-LaTeX Info: Redefining \pageref on input line 79.
-LaTeX Info: Redefining \nameref on input line 79.
+LaTeX Info: Redefining \ref on input line 80.
+LaTeX Info: Redefining \pageref on input line 80.
+LaTeX Info: Redefining \nameref on input line 80.
 
 (./main.out) (./main.out)
 \@outlinefile=\write5
@@ -1606,61 +1606,61 @@ LaTeX Info: Redefining \nameref on input line 79.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/LinuxLibertineT-TLF/m/n --> OT1/cmss/m/n on input l
-ine 79.
+ine 80.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/LinuxLibertineT-TLF/sb/n --> OT1/cmss/bx/n on input
- line 79.
+ line 80.
 \symnumbers=\mathgroup10
 \sympureletters=\mathgroup11
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
 (Font)                  OT1/cmss/m/n --> T1/LinuxLibertineT-TLF/m/n on input li
-ne 79.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 79.
+ne 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/LinuxLibertineT-TLF/sb/n --> T1/LinuxBiolinumT-TLF/
-bx/n on input line 79.
+bx/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  OT1/LinuxLibertineT-TLF/sb/n --> T1/LinuxBiolinumT-TLF/
-bx/n on input line 79.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 79.
+bx/n on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
 (Font)                  T1/LinuxBiolinumT-TLF/m/n --> T1/LinuxBiolinumT-TLF/m/n
- on input line 79.
+ on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/b/n --> T1/LinuxBiolinumT-TLF/m/n
- on input line 79.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 79.
+ on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/LinuxLibertineT-TLF/m/it --> T1/LinuxBiolinumT-TLF/
-m/it on input line 79.
+m/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/LinuxLibertineT-TLF/sb/it --> T1/LinuxBiolinumT-TLF
-/m/it on input line 79.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 79.
+/m/it on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  T1/zi4/m/n --> T1/zi4/m/n on input line 79.
+(Font)                  T1/zi4/m/n --> T1/zi4/m/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  T1/zi4/b/n --> T1/zi4/m/n on input line 79.
+(Font)                  T1/zi4/b/n --> T1/zi4/m/n on input line 80.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/m/n --> T1/LinuxBiolinumT-TLF/bx/
-n on input line 79.
+n on input line 80.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/m/it --> T1/LinuxBiolinumT-TLF/bx
-/it on input line 79.
+/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
 (Font)                  OT1/cmss/bx/n --> T1/LinuxLibertineT-TLF/bx/n on input 
-line 79.
+line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/bx/n --> T1/LinuxBiolinumT-TLF/bx
-/n on input line 79.
+/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/m/n --> T1/LinuxBiolinumT-TLF/bx/
-n on input line 79.
+n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  T1/LinuxBiolinumT-TLF/m/it --> T1/LinuxBiolinumT-TLF/bx
-/it on input line 79.
+/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  T1/zi4/m/n --> T1/zi4/bx/n on input line 79.
+(Font)                  T1/zi4/m/n --> T1/zi4/bx/n on input line 80.
 
 (/usr/share/texlive/texmf-dist/tex/latex/beamer/translator/dicts/translator-bas
 ic-dictionary/translator-basic-dictionary-English.dict
@@ -1686,7 +1686,7 @@ Dictionary: translator-numbers-dictionary, Language: English
 orem-dictionary/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 79.
+LaTeX Info: Redefining \includegraphics on input line 80.
 \c@mv@tabular=\count177
 \c@mv@boldtabular=\count178
 
@@ -1695,84 +1695,84 @@ Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
 )
 ABD: EverySelectfont initializing macros
-LaTeX Info: Redefining \selectfont on input line 79.
+LaTeX Info: Redefining \selectfont on input line 80.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (./main.nav)
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 15.24pt on input line 79.
+(Font)              scaled to size 15.24pt on input line 80.
 
 <IMElogo.png, id=13, 875.27pt x 1027.84pt>
 File: IMElogo.png Graphic file (type png)
  <use IMElogo.png>
-Package pdftex.def Info: IMElogo.png used on input line 79.
+Package pdftex.def Info: IMElogo.png used on input line 80.
 (pdftex.def)             Requested size: 269.46654pt x 316.43141pt.
 
-Overfull \hbox (24.4983pt too wide) in paragraph at lines 79--79
+Overfull \hbox (24.4983pt too wide) in paragraph at lines 80--80
 []  
  []
 
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 78.64pt on input line 79.
+(Font)              scaled to size 78.64pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/bx/n' in size <78.64> not
  available
 (Font)              Font shape `T1/LinuxBiolinumT-TLF/b/n' tried instead on inp
-ut line 79.
+ut line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/b/n' will be
-(Font)              scaled to size 78.64pt on input line 79.
+(Font)              scaled to size 78.64pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 45.5pt on input line 79.
+(Font)              scaled to size 45.5pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/bx/n' in size <45.5> not 
 available
 (Font)              Font shape `T1/LinuxBiolinumT-TLF/b/n' tried instead on inp
-ut line 79.
+ut line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/b/n' will be
-(Font)              scaled to size 45.5pt on input line 79.
+(Font)              scaled to size 45.5pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 37.92pt on input line 79.
-LaTeX Font Info:    Try loading font information for T1+zi4 on input line 79.
+(Font)              scaled to size 37.92pt on input line 80.
+LaTeX Font Info:    Try loading font information for T1+zi4 on input line 80.
 (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2016/12/29 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 34.88632pt on input line 79.
-LaTeX Font Info:    Calculating math sizes for size <37.92> on input line 79.
-LaTeX Font Info:    Try loading font information for U+ntxmia on input line 79.
+(Font)              scaled to size 34.88632pt on input line 80.
+LaTeX Font Info:    Calculating math sizes for size <37.92> on input line 80.
+LaTeX Font Info:    Try loading font information for U+ntxmia on input line 80.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2016/01/31 Fontinst v1.933 font definitions for U/ntxmia.
 )
-LaTeX Font Info:    Try loading font information for U+ntxsym on input line 79.
+LaTeX Font Info:    Try loading font information for U+ntxsym on input line 80.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2015/03/20 Fontinst v1.933 font definitions for U/ntxsym.
 )
-LaTeX Font Info:    Try loading font information for U+ntxsyc on input line 79.
+LaTeX Font Info:    Try loading font information for U+ntxsyc on input line 80.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
 )
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 27.68143pt on input line 79.
+(Font)              scaled to size 27.68143pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 20.85611pt on input line 79.
+(Font)              scaled to size 20.85611pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 37.92pt on input line 79.
+(Font)              scaled to size 37.92pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 27.68143pt on input line 79.
+(Font)              scaled to size 27.68143pt on input line 80.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
-(Font)              scaled to size 20.85611pt on input line 79.
+(Font)              scaled to size 20.85611pt on input line 80.
 
 <USP.jpg, id=16, 338.2236pt x 485.6544pt>
 File: USP.jpg Graphic file (type jpg)
  <use USP.jpg>
-Package pdftex.def Info: USP.jpg used on input line 79.
+Package pdftex.def Info: USP.jpg used on input line 80.
 (pdftex.def)             Requested size: 244.96823pt x 351.75325pt.
 
-Overfull \hbox (1649.69098pt too wide) detected at line 79
+Overfull \hbox (1649.69098pt too wide) detected at line 80
  [] 
  []
 
@@ -1837,7 +1837,7 @@ LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
 (Font)              scaled to size 14.48708pt on input line 76.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 21.95pt on input line 97.
+(Font)              scaled to size 21.95pt on input line 98.
  (./main.bbl
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/it' will be
 (Font)              scaled to size 21.95pt on input line 11.
@@ -1923,10 +1923,10 @@ l.18   Abertos e Fechados}.
 ? 
 ))
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 4.0pt on input line 204.
+(Font)              scaled to size 4.0pt on input line 206.
 File: IMElogo.png Graphic file (type png)
  <use IMElogo.png>
-Package pdftex.def Info: IMElogo.png used on input line 204.
+Package pdftex.def Info: IMElogo.png used on input line 206.
 (pdftex.def)             Requested size: 269.46654pt x 316.43141pt.
 
 Overfull \hbox (24.4983pt too wide) has occurred while \output is active
@@ -1935,7 +1935,7 @@ Overfull \hbox (24.4983pt too wide) has occurred while \output is active
 
 File: USP.jpg Graphic file (type jpg)
 <use USP.jpg>
-Package pdftex.def Info: USP.jpg used on input line 204.
+Package pdftex.def Info: USP.jpg used on input line 206.
 (pdftex.def)             Requested size: 244.96823pt x 351.75325pt.
 
 Overfull \hbox (1649.69098pt too wide) has occurred while \output is active
@@ -1960,28 +1960,25 @@ ucutuiv.pdf>]
 \tf@snm=\write8
 \openout8 = `main.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 205.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 205.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 207.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 207.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 205.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 205.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 207.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 207.
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  )
 (\end occurred when \ifnum on line 18 was incomplete)
 (\end occurred when \ifx on line 18 was incomplete)
 (\end occurred when \ifx on line 18 was incomplete) 
 Here is how much of TeX's memory you used:
  22375 strings out of 493013
- 404622 string characters out of 6135683
- 490878 words of memory out of 5000000
+ 404606 string characters out of 6135683
+ 491802 words of memory out of 5000000
  25316 multiletter control sequences out of 15000+600000
  217698 words of font info for 210 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,24n,96p,831b,1141s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 57i,24n,96p,831b,1142s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-di
 st/fonts/enc/dvips/newtx/libertinealt.enc}{/usr/share/texlive/texmf-dist/fonts/
 enc/dvips/libertine/lbtn_25tcsq.enc}{/usr/share/texlive/texmf-dist/fonts/enc/dv
@@ -1995,10 +1992,10 @@ xfonts/rtxmi.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/txfonts/rtxr
 are/texlive/texmf-dist/fonts/type1/public/txfonts/txsya.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/public/newtx/txsys.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/public/newtx/zxlri.pfb>
-Output written on main.pdf (1 page, 1718363 bytes).
+Output written on main.pdf (1 page, 1718817 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
- 73 compressed objects within 1 object stream
+ 105 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
  11 named destinations out of 1000 (max. 500000)
  68 words of extra memory for PDF output out of 10000 (max. 10000000)
 
