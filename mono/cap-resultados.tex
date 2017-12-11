@@ -131,7 +131,7 @@ the Tesla K40 was slower than a single Xeon E5-2650 v4. Although \texttt{Ghmatec
 routine is similar to \texttt{Ghmatecd}, it does fewer computations and thus offloading 
 this task alone to the GPU may not be attractive.
 
-As for the error, the $14400$ was the only sample that had errors bigger than $10^{-5}$. Since the $||\bullet||_1$
+As for the error, the $14400$ was the only sample that had errors greater than $10^{-5}$. Since the $||\bullet||_1$
 grows as the number of matrix rows increases, this result was expected. Figure $\ref{fig:ghmatece_brucutuiv_error}$
 illustrates the results.
 
@@ -171,7 +171,7 @@ This routine has two parallel implementations: (1) Using OpenBLAS \texttt{CGESV}
 
 Figure $\ref{fig:linsolve_brucutuiv_1}$ illustrates the results for \texttt{BrucutuIV}. The acquired speedup in the 14400 mesh 
 elements sample in \texttt{cpu24}, \texttt{cpu48}, \texttt{gpu1} and \texttt{gpu48} with respect to 
-the sequential algorithm are 10, 7, 29 and 30. 
+the sequential algorithm are 10, 7, 29 and 30, respectively. 
 
 From these results, we can conclude that MAGMA's \texttt{cgesv\_gpu} can be used 
 to accelerate programs that require solving dense linear systems. Notice the slowdown when comparing 
