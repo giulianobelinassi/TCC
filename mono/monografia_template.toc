@@ -16,24 +16,25 @@
 \contentsline {section}{\numberline {3.2}$\texttt {Ghmatecd}$ Optimization and Parallelization}{12}{section.3.2}
 \contentsline {section}{\numberline {3.3}$\texttt {Ghmatece}$ Optimization and Parallelization}{15}{section.3.3}
 \contentsline {section}{\numberline {3.4}Linear System Solving Optimization}{16}{section.3.4}
-\contentsline {chapter}{\numberline {4}Methods and Results}{17}{chapter.4}
-\contentsline {section}{\numberline {4.1}Methods}{17}{section.4.1}
-\contentsline {section}{\numberline {4.2}Results and Isolated Conclusions}{18}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}\texttt {Ghmatecd} Routine}{18}{subsection.4.2.1}
-\contentsline {subsubsection}{\texttt {BrucutuIV} Data}{18}{section*.7}
-\contentsline {subsubsection}{Venus Data}{18}{section*.8}
-\contentsline {subsection}{\numberline {4.2.2}\texttt {Ghmatece} Routine}{19}{subsection.4.2.2}
-\contentsline {subsubsection}{BrucutuIV Data}{19}{section*.9}
-\contentsline {subsubsection}{Venus Data}{19}{section*.10}
-\contentsline {subsection}{\numberline {4.2.3}\texttt {Rigid} Routine}{19}{subsection.4.2.3}
-\contentsline {subsubsection}{BrucutuIV Results}{19}{section*.11}
-\contentsline {subsection}{\numberline {4.2.4}Linear System Solving Routine}{20}{subsection.4.2.4}
-\contentsline {subsubsection}{BrucutuIV results}{20}{section*.12}
-\contentsline {subsubsection}{Venus results}{20}{section*.13}
-\contentsline {chapter}{\numberline {5}Final Conclusions}{27}{chapter.5}
-\contentsline {section}{\numberline {5.1}BEM Efficiency as a Computational Tool}{27}{section.5.1}
-\contentsline {section}{\numberline {5.2}As a Programmer}{27}{section.5.2}
-\contentsline {section}{\numberline {5.3}Future Works}{28}{section.5.3}
-\contentsline {chapter}{\numberline {A}Computers used in tests}{29}{appendix.A}
-\contentsline {chapter}{Bibliography}{33}{appendix*.27}
+\contentsline {section}{\numberline {3.5}\texttt {Interec} Paralelization and Optimization}{16}{section.3.5}
+\contentsline {chapter}{\numberline {4}Methods and Results}{19}{chapter.4}
+\contentsline {section}{\numberline {4.1}Methods}{19}{section.4.1}
+\contentsline {section}{\numberline {4.2}Results and Isolated Conclusions}{20}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}\texttt {Ghmatecd} Routine}{20}{subsection.4.2.1}
+\contentsline {subsubsection}{\texttt {BrucutuIV} Data}{20}{section*.7}
+\contentsline {subsubsection}{Venus Data}{20}{section*.8}
+\contentsline {subsection}{\numberline {4.2.2}\texttt {Ghmatece} Routine}{21}{subsection.4.2.2}
+\contentsline {subsubsection}{BrucutuIV Data}{21}{section*.9}
+\contentsline {subsubsection}{Venus Data}{21}{section*.10}
+\contentsline {subsection}{\numberline {4.2.3}\texttt {Rigid} Routine}{21}{subsection.4.2.3}
+\contentsline {subsubsection}{BrucutuIV Results}{21}{section*.11}
+\contentsline {subsection}{\numberline {4.2.4}Linear System Solving Routine}{22}{subsection.4.2.4}
+\contentsline {subsubsection}{BrucutuIV results}{22}{section*.12}
+\contentsline {subsubsection}{Venus results}{22}{section*.13}
+\contentsline {chapter}{\numberline {5}Final Conclusions}{29}{chapter.5}
+\contentsline {section}{\numberline {5.1}BEM Efficiency as a Computational Tool}{29}{section.5.1}
+\contentsline {section}{\numberline {5.2}As a Programmer}{29}{section.5.2}
+\contentsline {section}{\numberline {5.3}Future Works}{30}{section.5.3}
+\contentsline {chapter}{\numberline {A}Computers used in tests}{31}{appendix.A}
+\contentsline {chapter}{Bibliography}{35}{appendix*.27}
 \contentsfinish 

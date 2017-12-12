@@ -15,16 +15,17 @@
 \BOOKMARK [1][]{section.3.2}{Ghmatecd Optimization and Parallelization}{chapter.3}% 15
 \BOOKMARK [1][]{section.3.3}{Ghmatece Optimization and Parallelization}{chapter.3}% 16
 \BOOKMARK [1][]{section.3.4}{Linear System Solving Optimization}{chapter.3}% 17
-\BOOKMARK [0][]{chapter.4}{Methods and Results}{}% 18
-\BOOKMARK [1][]{section.4.1}{Methods}{chapter.4}% 19
-\BOOKMARK [1][]{section.4.2}{Results and Isolated Conclusions}{chapter.4}% 20
-\BOOKMARK [2][]{subsection.4.2.1}{Ghmatecd Routine}{section.4.2}% 21
-\BOOKMARK [2][]{subsection.4.2.2}{Ghmatece Routine}{section.4.2}% 22
-\BOOKMARK [2][]{subsection.4.2.3}{Rigid Routine}{section.4.2}% 23
-\BOOKMARK [2][]{subsection.4.2.4}{Linear System Solving Routine}{section.4.2}% 24
-\BOOKMARK [0][]{chapter.5}{Final Conclusions}{}% 25
-\BOOKMARK [1][]{section.5.1}{BEM Efficiency as a Computational Tool}{chapter.5}% 26
-\BOOKMARK [1][]{section.5.2}{As a Programmer}{chapter.5}% 27
-\BOOKMARK [1][]{section.5.3}{Future Works}{chapter.5}% 28
-\BOOKMARK [0][]{appendix.A}{Computers used in tests}{}% 29
-\BOOKMARK [0][]{appendix*.27}{Bibliography}{}% 30
+\BOOKMARK [1][]{section.3.5}{Interec Paralelization and Optimization}{chapter.3}% 18
+\BOOKMARK [0][]{chapter.4}{Methods and Results}{}% 19
+\BOOKMARK [1][]{section.4.1}{Methods}{chapter.4}% 20
+\BOOKMARK [1][]{section.4.2}{Results and Isolated Conclusions}{chapter.4}% 21
+\BOOKMARK [2][]{subsection.4.2.1}{Ghmatecd Routine}{section.4.2}% 22
+\BOOKMARK [2][]{subsection.4.2.2}{Ghmatece Routine}{section.4.2}% 23
+\BOOKMARK [2][]{subsection.4.2.3}{Rigid Routine}{section.4.2}% 24
+\BOOKMARK [2][]{subsection.4.2.4}{Linear System Solving Routine}{section.4.2}% 25
+\BOOKMARK [0][]{chapter.5}{Final Conclusions}{}% 26
+\BOOKMARK [1][]{section.5.1}{BEM Efficiency as a Computational Tool}{chapter.5}% 27
+\BOOKMARK [1][]{section.5.2}{As a Programmer}{chapter.5}% 28
+\BOOKMARK [1][]{section.5.3}{Future Works}{chapter.5}% 29
+\BOOKMARK [0][]{appendix.A}{Computers used in tests}{}% 30
+\BOOKMARK [0][]{appendix*.27}{Bibliography}{}% 31
