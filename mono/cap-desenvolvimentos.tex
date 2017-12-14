@@ -297,6 +297,7 @@ it is very similar to \texttt{Ghmatecd} routine as described by Algorithm \ref{g
 \end{algorithmic}
 \end{algorithm}
 
+
 The parallelization technique presented in Algorithm $\ref{ghmatecd_new}$ can be applied to \texttt{Ghmatece} 
 because \texttt{Nonsinge} operates in the same way as \texttt{Nonsingd}, but it computes the integral 
 of the static nuclei in the equation ($\ref{bem_formulation}$). Unfortunately, since 
@@ -327,11 +328,11 @@ A Library named MAGMA implements the LU decomposition with GPU acceleration with
 Such routine can be broken into two routines: \texttt{Interec1}, a routine designed to 
 calculate a vector $d \in \Cfield^{3L}$ containing the displacements; and \texttt{Interec2}, a routine that 
 calculates a vector $s \in \Cfield^{9L}$ containing the tensions, where $L$ is the number of internal points and 
-$m$ is the number of boundary elements. Algorithm $\ref{Interec}$ sketches this routine.
+$m$ is the number of boundary elements. Algorithm $\ref{interec_old}$ sketches this routine.
 
-\begin{algorithm}[H]
-\label{Interec}
+\begin{algorithm}
 \caption{Creates $d \in \Cfield^{3L}, s \in \Cfield^{9L}$}
+\label{interec_old}
 \begin{algorithmic}[1]
 	\Procedure{Interec1}{}
 		\For{$j := 1, m$} 
@@ -359,12 +360,13 @@ $m$ is the number of boundary elements. Algorithm $\ref{Interec}$ sketches this 
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Interec1 Parallelization}
+
 Althrough \texttt{Interec1} calls \texttt{Nonsingd}, its results differs significally from \texttt{Ghmatecd} because the inputs are different.
 
-
 Let now $d_i$ be the section $d[ii:ii+2]$, that is, $d_i$ is a vector of size 3. Analogously, Let $b_j$ and $u_j$ 
-be $b[jj:jj+2]$ and $u[jj:jj+2]$. Let $H_{ij}$ and $G_{ij}$ be the two results from the \texttt{Nonsingd} 
-routine from the step $i, j$. Then line 6 of Algorithm $\ref{Interec}$ can be expressed mathematically as: 
+be $b[jj:jj+2]$ and $u[jj:jj+2]$. Let $H_{ij}^{\text{element}}$ and $G_{ij}^{\text{element}}$ be the two results from the \texttt{Nonsingd} 
+routine from the step $i, j$. Then line 6 of Algorithm $\ref{interec_old}$ can be expressed mathematically as: 
 
 \begin{equation}
 	d_i = \sum_{j=1}^{m}G^{\text{element}}_{ij}b_j - H^{\text{element}}_{ij}u_j 
@@ -385,7 +387,8 @@ Now the entire vector $d$ can be expressed as:
 \end{equation}
 
 Now we only have two assemble two matrices $H$ and $G$ analogously as Algorithm $\ref{ghmatecd_new2}$ without concerning singularity issues 
-(just removing lines 10 and 11). After that, just use cuBLAS to multiply $Hu$ and $Gb$, and subtract the resulting vectors. 
+(just removing lines 10 and 11). After that, just use cuBLAS to multiply $Hu$ and $Gb$, and subtract the resulting vectors. Algorithm 
+$\ref{interec1_new}$ illustrates this approach.
 
 \begin{algorithm}[H]
 \caption{Creates $d \in \Cfield^{3L}$}
@@ -413,3 +416,6 @@ Now we only have two assemble two matrices $H$ and $G$ analogously as Algorithm 
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Interec2 Parallelization}
+
+Due to the deadline, the \texttt{Interec2} routine was not parallelized using GPUs, althrough an OpenMP version is implemented. 

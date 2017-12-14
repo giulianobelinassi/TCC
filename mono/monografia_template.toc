@@ -17,6 +17,8 @@
 \contentsline {section}{\numberline {3.3}$\texttt {Ghmatece}$ Optimization and Parallelization}{15}{section.3.3}
 \contentsline {section}{\numberline {3.4}Linear System Solving Optimization}{16}{section.3.4}
 \contentsline {section}{\numberline {3.5}\texttt {Interec} Paralelization and Optimization}{16}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Interec1 Parallelization}{16}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}Interec2 Parallelization}{17}{subsection.3.5.2}
 \contentsline {chapter}{\numberline {4}Methods and Results}{19}{chapter.4}
 \contentsline {section}{\numberline {4.1}Methods}{19}{section.4.1}
 \contentsline {section}{\numberline {4.2}Results and Isolated Conclusions}{20}{section.4.2}
@@ -31,10 +33,12 @@
 \contentsline {subsection}{\numberline {4.2.4}Linear System Solving Routine}{22}{subsection.4.2.4}
 \contentsline {subsubsection}{BrucutuIV results}{22}{section*.12}
 \contentsline {subsubsection}{Venus results}{22}{section*.13}
+\contentsline {subsection}{\numberline {4.2.5}Interec1 Routine}{22}{subsection.4.2.5}
+\contentsline {subsubsection}{Venus Results}{22}{section*.14}
 \contentsline {chapter}{\numberline {5}Final Conclusions}{29}{chapter.5}
 \contentsline {section}{\numberline {5.1}BEM Efficiency as a Computational Tool}{29}{section.5.1}
 \contentsline {section}{\numberline {5.2}As a Programmer}{29}{section.5.2}
 \contentsline {section}{\numberline {5.3}Future Works}{30}{section.5.3}
 \contentsline {chapter}{\numberline {A}Computers used in tests}{31}{appendix.A}
-\contentsline {chapter}{Bibliography}{35}{appendix*.27}
+\contentsline {chapter}{Bibliography}{35}{appendix*.29}
 \contentsfinish 

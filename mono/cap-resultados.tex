@@ -50,7 +50,8 @@ to compute the result, (4) time to move data back to main memory, (5) time to co
 any remaining parts in the CPU. 
 The elapsed time was computed in seconds with the OpenMP library function 
 $\texttt{OMP\_GET\_WTIME}$. This function calculates the elapsed wall clock time in seconds 
-with double precision. All experiments set the Gauss Quadrature Points to 8.
+with double precision. All experiments set the Gauss Quadrature Points to 8 and
+the number of Internal Points to 10.
 
 \begin{table}[]
 \centering
@@ -185,6 +186,16 @@ for \texttt{Venus}. The acquired speedup in the 4000 mesh
 elements sample in \texttt{cpu4} and \texttt{gpu4} are 2 and 38, 
 and the \texttt{BrucutuIV} conclusions about this routine also prevails in this machine.
 
+\subsection{Interec1 Routine}
+
+\subsubsection{Venus Results}
+The logarithm graphic in Figure $\ref{fig:interec1_venus_1}$ illustrates the results for 
+\texttt{Venus}. From the figure, we can conclude that for all samples there were speedups. 
+The speedup acquired in the 4000 mesh elements sample with \texttt{cpu4} and \texttt{gpu1} with 
+respect to the sequential algorithm are 3 and 17 respectively. As for the error, all results were below  $10^{-6}$.
+
+
+
 \begin{figure}[ht]
 \centering
 \textbf{Average of elapsed time in seconds running \texttt{Ghmatecd} in \texttt{BrucutuIV}}\par\medskip
@@ -265,3 +276,10 @@ and the \texttt{BrucutuIV} conclusions about this routine also prevails in this 
 \label{fig:linsolve_venus_1}
 \end{figure}
 
+\begin{figure}[ht]
+\centering
+\textbf{Average of times of \texttt{Interec1} in \texttt{Venus}}\par\medskip
+\includegraphics[scale=1]{interec1_venus_1.pdf}
+\caption{\texttt{Interec1}: Time elapsed by each implementation in \texttt{Venus}}
+\label{fig:interec1_venus_1}
+\end{figure}
