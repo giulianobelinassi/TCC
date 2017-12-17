@@ -3,7 +3,7 @@
 \label{cap:dev}
 
 The first goal of the project was to compile and execute the code with at least one sample. 
-From this point we found a few issues such as:
+While doing these, we found a few issues such as:
 
 \begin{itemize}
 \item The original code provided by Carrion had issues common to legacy code. 
@@ -31,7 +31,7 @@ memory for the total of statically allocated variables \citep{intel_mcmodel:2010
 \end{itemize}
 
 
-After all those issues were addressed, A parallel optimization of BEM began by analyzing the sequential code provided. 
+After all those issues were addressed, a parallel optimization of BEM began by analyzing the sequential code provided. 
 Gprof, a profiling tool by \cite{binutils}, revealed the two most time-consuming routines: 
 $\texttt{Ghmatecd}$ and $\texttt{Nonsingd}$, with $60.9\%$ and $58.3\%$ of the program total 
 elapsed time, respectively.
@@ -75,17 +75,18 @@ extern "C"{
       END PROGRAM CALL_C
 \end{lstlisting}
 \end{minipage}
+
 It must be highlighted that matrices in Fortran are stored in column-major order and indexed from 1, 
-wherein C and C++ are stored in line-major order and indexed from 0. This means that when accessing 
+whereas in C and C++ they are stored in line-major order and indexed from 0. This means that when accessing 
 the position \texttt{A(i,j)} from a Fortran matrix in C, one must access \texttt{A[j-1][i-1]}.
 
 \section{$\texttt{Ghmatecd}$ Optimization and Parallelization}
 
 $\texttt{Ghmatecd}$ is a routine developed to create both the $H$ and $G$ matrices for the dynamic problem 
-described in equation ($\ref{eqmatrix}$). It does so by making several calls to \texttt{Nonsingd}, a routine
-that uses the Gaussian Quadrature as described by chapter $\ref{cap:quadrature}$ to compute the integral of the 
-dynamic part in equation ($\ref{bem_formulation}$); and \texttt{Sing\_de}, a routine 
-that implements the artifice described by equation ($\ref{singular}$).
+described in Equation ($\ref{eqmatrix}$). It does so by making several calls to \texttt{Nonsingd}, a routine
+that uses the Gaussian Quadrature as described in Chapter $\ref{cap:quadrature}$ to compute the integral of the 
+dynamic part in Equation ($\ref{bem_formulation}$); and \texttt{Sing\_de}, a routine 
+that implements the artifice described by Equation ($\ref{singular}$).
 
 At first, we did some optimization to the original sequential code to remove unnecessary computations or memory copy.
 \texttt{Ghmatecd}'s code had additional matrices used in the computations that dependency analysis showed to be unnecessary. 
@@ -97,7 +98,7 @@ were used to compute the abscissae and weight points of the Gaussian Quadrature.
 zeroes of the Legendre Polynomials and there is no need to compute them more than once in the entire program, 
 hence the result of \texttt{Gauleg} can just be passed to \texttt{Nonsingd}.
 
-Algorithm 1 shows pseudocode for the $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh 
+Algorithm 1 shows the pseudocode for the $\texttt{Ghmatecd}$ subroutine. Let $n$ be the number of mesh 
 elements and $m$ the number of boundary elements. $\texttt{Ghmatecd}$ builds matrices $H$ and $G$ by computing 
 smaller $3\times3$ matrices returned by $\texttt{Nonsingd}$ and $\texttt{Sing\_de}$.
 %
@@ -128,7 +129,7 @@ CPU have 8 cores, even a small number of mesh elements generate enough
 workload to use all CPUs resources if this strategy alone is used. On the other hand, a typical GPU contain thousands 
 of processors, hence even a considerable large amount of elements may not generate a workload that consumes all the device's 
 resources. Since $\texttt{Nonsingd}$ is the cause of the performance bottleneck of $\texttt{Ghmatecd}$, 
-the main effort was implementing
+the main effort was put to implementing
 an optimized version of $\texttt{Ghmatecd}$, called $\texttt{Ghmatecd\_Nonsingd}$, that only computes the $\texttt{Nonsingd}$
 case in the GPU, and leave $\texttt{Sing\_de}$ to be computed in the CPU after the computation of $\texttt{Ghmatecd\_Nonsingd}$ 
 is completed. The pseudocode in Algorithm \ref{ghmatecd_new} pictures a new strategy where $\texttt{Nonsingd}$ is also computed in parallel.
@@ -222,7 +223,7 @@ amount of shared memory available in the GPU. Launching $m \times n$ blocks to c
 2 to 3 will generate the entire $H$ and $G$ without the $\texttt{Sing\_de}$ part. The $\texttt{Ghmatecd\_Sing\_de}$ routine can be parallelized with 
 a simple OpenMP $\texttt{Parallel for}$ clause, and it will compute the remaining $H$ and $G$. 
 
-A careful examination of \texttt{Sing\_de} concluded that, algorithmically, it is very similar to \texttt{Nonsingd} 
+A careful examination of \texttt{Sing\_de} lead us to conclude that, algorithmically, it is very similar to \texttt{Nonsingd} 
 with a special logic to overcome singularity issues. If we merge both procedures in one, then there would 
 be no need to compute the diagonal of $H$ and $G$ using the CPU. Algorithm $\ref{ghmatecd_new2}$ captures this idea.
 
@@ -261,7 +262,7 @@ significant loss of precision in this version when compared to the previous one.
 \section{$\texttt{Ghmatece}$ Optimization and Parallelization}
 
 $\texttt{Ghmatece}$ is a routine developed to create both the $H$ and $G$ matrices for the static problem described in equation ($\ref{eqmatrix}$). 
-Unless by \texttt{RIGID} routine, a procedure designed to calculate $H$ diagonal by considerating the rigid body movement, 
+Except for \texttt{RIGID} routine, a procedure designed to calculate $H$ diagonal by considering the rigid body movement, 
 it is very similar to \texttt{Ghmatecd} routine as described by Algorithm \ref{ghmatece_old}. 
 
 \begin{algorithm}[H]
@@ -300,7 +301,7 @@ it is very similar to \texttt{Ghmatecd} routine as described by Algorithm \ref{g
 
 The parallelization technique presented in Algorithm $\ref{ghmatecd_new}$ can be applied to \texttt{Ghmatece} 
 because \texttt{Nonsinge} operates in the same way as \texttt{Nonsingd}, but it computes the integral 
-of the static nuclei in the equation ($\ref{bem_formulation}$). Unfortunately, since 
+of the static nuclei in Equation ($\ref{bem_formulation}$). Unfortunately, since 
 \texttt{Singge} makes 4 calls to \texttt{Nonsinge}, the strategy presented in 
 algorithm $\ref{ghmatecd_new2}$ cannot be deployed efficiently because it would 
 generate too much workload to a group of blocks.
@@ -310,11 +311,11 @@ For the \texttt{RIGID} procedure, it has no interdependency between lines and th
 
 \section{Linear System Solving Optimization}
 In order to compute all regions surface forces and displacements, a linear system can be assembled 
-from the matrices $H$ and $G$ from the dynamic problem, that means solving: 
+from the matrices $H$ and $G$ from the dynamic problem, which means solving: 
 \begin{equation}
 	Ax = b
 \end{equation}
-Where $A$ is a square nonsingular complex matrix. As described in chapter $\ref{cap:lu}$, 
+where $A$ is a square nonsingular complex matrix. As described in section $\ref{cap:lu}$, 
 the LU decomposition with partial pivoting can be deployed to solve it.
 
 The original code used a sequential implementation provided by Compaq within a routine called \texttt{CGESV}. In order to explore multiple CPUs,
@@ -375,20 +376,22 @@ routine from the step $i, j$. Then line 6 of Algorithm $\ref{interec_old}$ can b
 This can be reorganized as:
 
 \begin{equation}
-	d_i = \sum_{j=1}^{m} \left(G^{\text{element}}_{ij}b_j \right) - \sum_{j=1}^{m} \left( H^{\text{element}}_{ij}u_j \right)
+	d_i = \left(\sum_{j=1}^{m} G^{\text{element}}_{ij}b_j \right) -  \left(\sum_{j=1}^{m} H^{\text{element}}_{ij}u_j \right)
 \end{equation}
 
-Define now two matrices $H \in \Cfield^{(3L)\times (3m)}$ and $G\in \Cfield^{(3L)\times (3m)}$ 
+Lets define two matrices $H \in \Cfield^{(3L)\times (3m)}$ and $G\in \Cfield^{(3L)\times (3m)}$ 
 such that $H_{ij} = H^{\text{element}}_{ij}$ and $G_{ij} = G^{\text{element}}_{ij}$. 
 Now the entire vector $d$ can be expressed as:
 
 \begin{equation}
+\label{eq:interec1}
 	d = Gb - Hu
 \end{equation}
 
-Now we only have two assemble two matrices $H$ and $G$ analogously as Algorithm $\ref{ghmatecd_new2}$ without concerning singularity issues 
-(just removing lines 10 and 11). After that, just use cuBLAS to multiply $Hu$ and $Gb$, and subtract the resulting vectors. Algorithm 
-$\ref{interec1_new}$ illustrates this approach.
+Matrices $H$ and $G$ in Eq. ($\ref{eq:interec1}$) can be assembled analogously as in Algorithm $\ref{ghmatecd_new2}$ 
+just without special logic to overcome singularity issues (remove lines 10 and 11 of such algorithm). 
+After that, just use cuBLAS to multiply $Hu$ and $Gb$, and subtract the resulting vectors. 
+Algorithm $\ref{interec1_new}$ illustrates this approach.
 
 \begin{algorithm}[H]
 \caption{Creates $d \in \Cfield^{3L}$}

@@ -52,7 +52,7 @@ and must not be underestimated.
 As for the GPU development, testing an code is painful as we are unable to run \texttt{X11} and \texttt{cuda-gdb} 
 in the same GPU  simultaneously. Additionaly, sometimes a \texttt{SEGFAULT} in a CUDA kernel caused the computer 
 to hang, requiring a complete reboot of the machine. 
-One last complain is that it is not possible to allocate multiple arrays in CUDA's shared memory dynamically, 
+One last item is that it is not possible to allocate multiple arrays in CUDA's shared memory dynamically, 
 requiring pointer magic to allocate multiple arrays into a single array. All these points require improvements. 
 
 \section{Future Works}
@@ -62,7 +62,7 @@ distribuiting workload between CPU and GPU for constructing the $H$ and $G$ matr
 \texttt{Ghmatece} and \texttt{Ghmatecd} routines for better speedups.  
 
 The linear system solving routine can run quickier simply by keeping the $H$ 
-matrix in GPU memory. This is not already implemented due to the structure of the actual 
+matrix in GPU memory. This is not already implemented due to the structure of the current 
 program, a refactoration is necessary.
 
 A better parallel strategy for reducing the matrix (as illustrated by the function \newline 

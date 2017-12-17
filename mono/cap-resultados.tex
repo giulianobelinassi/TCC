@@ -76,7 +76,7 @@ $\ref{ghmatecd_new2}$ (\texttt{gpu\_sing}).
 
 \subsubsection{\texttt{BrucutuIV} Data}
 
-The logarithmic scale graphic at Figure $\ref{fig:ghmatecd_brucutuiv_non_sequential}$ illustrates the
+The logarithmic scale graphic in Figure $\ref{fig:ghmatecd_brucutuiv_non_sequential}$ illustrates the
 results for \texttt{BrucutuIV}. We removed the points from the graph that represents the sequential data for legibility.
 
 The speedup acquired in the $14400$ mesh elements sample with \texttt{cpu48}, \texttt{cpu24} 
@@ -85,7 +85,7 @@ $25$, $19$, $22$ and $22$ respectively in \texttt{BrucutuIV}. For this sample we
 was faster than a single Xeon E5-2650 v4, but slower than two of those processors.
 
 Notice that with respect to time, \texttt{gpu8} and \texttt{cpu\_sing1} behaves very similarly, 
-but there is an interesting observation about the error (computed as described in Section $\ref{sec:methods}$), as illustrated by 
+but there is an interesting observation about the error (computed as described in Section $\ref{sec:methods}$), as illustrated in 
 Figure $\ref{fig:ghmatecd_brucutuiv_error}$. 
 
 Since there is an error gap in the $H$ matrix between the \texttt{gpu8} and \texttt{gpu\_sing1}, it suggests that most 
@@ -153,7 +153,7 @@ As a conclusion, for this hardware, the presented implementation provides accele
 
 We only present a parallel implementation of this routine using the CPU due to the low time 
 consumption of it when compared to the other analysed routines. We only present the \texttt{BrucutuIV} 
-data because the $14400$ sample was the only one that provides a meaning information about the elapsed time.
+data because the $14400$ sample was the only one that provides a meaningful information about the elapsed time.
 
 \subsubsection{BrucutuIV Results}
 

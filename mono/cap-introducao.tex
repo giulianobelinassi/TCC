@@ -48,19 +48,16 @@ BEM or discuss how it can be used to solve a particular set of problems.
 The main objective of this work is to provide an optimized version of the code provided by \cite{carrion:02}, 
 eighter by (1) reducing the number of calculations, (2) improving cache usage, or (3) paralelizing costly routines.  
 After all optimizations, the program must still yield acceptable results, that means we must still minimize errors 
-caused by floating point imprecisions.
+caused by floating point imprecisions. Another objective is extend the number of mesh elements that the program can accept as input. 
 
-contemporary world, where multicore machines and Linux prevails. 
-
-There was another objective that was to extend the number of mesh elements that the program could accept as input. 
-
-\section{Thesis Structure}
+\section{Monograph Structure}
 
 This document is presented in the following order: Chapter $\ref{cap:background}$ presents an overview of theoretical background required, 
 from the Boundary Elements Method formulation to the Gaussian Quadrature (used to calculate integrals numerically) 
 and LU Decomposition (used to solve dense linear systems). Chapter $\ref{cap:dev}$ discusses all development process, including 
 how routines were optimized and parallelized. Chapter $\ref{cap:results}$ presents the methodology used in this research and present 
-the results obtained. Finally, Chapter $\ref{cap:conclusoes}$ present conclusions from obtained data and as a CUDA developer.
+the results obtained. Finally, Chapter $\ref{cap:conclusoes}$ present conclusions from obtained data and some setbacks while developing 
+in CUDA platform.
 
 \chapter{Theoretical Background}
 \label{cap:background}
@@ -97,7 +94,7 @@ the Singular Integral, expressed as follows:
 \end{equation}
 Where DYN = Dynamic, STA = Static. The integral of the difference between the dynamic and static nuclei, 
 the first term in Equation ($\ref{singular}$), does not present singularity when executed concomitantly as expressed because 
-they have the same order in the both problems.
+they have the same order in both problems.
 
 \section{Gaussian Quadrature}
 \label{cap:quadrature}
@@ -294,8 +291,8 @@ illustrated in algorithms \ref{forward} and \ref{backward}.
 \end{algorithmic}
 \end{algorithm}
 
-The question that rises now is now is how can we reduce a square nonsingular matrix $A$ to triangular matrices. 
-This is what LU with partial pivoting does, it decomposes $A$ in three matrices $P^{\intercal}LU$, where $P$ is a pivoting matrix, 
+The question that rises now is how can we reduce a square nonsingular matrix $A$ to triangular matrices. 
+This is what LU decomposition with partial pivoting does, it decomposes $A$ in three matrices $P^{\intercal}LU$, where $P$ is a pivoting matrix, 
 $L$ is lower triangular and $U$ is upper triangular. Briefly, a pivoting matrix is such that when operated with a matrix, 
 it interchanges its columns; this is used to avoid divisions by $0$ \citep{watkins:2004}. Algorithm $\ref{lu}$ illustrates how $A$ can be decomposed
 in such matrices.
@@ -379,21 +376,21 @@ by Flynn Taxonomy \citep{pacheco:2011}, but remarks are necessary to two archite
 		are not a pure SIMD, as described later.
 
 	\item MIMD: Stands for Multiple Instruction, Multiple Data. This refers to independent multicore systems, 
-	capable of executing tasks asynchronously. Here is located both shared memory systems and distributed 
-	memory systems. Shared memory systems are an example of it, where various processors reads and writes to 
+	capable of executing tasks asynchronously. in MIND is located both shared memory and distributed 
+	memory systems. Shared memory systems are an example of it, where various processors read and write to 
 	a shared memory. For such systems, a collection of directives called OpenMP can be used to explore its 
 	parallel capabilities with little changes in the original code. \citep{pacheco:2011}
 	
 \end{enumerate}
 
-An important concept regarding to parallel computing is the concept of processes and threads. A process is an 
+An important concept regarding parallel computing is the concept of processes and threads. A process is an 
 operating system (OS) abstraction that allows a program to have the illusion that it monopolizes the entire CPU 
 \citep{love:2005}. Every process has at least one execution flow, which is named thread. Modern OS can handle 
 multiple threads within a process, allowing many different executions flows in the same process. \citep{tanenbaum:2009}
 
 Although OpenMP uses simple pragmas to take advantage of multiple CPUs in a shared memory system by 
 creating multiple threads within a process, GPUs 
-requires severe modifications in the original code to run in such devices. NVIDIA developed CUDA for this 
+require severe modifications in the original code to run in such devices. NVIDIA developed CUDA for this 
 purpose.
 
 \subsection{CUDA Programming}
@@ -456,12 +453,12 @@ Boundary Elements Method implementations.
 both $H$ and $G$ matrices of equation 1.2 with GPU acceleration using two CUDA kernels: 
 One for computing the $G$ matrix and one for the $H$ matrix.
 
-While assembling both $H$ and $G$ matrices, the authors managed a speedup of 25 times and kept 
-the $H$ matrix in GPU memory to avoid memory transfers between device and host. Regarding to solve 
-the linear system, they obtained a speedup of 1300 times. Both results were obtained sing an 
+While assembling both $H$ and $G$ matrices, the authors managed to archive a speedup of 25 times and kept 
+the $H$ matrix in GPU memory to avoid memory transfers between device and host. With regard to solving 
+the linear system, they obtained a speedup of 1300 times. Both results were obtained using an 
 Intel Core i7-3770 paired GeForce GTX 970.
 
 As for precision, there is no further discussion 
-rather than the usage of 10 points for the Gaussian Quadrature and that both 
+other than the usage of 10 points for the Gaussian Quadrature and that both 
 CPU and GPU processed data in exactly the same manner and with reliable 
 accuracy. 
