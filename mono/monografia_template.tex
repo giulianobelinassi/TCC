@@ -195,11 +195,13 @@ framexrightmargin=10pt
 \chapter*{Resumo}
 
 O Método de Elementos de Contorno é uma alternativa eficiente para modelar domínios ilimitados, 
-podendo ser utilizado para simular vibrações no solo. Utilizando como base uma implementação legada, 
-conseguimos um speedup de $20\times$ no tempo total de simulação utilizando uma Tesla K40c quando comparado com o programa 
-original, obtendo um speedup de $100\times$ na construção das matrizes $H$ e $G$ do problema dinâmico em 
-uma das máquinas de teste que contém uma GeForce GTX 980. Com estes resultados é possível simular 
-superfícies com mais pontos de malha.
+podendo ser utilizado para simular vibrações no solo. Aplicando as abordagens descritas neste 
+trabalho em uma implementação legada voltada a problemas estastodinâmicos estacionários, 
+conseguimos um speedup de $20\times$ no tempo total de simulação utilizando uma 
+Tesla K40c quando comparado com o programa original, e obtemos um speedup de 
+$100\times$ no método responsável pela construção das matrizes $H$ e $G$ do problema 
+dinâmico utilizando uma GeForce GTX 980. Com estes resultados é possível simular domínios 
+com mais pontos de malha.
 \\
 
 \noindent \textbf{Palavras-chave:} Método de Elementos de Contorno, MEC, GPU, Computação Paralela, Computação de Alto Desempenho, Métodos Numéricos
@@ -208,12 +210,13 @@ superfícies com mais pontos de malha.
 % Abstract
 \chapter*{Abstract}
 
-The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited 
-domains, being useful to simulate soil vibrations. Using a legacy implementation as a basis, 
-we obtained a $20\times$ speedup in the total time of simulation using a Tesla K40c 
-when compared to the original implementation, and a $100\times$ speedup when building the 
-$H$ and $G$ matrices of the dynamic problem in a computer with a GeForce GTX 980. 
-With these results, it is possible to simulate surfaces with a higher number of mesh elements.
+The Boundary Element Method (BEM) is a very efficient alternative for modeling unlimited domains, 
+being useful to simulate soil vibrations. Aplying the approach described in this work into a legacy 
+implementation for stationary elastodynamic problems, we obtained a $20\times$ speedup in the 
+total time of simulation using a Tesla K40c when compared to the original implementation, and a 
+$100\times$ speedup in the routine responsible for building the $H$ and $G$ matrices of the dynamic 
+problem with a GeForce GTX 980. With these results, it is possible to simulate domains with a 
+higher number of mesh elements.
 \\
  
 \noindent \textbf{Keywords:} Boundary Elements Method, BEM, GPU, Parallel Computing, High Performance Computing, Numerical Methods
