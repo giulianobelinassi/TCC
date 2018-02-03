@@ -1,0 +1,119 @@
+%\documentclass[11pt]{article}
+%\pagestyle{empty}
+
+\documentclass{minimal}
+\usepackage[paperwidth=5.7in,paperheight=11.0in,margin=0in]{geometry}
+\usepackage[pdftex,letterpaper]{geometry}
+
+
+\usepackage{graphicx,url}
+
+%\usepackage[brazil]{babel}   
+\usepackage[latin1]{inputenc}  
+
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{mathtools}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+ 
+\newcommand{\Cfield}{\mathbb{C}}
+\newcommand{\Rfield}{\mathbb{R}}
+
+\begin{document} 
+
+%\begin{algorithm}
+%\caption{Creates $H, G \in \Rfield^{(3m)\times(3n)}$}
+%%\label{ghmatece_old}
+%\begin{algorithmic}[1]
+%	\Procedure{Ghmatece}{}
+%		\For{$j := 1, n$} 
+%			\For{$i := 1, m$}
+%				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+%				\If{$i == j$}
+%					\State{$Gelement, Helement \leftarrow \text{Singge}(i)$}\Comment{two $3\times3$ real matrices}					
+%				\Else
+%					\State{$Gelement, Helement \leftarrow \text{Nonsinge}(i, j)$}	
+%				\EndIf
+%				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+%				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+%			\EndFor
+%		\EndFor 
+%		\State{$\text{Rigid}(H)$}
+%	\EndProcedure
+%
+%	\Procedure{Rigid}{H}
+%		\For{$i := 1, m$} 
+%			\For{$j := 1, n$}
+%				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+%				\If{$i \neq j$}
+%					\State{$H[ii:ii+2][ii:ii+2] \leftarrow H[ii:ii+2][ii:ii+2] + H[ii:ii+2][jj:jj+2]$}
+%				\EndIf
+%			\EndFor
+%		\EndFor
+%		\EndProcedure
+%\end{algorithmic}
+%\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+\setcounter{algorithm}{2}
+\caption{Creates $[H]_{\text{dyn}}, [G]_{\text{dyn}} \in \Cfield^{(3m)\times(3n)}$ }
+\label{ghmatecd_new2}
+\begin{algorithmic}[1]
+	\Procedure{GHdyn\_nonsing\_kernel}{}
+		\State{$j := \text{blockIdx}.x; \text{  }  i: = \text{blockIdx}.y$}
+		\State{$x := \text{threadIdx}.x; \text{  }  y: = \text{threadIdx}.y$}
+		
+		\If{$i \neq j$} \Comment{Singularity case will be computed by CPU}
+			\State{$\textit{Hbuffer}[x][y] \leftarrow \text{GenerateMatrixHdyn}(i, j, x, y)$}
+			\State{$\textit{Gbuffer}[x][y] \leftarrow \text{GenerateMatrixGdyn}(i, j, x, y)$}
+
+			\If{$x < 3 \text{ and } y < 3$}
+				\State{$Helem[x][y] \leftarrow \texttt{thrust::reduce}(\textit{Hbuffer}[x][y][0], \textit{Hbuffer}[x][y][g^2])$}
+				\State{$H[i][j] \leftarrow \textit{Helem}$} \Comment{$H[i][j]$ is a $3\times3$ matrix}
+			\ElsIf{$g-3 \leq x \leq g \text{ and } g-3 \leq y \leq g$} \Comment{Make sure this runs in another warp}
+				\State{$u := g-3; \text{  } v := g-3$}
+				\State{$Gelem[u][v] \leftarrow \texttt{thrust::reduce}(\textit{Gbuffer}[u][v][0], \textit{Gbuffer}[u][v][g^2])$}
+				\State{$G[i][j] \leftarrow \textit{Gelem}$} \Comment{$G[i][j]$ is a $3\times3$ matrix}
+			\EndIf
+		\EndIf
+	\EndProcedure
+
+	\Procedure{GHdyn\_singular}{}
+		\State{\text{\#pragma omp parallel for}}
+		\For{$i := 1, m$}
+			\State{$G_{\text{elem}} \leftarrow 0$}
+			\State{$H_{\text{elem}} \leftarrow 0$}
+			\For{$y := 1, g$}
+				\For{$x := 1, g$}
+					\State{$G_{\text{elem}} \leftarrow G_{\text{elem}} + \text{GenerateMatrixGsing}(i, x, y)$}
+					\State{$H_{\text{elem}} \leftarrow H_{\text{elem}} + \text{GenerateMatrixHsing}(i, x, y)$}
+				\EndFor
+			\EndFor
+			\State{$Gdiag[i] \leftarrow G_{\text{elem}}$}
+			\State{$Hdiag[i] \leftarrow H_{\text{elem}}$}
+		\EndFor
+	\EndProcedure
+
+	
+	\Procedure{GHdyn\_assembly}{}
+		\State{Allocate $Hdiag, Gdiag$ in Host memory}
+		\State{Run GHdyn\_singular($Hdiag, Gdiag$) in another CPU thread}
+		\State{Move data to GPU memory}
+		\State{Allocate $H \text{ and } G \in \Cfield^{(3m)\times(3n)}$ in GPU memory}
+		\State{Allocate \textit{Hbuffer}, \textit{Gbuffer} in GPU shared memory, buffer of matrices $3\times3$ of size $g^2$}
+		\State{Run \texttt{GHdyn\_kernel} with $m \times n$ blocks and $g \times g$ threads.}
+		\State{Retrieve $H, G$ from GPU memory.}
+		\State{Retrieve $Hdiag, Gdiag$ from \texttt{GHdyn\_singular} when completed.}
+		\For{$i := 1, m$}
+			\State{$G[i][i] \leftarrow Gdiag[i]$}
+			\State{$H[i][i] \leftarrow Hdiag[i]$}
+		\EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{document}

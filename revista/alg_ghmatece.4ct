@@ -1,0 +1,3 @@
+\expandafter\ifx\csname doTocEntry\endcsname\relax \expandafter\endinput\fi 
+\doTocEntry\tocloa{1}{\csname a:TocLink\endcsname{1}{x1-2r1}{}{\ignorespaces Creates $H, G \in \mathbb  {R}^{(3m)\times (3n)}$}}{algorithm}\relax 
+\par 

@@ -1,0 +1,7 @@
+- Corrigidos os problemas apontados pela prof. Nina
+- Resumo revisado.
+- Adicionado informações sobre a rotina Interec, embora paralelizar
+esta rotina fuja do escopo do TCC. Seu processo de paralelização 
+em GPU ainda está incompleto.
+
+

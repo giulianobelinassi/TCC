@@ -1,0 +1,49 @@
+%\documentclass[11pt]{article}
+%\pagestyle{empty}
+
+\documentclass{minimal}
+\usepackage[paperwidth=5.7in,paperheight=6.0in,margin=0in]{geometry}
+\usepackage[pdftex,letterpaper]{geometry}
+
+
+\usepackage{graphicx,url}
+
+%\usepackage[brazil]{babel}   
+\usepackage[latin1]{inputenc}  
+
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{mathtools}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+ 
+\newcommand{\Cfield}{\mathbb{C}}
+\newcommand{\Rfield}{\mathbb{R}}
+
+\begin{document} 
+
+\begin{algorithm}[H]
+\setcounter{algorithm}{1}
+\caption{Creates $[G]_{\text{sta}} \in \Rfield^{m\times3\times3}$ }
+\label{ghmatece_new2}
+\begin{algorithmic}[1]
+	\Procedure{Gsta\_assemble}{}
+		\State{\text{\#pragma omp parallel for}}
+		\For{$i := 1, m$}
+			\State{$G_{\text{elem}} \leftarrow 0$}
+
+			\For{$k := 1, 4$}
+				\For{$y := 1, g$}
+					\For{$x := 1, g$}
+						\State{$G_{\text{elem}} \leftarrow G_{\text{elem}} + \text{GenerateMatrixGsta}(i, k, x, y)$} \Comment{Return $3 \times 3$ matrix}
+					\EndFor
+				\EndFor
+			\EndFor
+			\State{$G[i] \leftarrow G_{\text{elem}}$}
+		\EndFor
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{document}

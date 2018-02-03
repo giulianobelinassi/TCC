@@ -1,0 +1,102 @@
+%\documentclass[11pt]{article}
+%\pagestyle{empty}
+
+\documentclass{minimal}
+\usepackage[paperwidth=5.7in,paperheight=6.0in,margin=0in]{geometry}
+\usepackage[pdftex,letterpaper]{geometry}
+
+
+\usepackage{graphicx,url}
+
+%\usepackage[brazil]{babel}   
+\usepackage[latin1]{inputenc}  
+
+\usepackage{amsmath}
+\usepackage{amssymb} 
+\usepackage{mathtools}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+ 
+\newcommand{\Cfield}{\mathbb{C}}
+\newcommand{\Rfield}{\mathbb{R}}
+
+\begin{document} 
+
+%\begin{algorithm}
+%\caption{Creates $H, G \in \Rfield^{(3m)\times(3n)}$}
+%%\label{ghmatece_old}
+%\begin{algorithmic}[1]
+%	\Procedure{Ghmatece}{}
+%		\For{$j := 1, n$} 
+%			\For{$i := 1, m$}
+%				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+%				\If{$i == j$}
+%					\State{$Gelement, Helement \leftarrow \text{Singge}(i)$}\Comment{two $3\times3$ real matrices}					
+%				\Else
+%					\State{$Gelement, Helement \leftarrow \text{Nonsinge}(i, j)$}	
+%				\EndIf
+%				\State{$G[ii:ii+2][jj:jj+2] \leftarrow Gelement$}
+%				\State{$H[ii:ii+2][jj:jj+2] \leftarrow Helement$}
+%			\EndFor
+%		\EndFor 
+%		\State{$\text{Rigid}(H)$}
+%	\EndProcedure
+%
+%	\Procedure{Rigid}{H}
+%		\For{$i := 1, m$} 
+%			\For{$j := 1, n$}
+%				\State{$ii := 3(i-1) + 1;     jj := 3(j-1) + 1$}
+%				\If{$i \neq j$}
+%					\State{$H[ii:ii+2][ii:ii+2] \leftarrow H[ii:ii+2][ii:ii+2] + H[ii:ii+2][jj:jj+2]$}
+%				\EndIf
+%			\EndFor
+%		\EndFor
+%		\EndProcedure
+%\end{algorithmic}
+%\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+\caption{Creates $H \in \Rfield^{(3m)\times(3n)}$ }
+\label{ghmatece_new2}
+\begin{algorithmic}[1]
+	\Procedure{Hsta\_kernel}{}
+		
+		\State{$j := \text{blockIdx}.x; \text{  }  i: = \text{blockIdx}.y; \text{  } x := \text{threadIdx}.x; \text{  }  y: = \text{threadIdx}.y$}
+		\State{$l := \text{laneId}; \text{  } w := \text{warpId}; \text{  } \textit{numWarps} = \lceil g^2/32 \rceil$}
+		\State{Initialize \textit{Hbuffer} in shared memory with $0$}
+		\State{$\textit{Hlocal} \leftarrow \text{GenerateMatrixHsta}(i, j, x, y)$} \Comment{Return $3\times3$ matrix}
+		\State{$\texttt{shfl\_down}(\textit{Hlocal})$} \Comment{Reduces matrices in the same warp}
+		\If{$l = 0$}
+			\State{$\textit{Hbuffer}[\text{warpId}] = Hlocal$}
+		\EndIf
+		\If{$x < 3 \text{ and } y < 3$}
+			\State{$Helem[x][y] \leftarrow \texttt{thrust::reduce}(\textit{Hbuffer}[x][y][0], \textit{Hbuffer}[x][y][numWarps])$}
+			\State{$H[i][j] \leftarrow \textit{Helem}$} \Comment{$H[i][j]$ is a $3\times3$ matrix}
+		\EndIf
+	\EndProcedure
+
+	\Procedure{Rigid\_kernel}{$H, Hdiag$}
+		\State{$t := \text{blockDim}.x\times\text{blockIdx}.x + \text{threadIdx}.x$}
+		\If{$t < m$}
+			\For{$k := 1, n$} 
+				\State{$Hdiag[t] \leftarrow Hdiag[t] - H[t][k]$}
+			\EndFor
+		\EndIf
+	\EndProcedure
+	
+	\Procedure{Hsta\_assembly}{}
+		\State{Move data to GPU memory}
+		\State{Allocate $H \in \Rfield^{(3m)\times(3n)}$ in GPU memory}
+		\State{Allocate $Hdiag \in \Rfield^{m \times 3 \times 3}$ in GPU memory and initialize with $0$}
+		\State{Allocate \textit{Hbuffer} in GPU shared memory, buffer of matrices $3\times3$ of size $\lceil g^2/32 \rceil$}
+		\State{Run \texttt{Hsta\_kernel} with $m \times n$ blocks and $g \times g$ threads. Await for return}
+		\State{Run \texttt{Rigid\_kernel} with $128$ threads and $\lceil m/128 \rceil$ blocks. Await for return}
+		\State{Keep $Hdiag$ in GPU memory and free $H$ from GPU memory.}
+	\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+\end{document}
